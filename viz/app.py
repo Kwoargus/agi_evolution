@@ -7,9 +7,17 @@ from core.genome import Genome
 from db.connector import load_reflex_rules, load_instinct_patterns, load_best_genome
 
 if __name__ == "__main__":
-    # Загружаем правила из БД (они нужны для работы рефлексов и инстинктов)
-    reflex_rules = load_reflex_rules()
-    instinct_patterns = load_instinct_patterns()
+    # Загружаем правила из БД (они нужны для работы рефлексов и инстинктов) если в БД пусто, то берём дефолтный хардкод
+    # reflex_rules = load_reflex_rules()
+    reflex_rules = load_reflex_rules() or [
+        {'sense_type': 'smell', 'signal_type': 'food_smell', 'action': 'grab'},
+        {'sense_type': 'smell', 'signal_type': 'predator_smell', 'action': 'avoid'},
+    ]
+    # instinct_patterns = load_instinct_patterns()
+    # Загружаем паттерны из БД (они нужны для работы инстинктов) если в БД пусто, то берём дефолтный хардкод
+    instinct_patterns = load_instinct_patterns() or [
+        {'pattern': {'signals': {'sound': 'loud crash'}}, 'action': {'action': 'run_away'}}
+    ]
     print(f"Загружено {len(reflex_rules)} правил рефлексов")
     print(f"Загружено {len(instinct_patterns)} паттернов инстинктов")
 
@@ -18,22 +26,17 @@ if __name__ == "__main__":
 
     # Пытаемся загрузить лучший геном из БД
     best_genome_data = load_best_genome()
+    # Создаём бота – правила передаём всегда
     if best_genome_data:
-        # Создаём геном из загруженных данных
         genome = Genome.from_dict(best_genome_data)
-        # Создаём бота с этим геномом
-        bot = Individual(x=0, z=0, genome=genome)
-        print("Бот создан из лучшего генома.")
+        bot = Individual(x=0, z=0, genome=genome,
+                         reflex_rules=reflex_rules,
+                         instinct_patterns=instinct_patterns)
     else:
-        # Если генома нет, создаём бота со стандартными правилами
-        bot = Individual(
-            x=0, z=0,
-            angle=0,
-            move_delay=10,
-            reflex_rules=reflex_rules,
-            instinct_patterns=instinct_patterns
-        )
-        print("Бот создан со стандартными правилами (геном не найден).")
+        bot = Individual(x=0, z=0,
+                         reflex_rules=reflex_rules,
+                         instinct_patterns=instinct_patterns,
+                         move_delay=5)
 
     # Добавляем объекты в мир (костры, волк, яблоки)
     fire_positions = [(-4, -4), (6, -2), (0, 8), (-8, -8)]

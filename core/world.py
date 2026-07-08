@@ -74,22 +74,6 @@ class World:
             # print("state: ", state)
         return state
 
-    # def get_state(self, bot):
-    #     """Возвращает вектор состояния для GAN."""
-    #     state = [bot.x, bot.z]
-    #     for obj in self.objects:
-    #         if isinstance(obj, GameObject):
-    #             type_code = 1
-    #         elif isinstance(obj, Food):
-    #             type_code = 2
-    #         elif isinstance(obj, Predator):
-    #             type_code = 3
-    #         else:
-    #             type_code = 0
-    #         # state.extend([type_code, obj.x - bot.x, obj.z - bot.z])
-    #         state.extend([type_code, (obj.x - bot.x).world_size, (obj.z - bot.z).world_size])
-    #     return state
-
     def get_scale(self):
         return self.cell_size * self.zoom
 
@@ -206,30 +190,12 @@ class World:
         explosion = Explosion(x, z)
         self.explosions.append(explosion)
         if self.bot:
+            print(f"[Explosion] triggered at ({x}, {z}), notifying bot")  # <-- исправлено
             self.bot.notify('explosion', {
                 'sound': 'loud crash',
                 'vision': 'bright_flash',
                 'position': (x, z)
             })
-
-    # def trigger_explosion(self):
-    #     self.bot.notify('explosion', {
-    #         'sound': 'loud crash',
-    #         'vision': 'bright_flash',
-    #         'position': (x, z)
-    #     })
-    #     import random
-    #     print("Взрыв создан!")
-    #     corners = [(-8, -8), (-8, 8), (8, -8), (8, 8)]
-    #     x, z = random.choice(corners)
-    #     explosion = Explosion(x, z)
-    #     self.explosions.append(explosion)
-    #     if self.bot:
-    #         self.bot.notify('explosion', {
-    #             'sound': 'loud crash',
-    #             'vision': 'bright_flash',
-    #             'position': (x, z)
-    #         })
 
     # ---------- Запуск (для визуализации) ----------
     def run(self, bot=None):

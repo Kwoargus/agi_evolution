@@ -6,9 +6,11 @@ from models.reflex_module import ReflexModule
 from models.instinct_module import InstinctModule
 from core.base_strategy import Perception, ActionSuggestion
 import random
+from collections import deque
+from typing import List, Tuple, Any
 
 class Individual:
-    def __init__(self, x=0, z=0, angle=0, move_delay=5, reflex_rules=None, instinct_patterns=None, genome=None):
+    def __init__(self, x=0, z=0, angle=0, move_delay=5, reflex_rules=None, instinct_patterns=None, genome=None,  max_buffer_size=10000):
         self.x = x
         self.z = z
         self.angle = angle
@@ -30,7 +32,8 @@ class Individual:
 
         self.fitness = 0.0
         self.alive = True
-        self.step_size = genome.get('step_size', 2.0)
+        # self.step_size = genome.get('step_size', 2.0)
+        self.step_size = 2.0  # всегда 2, игнорируем геном
         self.directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         self.dir_index = 0
 
@@ -43,8 +46,12 @@ class Individual:
         self.max_steps = genome.get('max_steps', 500)
 
         # Модули рефлексов и инстинктов
-        self.reflex_module = ReflexModule(genome.get('reflex_rules', []))
-        self.instinct_module = InstinctModule(genome.get('instinct_patterns', []))
+        self.reflex_module = ReflexModule(
+            reflex_rules if reflex_rules is not None else genome.get('reflex_rules', [])
+        )
+        self.instinct_module = InstinctModule(
+            instinct_patterns if instinct_patterns is not None else genome.get('instinct_patterns', [])
+        )
 
         self.nearby_object = None
         self.nearby_params = {}
@@ -54,12 +61,16 @@ class Individual:
         self.awaiting_steps = 0
         self.moving = True
 
-        self.memory_buffer = []  # список переходов (state, action, reward, next_state)
-        self.max_buffer_size = 10000
+        self.max_buffer_size = max_buffer_size
+        self.memory_buffer = deque(maxlen=self.max_buffer_size)  # список переходов (state, action, reward, next_state)
+
+        # self.max_buffer_size = 10000
+
         self.runaway_attempts = 0
 
         self.food_collected = 0  # счётчик собранной еды
         self.total_reward = 0.0  # суммарная награда за эпизод
+
 
     # ---------- Взаимодействие с объектами ----------
     def setInform(self, obj):
@@ -103,22 +114,8 @@ class Individual:
         else:
             print(f"Неизвестное действие: {action}")
 
-    ## ---------- Действия от рефлексов ----------
-    # def execute_action(self, action, world):
-    #     if action == 'move_on':
-    #         print("Рефлекс: move_on! Разворот и уход на 2 клетки.")
-    #         self.dir_index = (self.dir_index + 2) % 4
-    #         for _ in range(2):
-    #             if not self._move_one_step(world):
-    #                 break
-    #     elif action == 'grab':
-    #         print("Рефлекс: grab! Захват еды.")
-    #         self._grab_object(world)
-    #     elif action == 'avoid':
-    #         print("Рефлекс: avoid! Отворачиваем.")
-    #         self._turn_right()
-    #     else:
-    #         print(f"Неизвестное действие: {action}")
+        print(f"[Action] executing {action}")
+
 
     def _grab_object(self, world, state):
         if self.nearby_object is None:
@@ -152,26 +149,6 @@ class Individual:
         self.nearby_params = {}
         return True
 
-
-    # def _grab_object(self, world):
-    #     if self.nearby_object is None:
-    #         return False
-    #     target_x = self.nearby_object.x
-    #     target_z = self.nearby_object.z
-    #     dx = target_x - self.x
-    #     dz = target_z - self.z
-    #     if abs(dx) > self.step_size or abs(dz) > self.step_size:
-    #         print("Объект не в соседней клетке")
-    #         return False
-    #     world.remove_object(self.nearby_object)
-    #     self.visited_edges.append(((self.x, self.z), (target_x, target_z)))
-    #     self._add_edge((self.x, self.z), (target_x, target_z))
-    #     self.x, self.z = target_x, target_z
-    #     self.visited_nodes.append((self.x, self.z))
-    #     print(f"Bot схватил {self.nearby_object.name if hasattr(self.nearby_object, 'name') else 'еду'} и переместился в ({self.x}, {self.z})")
-    #     self.nearby_object = None
-    #     self.nearby_params = {}
-    #     return True
 
     # ---------- Инстинкты (взрыв) ----------
     def notify(self, event_type, data):
@@ -279,28 +256,6 @@ class Individual:
                 self.frame_counter = 0
                 print("Возврат к обходу")
 
-    # def _update_runaway(self, world):
-    #     dx, dz = self.runaway_target
-    #     next_x = self.x + dx * self.step_size
-    #     next_z = self.z + dz * self.step_size
-    #     if world.is_within_world(next_x, next_z) and world.get_object_at(next_x, next_z) is None:
-    #         self.visited_edges.append(((self.x, self.z), (next_x, next_z)))
-    #         self._add_edge((self.x, self.z), (next_x, next_z))
-    #         self.x, self.z = next_x, next_z
-    #         self.visited_nodes.append((self.x, self.z))
-    #         self.awaiting_steps = 0
-    #     else:
-    #         if self.awaiting_steps == 0:
-    #             self.awaiting_steps = 50
-    #         else:
-    #             self.awaiting_steps -= 1
-    #             if self.awaiting_steps <= 0:
-    #                 self.runaway_target = None
-    #                 self.moving = True
-    #                 self.frame_counter = 0
-    #                 print("Возврат к обходу")
-
-
     # ---------- Основной цикл обновления ----------
     def update(self, world):
         if self.runaway_target:
@@ -396,100 +351,11 @@ class Individual:
                     self.execute_action(suggestion.action_id, world, state)  # передаём state
                 break
 
+                print(f"Object detected: {self.nearby_params}, perception: {perception}")
+
         if len(self.visited_nodes) > self.max_steps:
             self.alive = False
             print("Достигнут лимит шагов")
-
-
-    # def update(self, world):
-    #     if not self.moving:
-    #         return
-    #
-    #     # Если убегаем – отдельно
-    #     if self.runaway_target:
-    #         self._update_runaway(world)
-    #         return
-    #
-    #     if not self.alive:
-    #         return
-    #
-    #     self.frame_counter += 1
-    #     if self.frame_counter < self.move_delay:
-    #         return
-    #     self.frame_counter = 0
-    #
-    #     # Получаем текущее состояние
-    #     state = world.get_state(self)
-    #
-    #     # Выбираем действие (направление) – в вашем коде это dx, dz
-    #     dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    #     candidates = []
-    #     fallback = []
-    #
-    #     for (dx, dz) in dirs:
-    #         next_x = self.x + dx * self.step_size
-    #         next_z = self.z + dz * self.step_size
-    #         if not world.is_within_world(next_x, next_z):
-    #             continue
-    #         if world.get_object_at(next_x, next_z) is not None:
-    #             continue
-    #         node1 = (self.x, self.z)
-    #         node2 = (next_x, next_z)
-    #         if node1 > node2:
-    #             node1, node2 = node2, node1
-    #         if (node1, node2) not in self.visited_edges_set:
-    #             candidates.append((dx, dz))
-    #         else:
-    #             fallback.append((dx, dz))
-    #
-    #     if candidates:
-    #         dx, dz = random.choice(candidates)
-    #         reward_step = 1.0  # награда за исследование нового узла
-    #     elif fallback:
-    #         dx, dz = random.choice(fallback)
-    #         reward_step = 0.0  # за повторный проход награда меньше
-    #     else:
-    #         self.alive = False
-    #         reward_step = -1.0
-    #         # Добавляем опыт с отрицательной наградой и завершаем
-    #         next_state = world.get_state(self)
-    #         self.add_experience(state, (0, 0), reward_step, next_state)
-    #         print("Обход завершён: нет доступных направлений")
-    #         return
-    #
-    #     # Сохраняем действие (кодируем направление индексом от 0 до 3)
-    #     action_idx = dirs.index((dx, dz))
-    #
-    #     # Делаем шаг
-    #     next_x = self.x + dx * self.step_size
-    #     next_z = self.z + dz * self.step_size
-    #     self.visited_edges.append(((self.x, self.z), (next_x, next_z)))
-    #     self._add_edge((self.x, self.z), (next_x, next_z))
-    #     self.x, self.z = next_x, next_z
-    #     self.visited_nodes.append((self.x, self.z))
-    #
-    #     # Получаем новое состояние
-    #     next_state = world.get_state(self)
-    #
-    #     # Добавляем переход в буфер
-    #     self.add_experience(state, action_idx, reward_step, next_state)
-    #
-    #     # Проверяем объекты в соседних клетках (рефлексы)
-    #     for (dx_check, dz_check) in dirs:
-    #         check_x = self.x + dx_check * self.step_size
-    #         check_z = self.z + dz_check * self.step_size
-    #         obj = world.get_object_at(check_x, check_z)
-    #         if obj:
-    #             self.setInform(obj)
-    #             perception = Perception(self.nearby_params.copy())
-    #             suggestion = self.reflex_module.get_best_action(perception)
-    #             if suggestion:
-    #                 self.execute_action(suggestion.action_id, world)
-    #             break
-    #
-    #     if len(self.visited_nodes) > self.max_steps:
-    #         self.alive = False
-    #         print("Достигнут лимит шагов")
 
     # ---------- Фитнес ----------
     def calculate_fitness(self):
@@ -499,11 +365,6 @@ class Individual:
         survival_score = 1.0 if self.alive else 0.0  # бонус за выживание
         # Можно добавить штраф за столкновения с хищниками
         return visited_score + food_score + survival_score
-
-    # def calculate_fitness(self):
-    #     # Можно комбинировать: кол-во посещённых узлов + собранная еда (пока только узлы)
-    #     self.fitness = len(self.visited_nodes)
-    #     return self.fitness
 
     # ---------- Отрисовка ----------
     def draw_path(self, screen, world_to_screen_func):
@@ -582,16 +443,16 @@ class Individual:
         return len(self.visited_nodes) * 1.0
 
     def add_experience(self, state, action, reward, next_state):
-        """Добавляет переход в буфер памяти."""
+        """Добавляет переход в буфер памяти. Автоматически удаляет старые при переполнении."""
         self.memory_buffer.append((state, action, reward, next_state))
+
         # Если буфер слишком большой, удаляем старые записи
         if len(self.memory_buffer) > self.max_buffer_size:
             self.memory_buffer.pop(0)
 
     def get_experiences(self):
         """Возвращает список всех переходов и очищает буфер."""
-        data = self.memory_buffer.copy()
+        data = list(self.memory_buffer)
         self.memory_buffer.clear()
         return data
-
 

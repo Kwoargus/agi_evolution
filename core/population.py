@@ -18,22 +18,17 @@ class Population:
             self.individuals.append(ind)
 
     def evaluate_all(self, steps_per_episode=500):
-        """Запускает всех особей на эпизод и возвращает список фитнесов."""
         fitnesses = []
+        all_experiences = []  # список всех переходов за поколение
         for ind in self.individuals:
-            # Сброс мира (объекты остаются, но бот сбрасывается)
             self.world.reset()
             fit = ind.evaluate(self.world, steps_per_episode)
             fitnesses.append(fit)
-            ind.get_experiences()
-            all_experiences = []
-            for ind in self.individuals:
-                ind.evaluate(...)
-                exps = ind.get_experiences()
-                all_experiences.extend(exps)
-            # Теперь all_experiences можно передать в GAN для обучения
-
-        return fitnesses
+            # Получаем и очищаем буфер бота
+            exps = ind.get_experiences()
+            all_experiences.extend(exps)
+        # Теперь all_experiences можно передать в GAN
+        return fitnesses, all_experiences
 
     def _generate_random_objects(self):
         pass

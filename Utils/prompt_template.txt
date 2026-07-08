@@ -1,0 +1,138 @@
+Вот код который был разработан ранее:
+
+
+Вот код core/base_strategy.py:
+
+
+
+
+
+Вот код core/evolution.py:
+
+
+
+
+
+Вот код core/genome.py:
+
+
+
+
+Вот код core/individual.py:
+
+
+
+   
+
+Вот код core/objects.py:
+
+
+
+
+Вот код core/population.py:
+
+
+
+
+Вот код core/world.py:
+
+
+
+
+Вот код db/connector.py:
+
+
+
+
+Вот код experiments/run_evolution.py:
+
+
+
+
+Вот код models/gan.py:
+
+
+
+
+Вот код models/reflex_module.py:
+
+
+
+Вот код models/instinct_module.py:
+
+
+
+Вот код models/plot_evolution.py:
+
+
+
+
+Вот код models/__init__.py
+
+
+
+
+
+Вот код viz/app.py:
+
+
+
+
+
+Вот код viz/plot_evolution.py
+
+
+
+
+Вот dump таблицы reflex_pattern
+
+
+
+Вот dump таблицы instinct_pattern
+
+
+
+
+Как исправить?
+
+
+
+
+Вот скрипт compare_evolution_with_gan.py
+
+
+
+
+Вот скрипт run_all.sh
+
+
+
+
+Вот скрипт visualize_gan_training.py
+
+
+
+
+Вот скрипт test_gan.py
+
+
+
+
+Вот скрипт test_gan_integration.py
+
+
+
+
+Вот скрипт test_gan_only.py
+
+
+
+
+Вот скрипт test_genome_improvement.py
+
+
+
+
+Вот скрипт test_setup.py
+
+

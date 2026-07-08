@@ -27,6 +27,7 @@ class ReflexModule:
                     if str(value) == str(signal_type):
                         suggestions.append(ActionSuggestion(action_id=action, priority=1.0))
                         break
+        print(f"[Reflex] perception: {perception}, rules: {self.rules}")
         return suggestions
 
 

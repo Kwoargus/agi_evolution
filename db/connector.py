@@ -3,7 +3,7 @@ import json
 import psycopg2
 import psycopg2.extras
 
-def get_connection(host='localhost', port=5434, dbname='postgres', user='postgres', password='Postgres'):
+def get_connection(host='localhost', port=5432, dbname='postgres', user='postgres', password='postgres'):
     """Возвращает соединение с БД."""
     return psycopg2.connect(
         host=host,
@@ -28,11 +28,11 @@ def load_reflex_rules(schema='agi_evolution'):
         return []
 
 def load_instinct_patterns(schema='agi_evolution'):
-    """Загружает паттерны инстинктов из таблицы instinct_patterns."""
+    """Загружает паттерны инстинктов из таблицы instinct_pattern."""
     try:
         conn = get_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute(f"SELECT pattern, actions FROM {schema}.instinct_patterns")
+        cur.execute(f"SELECT pattern, actions FROM {schema}.instinct_pattern")
         rows = cur.fetchall()
         cur.close()
         conn.close()
@@ -82,7 +82,6 @@ def save_genome(generation_id, genome_json, fitness, schema='agi_evolution'):
         return False
 
 def load_best_genome(schema='agi_evolution'):
-    """Загружает геном с наилучшим фитнесом из БД."""
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -97,7 +96,13 @@ def load_best_genome(schema='agi_evolution'):
         cur.close()
         conn.close()
         if row:
-            genome_json = json.loads(row[0])
+            genome_data = row[0]
+            # Если это уже dict (например, при использовании JSONB), используем как есть
+            if isinstance(genome_data, dict):
+                genome_json = genome_data
+            else:
+                # Иначе предполагаем, что это строка JSON
+                genome_json = json.loads(genome_data)
             fitness = row[1]
             generation = row[2]
             print(f"Загружен лучший геном из поколения {generation} с фитнесом {fitness:.2f}")
@@ -108,5 +113,7 @@ def load_best_genome(schema='agi_evolution'):
     except Exception as e:
         print(f"Ошибка загрузки лучшего генома: {e}")
         return None
+
+
 
 
