@@ -4,5 +4,5 @@ INSERT INTO agi_prototype.reflex_pattern (id,signal_type,signal_threshold,"actio
 	 (3,'predator_roar',0.1,'move_on',NULL,NULL,NULL,'sound'),
 	 (4,'food_smell',0.2,'grab',NULL,NULL,NULL,'smell'),
 	 (2,'predator_smell',1.0,'move_on',NULL,NULL,NULL,'smell'),
-	 (5,'loud crash',0.99,'look',NULL,NULL,NULL,'sound'),
+	 (5,'loud_crash',0.99,'look',NULL,NULL,NULL,'sound'),
 	 (6,'bright_flash',0.99,'look',NULL,NULL,NULL,'vision');
