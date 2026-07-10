@@ -1,6 +1,7 @@
 import random
 from core.individual import Individual
 from core.genome import Genome
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 class Population:
     def __init__(self, size, world, genome_template=None, start_pos=(0,0)):

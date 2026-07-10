@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from db.connector import get_connection
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 def plot_fitness_history():
     conn = get_connection()

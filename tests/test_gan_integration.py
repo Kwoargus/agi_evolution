@@ -11,6 +11,7 @@ from models.gan import GAN, ExperienceEncoder, PatternRepository
 from core.genome import Genome
 from core.individual import Individual
 from core.world import World
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 
 class TestGANIntegration(unittest.TestCase):

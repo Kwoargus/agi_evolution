@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Any, Union
 import random
 
 

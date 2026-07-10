@@ -1,7 +1,7 @@
 # models/instinct_module.py
 from __future__ import annotations
-from typing import List, Dict, Optional
 from core.base_strategy import Perception, ActionSuggestion
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 class InstinctModule:
     def __init__(self, patterns: List[Dict]):

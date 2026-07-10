@@ -1,14 +1,19 @@
+# core/instinct_system.py
 import numpy as np
-from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import torch
+from typing import List, Dict, Optional, Tuple, Any, Union
+
+# Добавляем импорт MultimodalEncoder
+from sensors.multimodal_sensor import MultimodalEncoder
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 
 @dataclass
 class SensoryInput:
     vision: np.ndarray  # векторное представление того, что видит бот
-    sound: np.ndarray  # векторное представление того, что слышит бот
-    smell: np.ndarray  # векторное представление того, что чувствует бот
+    sound: np.ndarray   # векторное представление того, что слышит бот
+    smell: np.ndarray   # векторное представление того, что чувствует бот
     position: Tuple[float, float]  # позиция объекта
 
 

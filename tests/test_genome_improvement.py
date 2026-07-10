@@ -13,7 +13,7 @@ from core.individual import Individual
 from core.world import World
 from models.gan import GAN
 import matplotlib.pyplot as plt
-
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 # # tests/test_genome_improvement.py (исправленный)
 # import sys

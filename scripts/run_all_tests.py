@@ -8,6 +8,7 @@ import os
 # Добавляем корневую директорию проекта в путь
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import subprocess
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 # Определяем корневую директорию проекта (поднимаемся на уровень выше, если скрипт в scripts/)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

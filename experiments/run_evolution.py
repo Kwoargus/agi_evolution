@@ -1,6 +1,7 @@
 # experiments/run_evolution.py (исправленный)
 import sys
 import os
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 # Добавляем корневую директорию проекта в путь
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

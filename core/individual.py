@@ -7,7 +7,7 @@ from models.instinct_module import InstinctModule
 from core.base_strategy import Perception, ActionSuggestion
 import random
 from collections import deque
-from typing import List, Tuple, Any
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 class Individual:
     def __init__(self, x=0, z=0, angle=0, move_delay=5, reflex_rules=None, instinct_patterns=None, genome=None,  max_buffer_size=10000):

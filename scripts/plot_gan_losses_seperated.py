@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 
 def plot_gan_losses(g_losses, d_losses, title="GAN Training Losses", save_path=None):

@@ -1,6 +1,7 @@
 # core/genome.py
 import copy
 import random
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 class Genome:
     def __init__(self, params=None):

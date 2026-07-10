@@ -3,6 +3,7 @@ import pygame
 import math
 import random
 from core.objects import GameObject, Predator, Food, Explosion
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 class World:
     def __init__(self, width=1200, height=800, world_size=20, cell_size=40, objects_config=None):

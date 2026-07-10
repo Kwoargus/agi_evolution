@@ -9,6 +9,7 @@ import matplotlib.animation as animation
 import numpy as np
 from models.gan import GAN
 import torch
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 
 class GANTrainingVisualizer:

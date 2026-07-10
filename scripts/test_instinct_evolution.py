@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from core.instinct_evolution import InstinctEvolutionEngine, InstinctPopulation
 from models.instinct_gan import InstinctGAN  # <-- Импортируем InstinctGAN
 import torch
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 
 def test_instinct_evolution():

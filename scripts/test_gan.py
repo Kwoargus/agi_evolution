@@ -3,9 +3,7 @@ import sys
 import os
 # Добавляем корневую директорию проекта в путь
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Добавляем корневую директорию проекта в путь
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 import numpy as np
 from models.gan import GAN, ExperienceEncoder, PatternRepository

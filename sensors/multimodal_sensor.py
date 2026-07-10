@@ -1,12 +1,9 @@
-# sensors / multimodal_sensor.py
-import numpy as np
-from typing import Dict, List, Optional
+# sensors/multimodal_sensor.py
 import torch
 import torch.nn as nn
-import sys
-import os
-# Добавляем корневую директорию проекта в путь
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import numpy as np
+from typing import Optional
+
 
 class VisionEncoder(nn.Module):
     """Кодирует визуальную информацию в вектор."""
@@ -67,8 +64,11 @@ class MultimodalEncoder(nn.Module):
     Объединяет vision, sound, smell в единый вектор.
     """
 
-    def __init__(self, vision_dim: int = 128, sound_dim: int = 128,
-                 smell_dim: int = 128, combined_dim: int = 256):
+    def __init__(self,
+                 vision_dim: int = 128,
+                 sound_dim: int = 128,
+                 smell_dim: int = 128,
+                 combined_dim: int = 256):
         super().__init__()
 
         self.vision_encoder = VisionEncoder(latent_dim=vision_dim)
@@ -91,3 +91,16 @@ class MultimodalEncoder(nn.Module):
 
         combined = torch.cat([vision_encoded, sound_encoded, smell_encoded], dim=1)
         return self.fusion(combined)
+
+    def encode_sensory(self, vision: np.ndarray, sound: np.ndarray, smell: np.ndarray) -> np.ndarray:
+        """
+        Удобный метод для кодирования сенсорных данных.
+        """
+        vision_tensor = torch.FloatTensor(vision).unsqueeze(0)
+        sound_tensor = torch.FloatTensor(sound).unsqueeze(0)
+        smell_tensor = torch.FloatTensor(smell).unsqueeze(0)
+
+        with torch.no_grad():
+            combined = self.forward(vision_tensor, sound_tensor, smell_tensor)
+
+        return combined.numpy().flatten()

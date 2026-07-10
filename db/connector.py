@@ -2,6 +2,7 @@
 import json
 import psycopg2
 import psycopg2.extras
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 def get_connection(host='localhost', port=5432, dbname='postgres', user='postgres', password='postgres'):
     """Возвращает соединение с БД."""

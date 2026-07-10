@@ -1,6 +1,6 @@
 # models/reflex_module.py
 from __future__ import annotations
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple, Any, Union
 from core.base_strategy import Perception, ActionSuggestion
 
 class ReflexModule:

@@ -10,6 +10,7 @@ from core.world import World
 from core.evolution import EvolutionEngine
 from models.gan import GAN, PatternRepository
 import pandas as pd
+from typing import List, Dict, Optional, Tuple, Any, Union
 
 
 class EvolutionComparison:

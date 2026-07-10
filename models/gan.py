@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
-from typing import List, Tuple, Dict, Any, Optional
+from typing import List, Dict, Optional, Tuple, Any, Union
 import random
 import json
 from collections import deque
