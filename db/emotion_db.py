@@ -592,28 +592,3 @@ class EmotionDB:
 
         return graph_data
 
-
-    # def load_full_graph(self) -> Dict[str, Any]:
-    #     """
-    #     Загружает полный биграф из БД.
-    #     Возвращает словарь с данными для восстановления EmotionGraph.
-    #     """
-    #     print("🔄 Загрузка биграфа из БД...")
-    #
-    #     graph_data = {
-    #         'events': self.load_events(),
-    #         'emotions': self.load_emotions(),
-    #         'causal_links': self.load_causal_links(),
-    #         'emotion_chain_links': self.load_emotion_chain_links(),
-    #         'event_emotion_links': self.load_event_emotion_links(),
-    #         'emotion_event_links': self.load_emotion_event_links()
-    #     }
-    #
-    #     print(f"✅ Загружено: {len(graph_data['events'])} событий, "
-    #           f"{len(graph_data['emotions'])} эмоций, "
-    #           f"{len(graph_data['causal_links'])} причинных связей, "
-    #           f"{len(graph_data['emotion_chain_links'])} цепочек эмоций, "
-    #           f"{len(graph_data['event_emotion_links'])} связей событие→эмоция, "
-    #           f"{len(graph_data['emotion_event_links'])} связей эмоция→событие")
-    #
-    #     return graph_data

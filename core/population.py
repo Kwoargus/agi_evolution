@@ -57,3 +57,19 @@ class Population:
 
         self.individuals = new_individuals
         self.generation += 1
+
+    def get_statistics(self) -> Dict:
+        """Возвращает статистику популяции."""
+        if not self.individuals:
+            return {'size': 0}
+
+        fitnesses = [ind.fitness for ind in self.individuals if hasattr(ind, 'fitness')]
+
+        return {
+            'size': len(self.individuals),
+            'max_fitness': max(fitnesses) if fitnesses else 0,
+            'min_fitness': min(fitnesses) if fitnesses else 0,
+            'avg_fitness': sum(fitnesses) / len(fitnesses) if fitnesses else 0,
+            'alive': sum(1 for ind in self.individuals if ind.alive),
+            'food_collected': sum(ind.food_collected for ind in self.individuals if hasattr(ind, 'food_collected'))
+        }

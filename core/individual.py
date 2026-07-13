@@ -71,6 +71,13 @@ class Individual:
         self.food_collected = 0  # счётчик собранной еды
         self.total_reward = 0.0  # суммарная награда за эпизод
 
+        # НОВОЕ: счётчики для обратной связи
+        self.reflex_stats = {}  # {action_id: {'success': 0, 'total': 0}}
+        self.instinct_stats = {}  # {pattern_id: {'success': 0, 'total': 0}}
+
+        # НОВОЕ: флаги для приоритетов
+        self._has_reflex_action = False
+        self._has_instinct_action = False
 
     # ---------- Взаимодействие с объектами ----------
     def setInform(self, obj):
@@ -256,54 +263,147 @@ class Individual:
                 self.frame_counter = 0
                 print("Возврат к обходу")
 
-    # ---------- Основной цикл обновления ----------
     def update(self, world):
+        """ОСНОВНОЙ ЦИКЛ с правильным порядком и приоритетами."""
+
+        # ============================================================
+        # УРОВЕНЬ 1: ИНСТИНКТЫ (ВЫСШИЙ ПРИОРИТЕТ - ВЫЖИВАНИЕ)
+        # ============================================================
         if self.runaway_target:
-            self._update_runaway(world)
-            return
+            # Проверяем, достигли ли безопасного расстояния
+            if self._is_safe(world):
+                self.runaway_target = None
+                print("✅ Безопасно, возврат к исследованию")
+            else:
+                self._update_runaway(world)
+                self._has_instinct_action = True
+                return
 
-        if not self.alive:
-            return
+        # ============================================================
+        # УРОВЕНЬ 2: РЕФЛЕКСЫ (СРЕДНИЙ ПРИОРИТЕТ)
+        # ============================================================
+        state = world.get_state(self)
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
-        self.frame_counter += 1
-        if self.frame_counter < self.move_delay:
-            return
-        self.frame_counter = 0
+        # Проверяем все соседние клетки
+        for (dx, dz) in dirs:
+            check_x = self.x + dx * self.step_size
+            check_z = self.z + dz * self.step_size
+            obj = world.get_object_at(check_x, check_z)
 
+            if obj:
+                self.setInform(obj)
+                perception = Perception(self.nearby_params.copy())
+
+                # Получаем пороги из генома
+                thresholds = self.genome.get('reflex_thresholds', {})
+
+                suggestion = self.reflex_module.get_best_action(
+                    perception,
+                    thresholds
+                )
+
+                if suggestion:
+                    # ВЫПОЛНЯЕМ РЕФЛЕКС
+                    self.execute_action(suggestion.action_id, world, state)
+
+                    # Сохраняем результат для обратной связи
+                    self._has_reflex_action = True
+                    self._record_reflex_outcome(suggestion.action_id, True)
+
+                    # Сохраняем опыт
+                    next_state = world.get_state(self)
+                    self.add_experience(state, suggestion.action_id, 1.0, next_state)
+                    return  # Рефлекс выполнен, выходим
+
+        # ============================================================
+        # УРОВЕНЬ 3: ИССЛЕДОВАНИЕ (НИЗШИЙ ПРИОРИТЕТ)
+        # ============================================================
+        self._explore(world)
+
+    def _is_safe(self, world) -> bool:
+        """Проверяет, безопасно ли当前位置."""
+        # Проверяем, нет ли рядом опасных объектов
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        for (dx, dz) in dirs:
+            check_x = self.x + dx * self.step_size * 3
+            check_z = self.z + dz * self.step_size * 3
+            obj = world.get_object_at(check_x, check_z)
+            if obj and hasattr(obj, 'danger_level') and obj.danger_level > 0.5:
+                return False
+        return True
+
+    def _record_reflex_outcome(self, action_id: str, success: bool):
+        """Записывает результат рефлекса для обратной связи."""
+        if action_id not in self.reflex_stats:
+            self.reflex_stats[action_id] = {'success': 0, 'total': 0}
+        self.reflex_stats[action_id]['total'] += 1
+        if success:
+            self.reflex_stats[action_id]['success'] += 1
+
+    def _record_instinct_outcome(self, pattern_id: str, success: bool):
+        """Записывает результат инстинкта для обратной связи."""
+        if pattern_id not in self.instinct_stats:
+            self.instinct_stats[pattern_id] = {'success': 0, 'total': 0}
+        self.instinct_stats[pattern_id]['total'] += 1
+        if success:
+            self.instinct_stats[pattern_id]['success'] += 1
+
+    def get_reflex_success_rate(self, action_id: str) -> float:
+        """Возвращает процент успешности рефлекса."""
+        stats = self.reflex_stats.get(action_id, {'success': 0, 'total': 0})
+        if stats['total'] == 0:
+            return 0.0
+        return stats['success'] / stats['total']
+
+    def _explore(self, world):
+        """
+        УРОВЕНЬ 3: ИССЛЕДОВАНИЕ (низший приоритет).
+        Выполняется, если нет активных инстинктов и рефлексов.
+        """
         # Получаем состояние до действия
         state = world.get_state(self)
 
         dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         candidates = []
         fallback = []
+
         for (dx, dz) in dirs:
             next_x = self.x + dx * self.step_size
             next_z = self.z + dz * self.step_size
+
+            # Проверяем границы
             if not world.is_within_world(next_x, next_z):
                 continue
+
+            # Проверяем, не занято ли объектом
             if world.get_object_at(next_x, next_z) is not None:
                 continue
+
             node1 = (self.x, self.z)
             node2 = (next_x, next_z)
             if node1 > node2:
                 node1, node2 = node2, node1
+
+            # Предпочитаем непосещённые узлы
             if (node1, node2) not in self.visited_edges_set:
                 candidates.append((dx, dz))
             else:
                 fallback.append((dx, dz))
 
+        # Выбираем направление
         if candidates:
             dx, dz = random.choice(candidates)
-            reward_step = 1.0  # новый узел
-            action_idx = dirs.index((dx, dz))  # 0-3
+            reward_step = 1.0  # Новый узел
+            action_idx = dirs.index((dx, dz))
         elif fallback:
             dx, dz = random.choice(fallback)
-            reward_step = -0.1  # штраф за повтор
+            reward_step = -0.1  # Штраф за повтор
             action_idx = dirs.index((dx, dz))
         else:
+            # Нет доступных направлений - бот застрял
             self.alive = False
             reward_step = -1.0
-            # Добавляем опыт с отрицательной наградой (действие 0 = стоять на месте)
             next_state = world.get_state(self)
             self.add_experience(state, 0, reward_step, next_state)
             self.total_reward += reward_step
@@ -332,30 +432,118 @@ class Individual:
             if obj:
                 self.setInform(obj)
                 perception = Perception(self.nearby_params.copy())
-                suggestion = self.reflex_module.get_best_action(perception)
+                thresholds = self.genome.get('reflex_thresholds', {})
+                suggestion = self.reflex_module.get_best_action(perception, thresholds)
                 if suggestion:
-                    # Передаём состояние до выполнения рефлекса (оно уже не актуально, но для grab используем текущее)
-                    # Для простоты передадим текущее состояние (после шага) – но для grab важно, чтобы объект ещё был, но мы уже переместились.
-                    # Лучше передать состояние до шага, но после шага состояние другое. Мы можем сохранить state до шага,
-                    # но для рефлекса grab нам нужно состояние до захвата. Поэтому передадим state (которое было до шага) – но оно уже не соответствует текущему.
-                    # Более правильно: вызов _grab_object использует текущее состояние, и мы передадим в него state (которое было до шага).
-                    # Однако после шага мы уже переместились, и объект может быть не рядом. Поэтому логика должна быть пересмотрена.
-                    # Упростим: будем вызывать execute_action с состоянием до шага, но если рефлекс grab, то он должен срабатывать до перемещения?
-                    # Текущая логика: сначала шаг, потом проверка объектов. Это неправильно, потому что объект должен быть обнаружен до шага.
-                    # Рекомендую перестроить логику: сначала проверять объекты, потом делать шаг.
-                    # Но чтобы не переписывать всё сейчас, оставим как есть, и для grab будем использовать состояние до шага,
-                    # но тогда нужно вызывать _grab_object до перемещения. Я изменю порядок: сначала проверка объектов, потом шаг.
-                    # Однако это потребует значительных изменений. Предложу упрощённый вариант: пока собираем переходы только для шагов,
-                    # а для grab добавим отдельный переход в _grab_object (мы уже это сделали).
-                    # Поэтому в этом месте не будем добавлять опыт для рефлексов, только для шагов.
-                    self.execute_action(suggestion.action_id, world, state)  # передаём state
+                    self.execute_action(suggestion.action_id, world, state)
+                    self._has_reflex_action = True
                 break
 
-                print(f"Object detected: {self.nearby_params}, perception: {perception}")
-
+        # Проверяем лимит шагов
         if len(self.visited_nodes) > self.max_steps:
             self.alive = False
             print("Достигнут лимит шагов")
+
+    # ---------- Основной цикл обновления ----------
+    # def update(self, world):
+    #     if self.runaway_target:
+    #         self._update_runaway(world)
+    #         return
+    #
+    #     if not self.alive:
+    #         return
+    #
+    #     self.frame_counter += 1
+    #     if self.frame_counter < self.move_delay:
+    #         return
+    #     self.frame_counter = 0
+    #
+    #     # Получаем состояние до действия
+    #     state = world.get_state(self)
+    #
+    #     dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    #     candidates = []
+    #     fallback = []
+    #     for (dx, dz) in dirs:
+    #         next_x = self.x + dx * self.step_size
+    #         next_z = self.z + dz * self.step_size
+    #         if not world.is_within_world(next_x, next_z):
+    #             continue
+    #         if world.get_object_at(next_x, next_z) is not None:
+    #             continue
+    #         node1 = (self.x, self.z)
+    #         node2 = (next_x, next_z)
+    #         if node1 > node2:
+    #             node1, node2 = node2, node1
+    #         if (node1, node2) not in self.visited_edges_set:
+    #             candidates.append((dx, dz))
+    #         else:
+    #             fallback.append((dx, dz))
+    #
+    #     if candidates:
+    #         dx, dz = random.choice(candidates)
+    #         reward_step = 1.0  # новый узел
+    #         action_idx = dirs.index((dx, dz))  # 0-3
+    #     elif fallback:
+    #         dx, dz = random.choice(fallback)
+    #         reward_step = -0.1  # штраф за повтор
+    #         action_idx = dirs.index((dx, dz))
+    #     else:
+    #         self.alive = False
+    #         reward_step = -1.0
+    #         # Добавляем опыт с отрицательной наградой (действие 0 = стоять на месте)
+    #         next_state = world.get_state(self)
+    #         self.add_experience(state, 0, reward_step, next_state)
+    #         self.total_reward += reward_step
+    #         return
+    #
+    #     # Делаем шаг
+    #     next_x = self.x + dx * self.step_size
+    #     next_z = self.z + dz * self.step_size
+    #     self.visited_edges.append(((self.x, self.z), (next_x, next_z)))
+    #     self._add_edge((self.x, self.z), (next_x, next_z))
+    #     self.x, self.z = next_x, next_z
+    #     self.visited_nodes.append((self.x, self.z))
+    #
+    #     # Получаем новое состояние
+    #     next_state = world.get_state(self)
+    #
+    #     # Добавляем переход в буфер
+    #     self.add_experience(state, action_idx, reward_step, next_state)
+    #     self.total_reward += reward_step
+    #
+    #     # Проверяем объекты в соседних клетках (рефлексы)
+    #     for (dx_check, dz_check) in dirs:
+    #         check_x = self.x + dx_check * self.step_size
+    #         check_z = self.z + dz_check * self.step_size
+    #         obj = world.get_object_at(check_x, check_z)
+    #         if obj:
+    #             self.setInform(obj)
+    #             perception = Perception(self.nearby_params.copy())
+    #             suggestion = self.reflex_module.get_best_action(perception)
+    #             if suggestion:
+    #                 # Передаём состояние до выполнения рефлекса (оно уже не актуально, но для grab используем текущее)
+    #                 # Для простоты передадим текущее состояние (после шага) – но для grab важно, чтобы объект ещё был, но мы уже переместились.
+    #                 # Лучше передать состояние до шага, но после шага состояние другое. Мы можем сохранить state до шага,
+    #                 # но для рефлекса grab нам нужно состояние до захвата. Поэтому передадим state (которое было до шага) – но оно уже не соответствует текущему.
+    #                 # Более правильно: вызов _grab_object использует текущее состояние, и мы передадим в него state (которое было до шага).
+    #                 # Однако после шага мы уже переместились, и объект может быть не рядом. Поэтому логика должна быть пересмотрена.
+    #                 # Упростим: будем вызывать execute_action с состоянием до шага, но если рефлекс grab, то он должен срабатывать до перемещения?
+    #                 # Текущая логика: сначала шаг, потом проверка объектов. Это неправильно, потому что объект должен быть обнаружен до шага.
+    #                 # Рекомендую перестроить логику: сначала проверять объекты, потом делать шаг.
+    #                 # Но чтобы не переписывать всё сейчас, оставим как есть, и для grab будем использовать состояние до шага,
+    #                 # но тогда нужно вызывать _grab_object до перемещения. Я изменю порядок: сначала проверка объектов, потом шаг.
+    #                 # Однако это потребует значительных изменений. Предложу упрощённый вариант: пока собираем переходы только для шагов,
+    #                 # а для grab добавим отдельный переход в _grab_object (мы уже это сделали).
+    #                 # Поэтому в этом месте не будем добавлять опыт для рефлексов, только для шагов.
+    #                 self.execute_action(suggestion.action_id, world, state)  # передаём state
+    #             break
+    #
+    #             print(f"Object detected: {self.nearby_params}, perception: {perception}")
+    #
+    #     if len(self.visited_nodes) > self.max_steps:
+    #         self.alive = False
+    #         print("Достигнут лимит шагов")
 
     # ---------- Фитнес ----------
     def calculate_fitness(self):

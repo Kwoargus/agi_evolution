@@ -5,7 +5,7 @@ from core.individual import Individual
 from core.objects import GameObject, Predator, Food
 from core.genome import Genome
 from db.connector import load_reflex_rules, load_instinct_patterns, load_best_genome
-from typing import List, Dict, Optional, Tuple, Any, Union
+
 
 if __name__ == "__main__":
     # Загружаем правила из БД (они нужны для работы рефлексов и инстинктов) если в БД пусто, то берём дефолтный хардкод

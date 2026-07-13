@@ -1,0 +1,906 @@
+
+-- agi_evolution.causal_links definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.causal_links;
+
+CREATE TABLE agi_evolution.causal_links (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	source_id uuid NULL,
+	target_id uuid NULL,
+	weight float8 DEFAULT 1.0 NULL,
+	delay float8 DEFAULT 0.0 NULL,
+	probability float8 DEFAULT 0.5 NULL,
+	usage_count int4 DEFAULT 0 NULL,
+	success_count int4 DEFAULT 0 NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT causal_links_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_causal_links_source ON agi_evolution.causal_links USING btree (source_id);
+CREATE INDEX idx_causal_links_target ON agi_evolution.causal_links USING btree (target_id);
+
+
+-- agi_evolution.causal_links foreign keys
+
+ALTER TABLE agi_evolution.causal_links ADD CONSTRAINT causal_links_source_id_fkey FOREIGN KEY (source_id) REFERENCES agi_evolution.emotion_events(id);
+ALTER TABLE agi_evolution.causal_links ADD CONSTRAINT causal_links_target_id_fkey FOREIGN KEY (target_id) REFERENCES agi_evolution.emotion_events(id);
+
+
+
+-- agi_evolution.combinations definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.combinations;
+
+CREATE TABLE agi_evolution.combinations (
+	id varchar(50) NOT NULL,
+	node_ids _text DEFAULT '{}'::text[] NULL,
+	edge_ids _text DEFAULT '{}'::text[] NULL,
+	properties _text DEFAULT '{}'::text[] NULL,
+	score float8 DEFAULT 0.0 NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT combinations_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_combinations_properties ON agi_evolution.combinations USING gin (properties);
+
+
+-- agi_evolution.emotion_chain_links definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.emotion_chain_links;
+
+CREATE TABLE agi_evolution.emotion_chain_links (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	source_id uuid NULL,
+	target_id uuid NULL,
+	weight float8 DEFAULT 1.0 NULL,
+	intensity_amplification float8 DEFAULT 1.0 NULL,
+	threshold float8 DEFAULT 0.3 NULL,
+	usage_count int4 DEFAULT 0 NULL,
+	success_count int4 DEFAULT 0 NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT emotion_chain_links_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_emotion_chain_source ON agi_evolution.emotion_chain_links USING btree (source_id);
+CREATE INDEX idx_emotion_chain_target ON agi_evolution.emotion_chain_links USING btree (target_id);
+
+
+-- agi_evolution.emotion_chain_links foreign keys
+
+ALTER TABLE agi_evolution.emotion_chain_links ADD CONSTRAINT emotion_chain_links_source_id_fkey FOREIGN KEY (source_id) REFERENCES agi_evolution.emotion_responses(id);
+ALTER TABLE agi_evolution.emotion_chain_links ADD CONSTRAINT emotion_chain_links_target_id_fkey FOREIGN KEY (target_id) REFERENCES agi_evolution.emotion_responses(id);
+
+
+-- agi_evolution.emotion_event_links definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.emotion_event_links;
+
+CREATE TABLE agi_evolution.emotion_event_links (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	source_id uuid NULL,
+	target_id uuid NULL,
+	weight float8 DEFAULT 1.0 NULL,
+	probability float8 DEFAULT 0.5 NULL,
+	action_urgency float8 DEFAULT 0.5 NULL,
+	action_duration float8 DEFAULT 1.0 NULL,
+	usage_count int4 DEFAULT 0 NULL,
+	success_count int4 DEFAULT 0 NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT emotion_event_links_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_emotion_event_source ON agi_evolution.emotion_event_links USING btree (source_id);
+CREATE INDEX idx_emotion_event_target ON agi_evolution.emotion_event_links USING btree (target_id);
+
+
+-- agi_evolution.emotion_event_links foreign keys
+
+ALTER TABLE agi_evolution.emotion_event_links ADD CONSTRAINT emotion_event_links_source_id_fkey FOREIGN KEY (source_id) REFERENCES agi_evolution.emotion_responses(id);
+ALTER TABLE agi_evolution.emotion_event_links ADD CONSTRAINT emotion_event_links_target_id_fkey FOREIGN KEY (target_id) REFERENCES agi_evolution.emotion_events(id);
+
+
+
+
+-- agi_evolution.emotion_events definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.emotion_events;
+
+CREATE TABLE agi_evolution.emotion_events (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	description text NULL,
+	"timestamp" float8 NULL,
+	context jsonb DEFAULT '{}'::jsonb NULL,
+	participants _text DEFAULT '{}'::text[] NULL,
+	embedding _float8 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT emotion_events_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_emotion_events_context ON agi_evolution.emotion_events USING gin (context);
+
+
+-- agi_evolution.emotion_responses definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.emotion_responses;
+
+CREATE TABLE agi_evolution.emotion_responses (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	emotion_type varchar(30) NOT NULL,
+	intensity float8 NULL,
+	valence float8 NULL,
+	arousal float8 NULL,
+	context jsonb DEFAULT '{}'::jsonb NULL,
+	"source" varchar(50) NULL,
+	embedding _float8 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT emotion_responses_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_emotion_responses_context ON agi_evolution.emotion_responses USING gin (context);
+CREATE INDEX idx_emotion_responses_type ON agi_evolution.emotion_responses USING btree (emotion_type);
+
+
+-- agi_evolution.emotion_types definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.emotion_types;
+
+CREATE TABLE agi_evolution.emotion_types (
+	id varchar(30) NOT NULL,
+	"name" varchar(50) NOT NULL,
+	description text NULL,
+	default_intensity float8 NULL,
+	default_valence float8 NULL,
+	default_arousal float8 NULL,
+	category varchar(30) NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT emotion_types_pkey PRIMARY KEY (id)
+);
+
+-- agi_evolution.event_emotion_links definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.event_emotion_links;
+
+CREATE TABLE agi_evolution.event_emotion_links (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	source_id uuid NULL,
+	target_id uuid NULL,
+	weight float8 DEFAULT 1.0 NULL,
+	probability float8 DEFAULT 0.5 NULL,
+	intensity_factor float8 DEFAULT 1.0 NULL,
+	valence_shift float8 DEFAULT 0.0 NULL,
+	conditions jsonb DEFAULT '[]'::jsonb NULL,
+	usage_count int4 DEFAULT 0 NULL,
+	success_count int4 DEFAULT 0 NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT event_emotion_links_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_event_emotion_source ON agi_evolution.event_emotion_links USING btree (source_id);
+CREATE INDEX idx_event_emotion_target ON agi_evolution.event_emotion_links USING btree (target_id);
+
+
+-- agi_evolution.event_emotion_links foreign keys
+
+ALTER TABLE agi_evolution.event_emotion_links ADD CONSTRAINT event_emotion_links_source_id_fkey FOREIGN KEY (source_id) REFERENCES agi_evolution.emotion_events(id);
+ALTER TABLE agi_evolution.event_emotion_links ADD CONSTRAINT event_emotion_links_target_id_fkey FOREIGN KEY (target_id) REFERENCES agi_evolution.emotion_responses(id);
+
+
+-- agi_evolution.gan_checkpoints definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.gan_checkpoints;
+
+CREATE TABLE agi_evolution.gan_checkpoints (
+	id serial4 NOT NULL,
+	generation_num int4 NULL,
+	g_loss float8 NULL,
+	d_loss float8 NULL,
+	buffer_size int4 NULL,
+	patterns_count int4 NULL,
+	checkpoint_data jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT gan_checkpoints_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_gan_checkpoints_gen ON agi_evolution.gan_checkpoints USING btree (generation_num);
+
+
+-- agi_evolution.gan_training_stats definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.gan_training_stats;
+
+CREATE TABLE agi_evolution.gan_training_stats (
+	id serial4 NOT NULL,
+	generation_id int4 NULL,
+	training_epoch int4 NULL,
+	avg_g_loss float8 NULL,
+	avg_d_loss float8 NULL,
+	best_pattern_score float8 NULL,
+	avg_pattern_score float8 NULL,
+	patterns_generated int4 NULL,
+	patterns_stored int4 NULL,
+	buffer_size int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT gan_training_stats_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_gan_stats_generation ON agi_evolution.gan_training_stats USING btree (generation_id);
+
+
+-- agi_evolution.gan_training_stats foreign keys
+
+ALTER TABLE agi_evolution.gan_training_stats ADD CONSTRAINT gan_training_stats_generation_id_fkey FOREIGN KEY (generation_id) REFERENCES agi_evolution.generations(id);
+
+
+-- agi_evolution.generated_patterns definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.generated_patterns;
+
+CREATE TABLE agi_evolution.generated_patterns (
+	id serial4 NOT NULL,
+	generation_id int4 NULL,
+	pattern_vector jsonb NULL,
+	pattern_score float8 NULL,
+	decoded_pattern jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT generated_patterns_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_patterns_generation ON agi_evolution.generated_patterns USING btree (generation_id);
+
+
+-- agi_evolution.generated_patterns foreign keys
+
+ALTER TABLE agi_evolution.generated_patterns ADD CONSTRAINT generated_patterns_generation_id_fkey FOREIGN KEY (generation_id) REFERENCES agi_evolution.generations(id);
+
+
+-- agi_evolution.generations definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.generations;
+
+CREATE TABLE agi_evolution.generations (
+	id serial4 NOT NULL,
+	generation_num int4 NULL,
+	best_fitness float8 NULL,
+	avg_fitness float8 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT generations_pkey PRIMARY KEY (id)
+);
+
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (1,61.0,61.0,'2026-07-05 11:46:03.776967'),
+	 (1,61.0,61.0,'2026-07-05 11:48:49.558504'),
+	 (2,61.0,58.6,'2026-07-05 11:48:49.865554'),
+	 (3,61.0,58.6,'2026-07-05 11:48:49.988023'),
+	 (4,101.0,63.666666666666664,'2026-07-05 11:48:50.139689'),
+	 (5,101.0,67.66666666666667,'2026-07-05 11:48:50.264165'),
+	 (6,101.0,76.0,'2026-07-05 11:48:50.426004'),
+	 (7,151.0,84.33333333333333,'2026-07-05 11:48:50.572184'),
+	 (8,301.0,141.0,'2026-07-05 11:48:50.789902'),
+	 (9,301.0,191.0,'2026-07-05 11:48:50.98849');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (10,301.0,301.0,'2026-07-05 11:48:51.202996'),
+	 (11,301.0,301.0,'2026-07-05 11:48:51.419227'),
+	 (12,301.0,282.3333333333333,'2026-07-05 11:48:51.645275'),
+	 (13,301.0,291.0,'2026-07-05 11:48:51.8715'),
+	 (14,301.0,281.0,'2026-07-05 11:48:52.097934'),
+	 (15,301.0,301.0,'2026-07-05 11:48:52.385014'),
+	 (16,301.0,301.0,'2026-07-05 11:48:52.616206'),
+	 (17,301.0,286.6666666666667,'2026-07-05 11:48:52.840269'),
+	 (18,301.0,301.0,'2026-07-05 11:48:53.074851'),
+	 (19,301.0,281.0,'2026-07-05 11:48:53.308094');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (20,301.0,301.0,'2026-07-05 11:48:53.547694'),
+	 (21,301.0,301.0,'2026-07-05 11:48:53.844029'),
+	 (22,301.0,291.0,'2026-07-05 11:48:54.086873'),
+	 (23,301.0,286.6666666666667,'2026-07-05 11:48:54.312691'),
+	 (24,301.0,301.0,'2026-07-05 11:48:54.549272'),
+	 (25,301.0,291.0,'2026-07-05 11:48:54.780674'),
+	 (26,301.0,282.3333333333333,'2026-07-05 11:48:55.008049'),
+	 (27,301.0,296.6666666666667,'2026-07-05 11:48:55.243642'),
+	 (28,301.0,301.0,'2026-07-05 11:48:55.519533'),
+	 (29,301.0,291.0,'2026-07-05 11:48:55.754247');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (30,301.0,291.0,'2026-07-05 11:48:55.981329'),
+	 (1,61.0,61.0,'2026-07-07 15:43:50.612323'),
+	 (2,61.0,61.0,'2026-07-07 15:43:50.937927'),
+	 (3,61.0,59.8,'2026-07-07 15:43:51.060437'),
+	 (4,101.0,61.266666666666666,'2026-07-07 15:43:51.215668'),
+	 (5,101.0,74.13333333333334,'2026-07-07 15:43:51.346389'),
+	 (6,101.0,97.66666666666667,'2026-07-07 15:43:51.520956'),
+	 (7,151.0,102.66666666666667,'2026-07-07 15:43:51.727056'),
+	 (8,151.0,114.33333333333333,'2026-07-07 15:43:51.897573'),
+	 (9,151.0,151.0,'2026-07-07 15:43:52.091114');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (10,301.0,157.66666666666666,'2026-07-07 15:43:52.274232'),
+	 (11,301.0,177.66666666666666,'2026-07-07 15:43:52.467128'),
+	 (12,301.0,287.6666666666667,'2026-07-07 15:43:52.67757'),
+	 (13,301.0,301.0,'2026-07-07 15:43:52.879999'),
+	 (14,301.0,277.6666666666667,'2026-07-07 15:43:53.086882'),
+	 (15,301.0,294.3333333333333,'2026-07-07 15:43:53.353535'),
+	 (16,301.0,274.3333333333333,'2026-07-07 15:43:53.586185'),
+	 (17,301.0,297.6666666666667,'2026-07-07 15:43:53.846337'),
+	 (18,301.0,277.6666666666667,'2026-07-07 15:43:54.102966'),
+	 (19,301.0,294.3333333333333,'2026-07-07 15:43:54.368086');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (20,301.0,301.0,'2026-07-07 15:43:54.636172'),
+	 (21,301.0,281.0,'2026-07-07 15:43:54.895249'),
+	 (22,301.0,297.6666666666667,'2026-07-07 15:43:55.211913'),
+	 (23,301.0,294.3333333333333,'2026-07-07 15:43:55.435656'),
+	 (24,301.0,301.0,'2026-07-07 15:43:55.642779'),
+	 (25,301.0,294.3333333333333,'2026-07-07 15:43:55.855734'),
+	 (26,301.0,267.6666666666667,'2026-07-07 15:43:56.066123'),
+	 (27,301.0,301.0,'2026-07-07 15:43:56.284245'),
+	 (28,301.0,301.0,'2026-07-07 15:43:56.597679'),
+	 (29,301.0,297.6666666666667,'2026-07-07 15:43:56.829118');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (30,301.0,297.6666666666667,'2026-07-07 15:43:57.057414'),
+	 (1,61.0,61.0,'2026-07-09 10:54:25.387451'),
+	 (1,61.0,61.0,'2026-07-09 10:58:00.332625'),
+	 (1,61.0,61.0,'2026-07-09 11:00:19.36897'),
+	 (1,61.0,61.0,'2026-07-09 11:08:02.328461'),
+	 (2,101.0,62.46666666666667,'2026-07-09 11:08:02.636464'),
+	 (3,101.0,76.66666666666667,'2026-07-09 11:08:02.772662'),
+	 (4,102.0,101.13333333333334,'2026-07-09 11:08:02.918848'),
+	 (5,101.0,101.0,'2026-07-09 11:08:03.080614'),
+	 (6,101.0,99.33333333333333,'2026-07-09 11:08:03.30218');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (7,101.0,99.33333333333333,'2026-07-09 11:08:03.463868'),
+	 (8,151.0,104.33333333333333,'2026-07-09 11:08:03.630055'),
+	 (9,301.0,137.66666666666666,'2026-07-09 11:08:03.813938'),
+	 (10,301.0,201.0,'2026-07-09 11:08:04.006423'),
+	 (11,301.0,291.0,'2026-07-09 11:08:04.214962'),
+	 (12,301.0,291.0,'2026-07-09 11:08:04.418554'),
+	 (13,301.0,291.0,'2026-07-09 11:08:04.631033'),
+	 (14,301.0,291.0,'2026-07-09 11:08:04.848729'),
+	 (15,301.0,287.6666666666667,'2026-07-09 11:08:05.112245'),
+	 (16,301.0,301.0,'2026-07-09 11:08:05.325762');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (17,301.0,297.6666666666667,'2026-07-09 11:08:05.54246'),
+	 (18,301.0,287.6666666666667,'2026-07-09 11:08:05.753752'),
+	 (19,301.0,297.6666666666667,'2026-07-09 11:08:05.975376'),
+	 (20,301.0,301.0,'2026-07-09 11:08:06.199749'),
+	 (21,301.0,294.3333333333333,'2026-07-09 11:08:06.473099'),
+	 (22,301.0,301.0,'2026-07-09 11:08:06.687496'),
+	 (23,301.0,291.0,'2026-07-09 11:08:06.905139'),
+	 (24,301.0,284.3333333333333,'2026-07-09 11:08:07.113537'),
+	 (25,301.0,297.6666666666667,'2026-07-09 11:08:07.337173'),
+	 (26,301.0,297.6666666666667,'2026-07-09 11:08:07.554166');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (27,301.0,301.0,'2026-07-09 11:08:07.832711'),
+	 (28,301.0,301.0,'2026-07-09 11:08:08.041906'),
+	 (29,301.0,291.0,'2026-07-09 11:08:08.251091'),
+	 (30,301.0,287.6666666666667,'2026-07-09 11:08:08.456101'),
+	 (1,61.0,61.0,'2026-07-09 11:16:33.61516'),
+	 (2,101.0,66.33333333333333,'2026-07-09 11:16:33.924055'),
+	 (3,101.0,87.33333333333333,'2026-07-09 11:16:34.056254'),
+	 (4,110.0,98.26666666666667,'2026-07-09 11:16:34.208616'),
+	 (5,151.0,104.73333333333333,'2026-07-09 11:16:34.369723'),
+	 (6,153.0,122.8,'2026-07-09 11:16:34.535788');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (7,151.0,147.66666666666666,'2026-07-09 11:16:34.699293'),
+	 (8,151.0,147.66666666666666,'2026-07-09 11:16:34.881259'),
+	 (9,151.0,147.66666666666666,'2026-07-09 11:16:35.064991'),
+	 (10,151.0,147.66666666666666,'2026-07-09 11:16:35.245451'),
+	 (11,151.0,147.66666666666666,'2026-07-09 11:16:35.427283'),
+	 (12,301.0,161.0,'2026-07-09 11:16:35.606155'),
+	 (13,301.0,167.66666666666666,'2026-07-09 11:16:35.78811'),
+	 (14,301.0,251.0,'2026-07-09 11:16:35.982996'),
+	 (15,301.0,295.6,'2026-07-09 11:16:36.241971'),
+	 (16,301.0,285.6,'2026-07-09 11:16:36.44519');
+INSERT INTO agi_evolution.generations (generation_num,best_fitness,avg_fitness,created_at) VALUES
+	 (17,301.0,297.6666666666667,'2026-07-09 11:16:36.666954'),
+	 (18,301.0,281.0,'2026-07-09 11:16:36.880916'),
+	 (19,301.0,301.0,'2026-07-09 11:16:37.091293'),
+	 (20,301.0,285.6,'2026-07-09 11:16:37.299539');
+
+
+-- agi_evolution.genomes definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.genomes;
+
+CREATE TABLE agi_evolution.genomes (
+	id serial4 NOT NULL,
+	generation_id int4 NULL,
+	genome_json jsonb NULL,
+	fitness float8 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT genomes_pkey PRIMARY KEY (id)
+);
+
+
+-- agi_evolution.genomes foreign keys
+
+ALTER TABLE agi_evolution.genomes ADD CONSTRAINT genomes_generation_id_fkey FOREIGN KEY (generation_id) REFERENCES agi_evolution.generations(id);
+
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (1,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-05 11:46:03.784968'),
+	 (2,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-05 11:48:49.571128'),
+	 (3,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-05 11:48:49.878094'),
+	 (4,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-05 11:48:50.000638'),
+	 (5,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.457756953380255, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9574012459337813}}',101.0,'2026-07-05 11:48:50.145049'),
+	 (6,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.457756953380255, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9574012459337813}}',101.0,'2026-07-05 11:48:50.276771'),
+	 (7,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.457756953380255, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9574012459337813}}',101.0,'2026-07-05 11:48:50.438958'),
+	 (8,'{"speed": 1.0, "max_steps": 750, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.46831771503519126, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0606647048481572, "avoid": 0.5, "move_on": 0.775744108486198}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.968050934450336}}',151.0,'2026-07-05 11:48:50.584683'),
+	 (9,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:50.802455'),
+	 (10,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:51.001313');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (11,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:51.207968'),
+	 (12,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:51.432173'),
+	 (13,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:51.658127'),
+	 (14,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:51.8842'),
+	 (15,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:52.11084'),
+	 (16,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:52.397853'),
+	 (17,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:52.628987'),
+	 (18,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:52.853373'),
+	 (19,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:53.087909'),
+	 (20,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:53.321073');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (21,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:53.560414'),
+	 (22,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:53.856868'),
+	 (23,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:54.099575'),
+	 (24,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:54.325568'),
+	 (25,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:54.562098'),
+	 (26,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:54.785581'),
+	 (27,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:55.02118'),
+	 (28,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:55.248746'),
+	 (29,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:55.532199'),
+	 (30,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:55.766994');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (31,'{"speed": 1.0, "max_steps": 625, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46303733420772314, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0303323524240786, "avoid": 0.5, "move_on": 0.787872054243099}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9627260901920587}}',301.0,'2026-07-05 11:48:55.994253'),
+	 (32,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-07 15:43:50.626147'),
+	 (33,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-07 15:43:50.950874'),
+	 (34,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-07 15:43:51.072993'),
+	 (35,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.3214904473113277, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-07 15:43:51.228802'),
+	 (36,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.3214904473113277, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-07 15:43:51.359195'),
+	 (37,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.3214904473113277, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-07 15:43:51.53396'),
+	 (38,'{"speed": 0.8277806134588018, "max_steps": 500, "step_size": 2.021133424394614, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.32057567587713176, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',151.0,'2026-07-07 15:43:51.741848'),
+	 (39,'{"speed": 0.8277806134588018, "max_steps": 500, "step_size": 2.021133424394614, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.32057567587713176, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',151.0,'2026-07-07 15:43:51.909952'),
+	 (40,'{"speed": 0.8277806134588018, "max_steps": 500, "step_size": 2.021133424394614, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.32057567587713176, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',151.0,'2026-07-07 15:43:52.103973');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (41,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:52.287351'),
+	 (42,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:52.480322'),
+	 (43,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:52.682825'),
+	 (44,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:52.893085'),
+	 (45,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:53.099546'),
+	 (46,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:53.366645'),
+	 (47,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:53.598868'),
+	 (48,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:53.859008'),
+	 (49,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:54.115857'),
+	 (50,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:54.380694');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (51,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:54.649196'),
+	 (52,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:54.908608'),
+	 (53,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:55.217374'),
+	 (54,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:55.448158'),
+	 (55,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:55.655654'),
+	 (56,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:55.868658'),
+	 (57,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:56.079072'),
+	 (58,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:56.297354'),
+	 (59,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:56.610319'),
+	 (60,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:56.841933');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (61,'{"speed": 0.9138903067294009, "max_steps": 500, "step_size": 2.010566712197307, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.30293690177874566, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-07 15:43:57.070787'),
+	 (62,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-09 10:54:25.400309'),
+	 (63,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-09 10:58:00.345437'),
+	 (64,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-09 11:00:19.38178'),
+	 (65,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-09 11:08:02.333788'),
+	 (66,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:08:02.649481'),
+	 (67,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:08:02.786058'),
+	 (68,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5825834603493227, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',102.0,'2026-07-09 11:08:02.931806'),
+	 (69,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5825834603493227, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:08:03.093605'),
+	 (70,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5825834603493227, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:08:03.315101');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (71,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5825834603493227, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:08:03.477131'),
+	 (72,'{"speed": 1.057435720269619, "max_steps": 250, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.03990772650025, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0237368833472478}}',151.0,'2026-07-09 11:08:03.643431'),
+	 (73,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:03.82704'),
+	 (74,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:04.019342'),
+	 (75,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:04.228005'),
+	 (76,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:04.431696'),
+	 (77,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:04.644536'),
+	 (78,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:04.862424'),
+	 (79,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:05.12525'),
+	 (80,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:05.338637');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (81,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:05.555285'),
+	 (82,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:05.766456'),
+	 (83,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:05.988198'),
+	 (84,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:06.212653'),
+	 (85,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:06.486095'),
+	 (86,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:06.700331'),
+	 (87,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:06.910106'),
+	 (88,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:07.126361'),
+	 (89,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:07.348413'),
+	 (90,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:07.567221');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (91,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:07.84545'),
+	 (92,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:08.054615'),
+	 (93,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:08.263865'),
+	 (94,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 0.9585680620503716, "avoid": 0.561937595261992, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',301.0,'2026-07-09 11:08:08.469153'),
+	 (95,'{"speed": 1.0, "max_steps": 500, "step_size": 2.0, "move_delay": 5, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',61.0,'2026-07-09 11:16:33.628294'),
+	 (96,'{"speed": 1.1683666712376921, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:16:33.937031'),
+	 (97,'{"speed": 1.1683666712376921, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.0, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 1.0}}',101.0,'2026-07-09 11:16:34.069459'),
+	 (98,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 3, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',110.0,'2026-07-09 11:16:34.221867'),
+	 (99,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',151.0,'2026-07-09 11:16:34.382533'),
+	 (100,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',153.0,'2026-07-09 11:16:34.548953');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (101,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',151.0,'2026-07-09 11:16:34.712624'),
+	 (102,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',151.0,'2026-07-09 11:16:34.894226'),
+	 (103,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',151.0,'2026-07-09 11:16:35.078031'),
+	 (104,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',151.0,'2026-07-09 11:16:35.258744'),
+	 (105,'{"speed": 1.084183335618846, "max_steps": 500, "step_size": 2.0, "move_delay": 2, "exploration_bias": 0.5, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.5, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',151.0,'2026-07-09 11:16:35.440545'),
+	 (106,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:35.619365'),
+	 (107,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:35.80083'),
+	 (108,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:35.995942'),
+	 (109,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:36.254944'),
+	 (110,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:36.458009');
+INSERT INTO agi_evolution.genomes (generation_id,genome_json,fitness,created_at) VALUES
+	 (111,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:36.679918'),
+	 (112,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:36.893986'),
+	 (113,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:37.104809'),
+	 (114,'{"speed": 1.1891983122330938, "max_steps": 500, "step_size": 2.0, "move_delay": 1, "exploration_bias": 0.46762886145727606, "exploration_rate": 0.05201286617726225, "reflex_priorities": {"grab": 1.0, "avoid": 0.4554933126612136, "move_on": 0.8}, "reflex_thresholds": {}, "instinct_priorities": {"run_away": 0.9147730476329092}}',301.0,'2026-07-09 11:16:37.313116');
+
+
+-- agi_evolution.hypotheses definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.hypotheses;
+
+CREATE TABLE agi_evolution.hypotheses (
+	id varchar(50) NOT NULL,
+	task_description text NULL,
+	source_combination_id varchar(50) NULL,
+	modifications _text DEFAULT '{}'::text[] NULL,
+	description text NULL,
+	predicted_score float8 DEFAULT 0.0 NULL,
+	actual_score float8 DEFAULT 0.0 NULL,
+	status varchar(30) DEFAULT 'proposed'::character varying NULL,
+	test_results jsonb DEFAULT '[]'::jsonb NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT hypotheses_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_hypotheses_status ON agi_evolution.hypotheses USING btree (status);
+
+
+-- agi_evolution.hypotheses foreign keys
+
+ALTER TABLE agi_evolution.hypotheses ADD CONSTRAINT hypotheses_source_combination_id_fkey FOREIGN KEY (source_combination_id) REFERENCES agi_evolution.combinations(id);
+
+-- agi_evolution.individual_knowledge_graphs definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.individual_knowledge_graphs;
+
+CREATE TABLE agi_evolution.individual_knowledge_graphs (
+	bot_id varchar(50) NOT NULL,
+	"name" varchar(100) NOT NULL,
+	description text NULL,
+	sync_status jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT individual_knowledge_graphs_pkey PRIMARY KEY (bot_id)
+);
+
+-- agi_evolution.individual_node_links definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.individual_node_links;
+
+CREATE TABLE agi_evolution.individual_node_links (
+	bot_id varchar(50) NOT NULL,
+	node_id varchar(50) NOT NULL,
+	confidence float8 DEFAULT 0.5 NULL,
+	usage_count int4 DEFAULT 0 NULL,
+	last_used timestamp NULL,
+	CONSTRAINT individual_node_links_pkey PRIMARY KEY (bot_id, node_id)
+);
+CREATE INDEX idx_individual_node_links_bot ON agi_evolution.individual_node_links USING btree (bot_id);
+
+
+-- agi_evolution.individual_node_links foreign keys
+
+ALTER TABLE agi_evolution.individual_node_links ADD CONSTRAINT individual_node_links_bot_id_fkey FOREIGN KEY (bot_id) REFERENCES agi_evolution.individual_knowledge_graphs(bot_id);
+ALTER TABLE agi_evolution.individual_node_links ADD CONSTRAINT individual_node_links_node_id_fkey FOREIGN KEY (node_id) REFERENCES agi_evolution.knowledge_nodes(id);
+
+-- agi_evolution.instinct_pattern definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.instinct_pattern;
+
+CREATE TABLE agi_evolution.instinct_pattern (
+	id int8 NOT NULL,
+	pattern jsonb NULL,
+	actions jsonb NULL,
+	success_rate float4 NULL,
+	usage_count int8 NULL,
+	last_used timestamp NULL,
+	CONSTRAINT instinct_patterns_pkey PRIMARY KEY (id)
+);
+
+INSERT INTO agi_evolution.instinct_pattern (id,pattern,actions,success_rate,usage_count,last_used) VALUES
+	 (0,'{"signals": {"sound": "loud crash", "vision": "bright_flash"}}','{"action": "run_away"}',NULL,NULL,NULL);
+
+
+-- agi_evolution.knowledge_edges definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.knowledge_edges;
+
+CREATE TABLE agi_evolution.knowledge_edges (
+	id varchar(50) NOT NULL,
+	source_id varchar(50) NULL,
+	target_id varchar(50) NULL,
+	edge_type varchar(50) NOT NULL,
+	weight float8 DEFAULT 0.5 NULL,
+	description text NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT knowledge_edges_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_knowledge_edges_source ON agi_evolution.knowledge_edges USING btree (source_id);
+CREATE INDEX idx_knowledge_edges_target ON agi_evolution.knowledge_edges USING btree (target_id);
+CREATE INDEX idx_knowledge_edges_type ON agi_evolution.knowledge_edges USING btree (edge_type);
+
+
+-- agi_evolution.knowledge_edges foreign keys
+
+ALTER TABLE agi_evolution.knowledge_edges ADD CONSTRAINT knowledge_edges_source_id_fkey FOREIGN KEY (source_id) REFERENCES agi_evolution.knowledge_nodes(id);
+ALTER TABLE agi_evolution.knowledge_edges ADD CONSTRAINT knowledge_edges_target_id_fkey FOREIGN KEY (target_id) REFERENCES agi_evolution.knowledge_nodes(id);
+
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_41292ebf','q_d587b9b5','mist_4e0e5684','related_to',0.6,'Подшипник related to Спиральная шпилька','{}','2026-07-12 21:04:06.654384','2026-07-12 21:04:06.654384'),
+	 ('mist_edge_828f5369','q_f63785b8','mist_6f058843','related_to',0.6,'Рычаг related to Насос','{}','2026-07-12 21:04:06.677278','2026-07-12 21:04:06.677278'),
+	 ('mist_edge_969e68ab','q_54e9ea08','mist_4e0e5684','related_to',0.6,'Вал related to Спиральная шпилька','{}','2026-07-12 21:04:06.705321','2026-07-12 21:04:06.705321'),
+	 ('mist_edge_49259c55','q_5cf3b9bd','q_c03313c0','related_to',0.6,'Шестерня related to Ремень','{}','2026-07-12 21:04:06.735454','2026-07-12 21:04:06.735454'),
+	 ('mist_edge_679a04cf','q_c03313c0','q_5008a288','related_to',0.6,'Ремень related to Пружина','{}','2026-07-12 21:04:06.754238','2026-07-12 21:04:06.754238'),
+	 ('mist_edge_09c24288','mist_4e0e5684','q_5cf3b9bd','related_to',0.6,'Спиральная шпилька related to Шестерня','{}','2026-07-12 21:04:06.773633','2026-07-12 21:04:06.773633'),
+	 ('mist_edge_9f1c0492','mist_217eb98b','q_f63785b8','related_to',0.6,'Клапаны газораспределения related to Рычаг','{}','2026-07-12 21:04:06.79416','2026-07-12 21:04:06.79416'),
+	 ('mist_edge_a11f5524','mist_502030c4','mist_fd65c761','related_to',0.6,'Ресора related to Колёса','{}','2026-07-12 21:04:06.810222','2026-07-12 21:04:06.810222'),
+	 ('mist_edge_0594eff7','q_9c14c410','mist_9bacee5a','related_to',0.6,'Резистор related to Индуктор','{}','2026-07-12 21:04:06.827854','2026-07-12 21:04:06.827854'),
+	 ('mist_edge_53b52663','q_ddfd2a55','q_adc4a19c','related_to',0.6,'Транзистор related to Диод','{}','2026-07-12 21:04:06.847203','2026-07-12 21:04:06.847203');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_4f451cba','q_adc4a19c','q_016cb1d5','related_to',0.6,'Диод related to Конденсатор','{}','2026-07-12 21:04:06.86934','2026-07-12 21:04:06.86934'),
+	 ('mist_edge_6c8bb073','mist_9bacee5a','q_ddfd2a55','related_to',0.6,'Индуктор related to Транзистор','{}','2026-07-12 21:04:06.891423','2026-07-12 21:04:06.891423'),
+	 ('mist_edge_18d201cb','q_e7b88f30','article_5d84dcd4','related_to',0.6,'Двигатель related to Воздушный змей','{}','2026-07-12 21:04:06.910276','2026-07-12 21:04:06.910276'),
+	 ('mist_edge_247edf95','q_bf2cff94','article_c0de28b8','related_to',0.6,'Фюзеляж related to Самолет','{}','2026-07-12 21:04:06.928114','2026-07-12 21:04:06.928114'),
+	 ('mist_edge_328ce915','q_100f624e','article_ef02eef7','related_to',0.6,'Крыло related to Биплан','{}','2026-07-12 21:04:06.944938','2026-07-12 21:04:06.944938'),
+	 ('mist_edge_4ffb0c41','article_e8d15e6a','q_e7b88f30','related_to',0.6,'Воздушный шар related to Двигатель','{}','2026-07-12 21:04:06.964646','2026-07-12 21:04:06.964646'),
+	 ('mist_edge_48afca21','article_5d84dcd4','article_e8d15e6a','related_to',0.6,'Воздушный змей related to Воздушный шар','{}','2026-07-12 21:04:06.981165','2026-07-12 21:04:06.981165'),
+	 ('mist_edge_db9f71ed','mist_e2655226','mist_2753e264','related_to',0.6,'Ракета-носитель related to Самолёт-лайнер','{}','2026-07-12 21:04:06.997797','2026-07-12 21:04:06.997797'),
+	 ('mist_edge_57ebbbaa','mist_2753e264','q_bf2cff94','related_to',0.6,'Самолёт-лайнер related to Фюзеляж','{}','2026-07-12 21:04:07.014098','2026-07-12 21:04:07.014098'),
+	 ('mist_edge_4819f553','mist_7d64010b','mist_5b66acf3','related_to',0.6,'Космический корабль related to Спутник','{}','2026-07-12 21:04:07.030112','2026-07-12 21:04:07.030112');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_d0157eec','q_8c959d74','q_8fdca40c','related_to',0.6,'Сталь related to Титан','{}','2026-07-12 21:04:07.046331','2026-07-12 21:04:07.046331'),
+	 ('mist_edge_add265c2','q_68159e8a','mist_28466d76','related_to',0.6,'Композит related to Полимеризация','{}','2026-07-12 21:04:07.062055','2026-07-12 21:04:07.062055'),
+	 ('mist_edge_dd29726b','q_8fdca40c','q_68159e8a','related_to',0.6,'Титан related to Композит','{}','2026-07-12 21:04:07.078221','2026-07-12 21:04:07.078221'),
+	 ('mist_edge_258195f7','mist_f4b03598','mist_28466d76','related_to',0.6,'Керамика related to Полимеризация','{}','2026-07-12 21:04:07.097889','2026-07-12 21:04:07.097889'),
+	 ('mist_edge_f9f05f68','mist_28466d76','mist_f5d5d406','related_to',0.6,'Полимеризация related to Стеклофибергласс','{}','2026-07-12 21:04:07.122029','2026-07-12 21:04:07.122029'),
+	 ('mist_edge_ca6cb8f5','q_95d29f47','q_5e48e488','related_to',0.6,'Пневматическая система related to Гидравлическая система','{}','2026-07-12 21:04:07.145592','2026-07-12 21:04:07.145592'),
+	 ('mist_edge_8bcf2f2b','q_a2ca8117','mist_579ea4ca','related_to',0.6,'Электрическая система related to Электрическая сеть','{}','2026-07-12 21:04:07.173936','2026-07-12 21:04:07.173936'),
+	 ('mist_edge_d5d5fab6','mist_579ea4ca','mist_d0375fda','related_to',0.6,'Электрическая сеть related to Теплообменник','{}','2026-07-12 21:04:07.195917','2026-07-12 21:04:07.195917'),
+	 ('mist_edge_03325780','mist_a25cd1c9','mist_579ea4ca','related_to',0.6,'Солнечная батарея related to Электрическая сеть','{}','2026-07-12 21:04:07.214222','2026-07-12 21:04:07.214222'),
+	 ('mist_edge_6d81847a','mist_f7f8d118','mist_a25cd1c9','related_to',0.6,'Водопроводная система related to Солнечная батарея','{}','2026-07-12 21:04:07.240076','2026-07-12 21:04:07.240076');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_a7a928f4','q_20542e62','q_a792bf4e','related_to',0.6,'Аккумулятор related to Турбина','{}','2026-07-12 21:04:07.26778','2026-07-12 21:04:07.26778'),
+	 ('mist_edge_7e270afe','q_9c542a8b','mist_6090ccd2','related_to',0.6,'Генератор related to Кинетическая энергия','{}','2026-07-12 21:04:07.295839','2026-07-12 21:04:07.295839'),
+	 ('mist_edge_aacb93c7','mist_4938a324','mist_6090ccd2','related_to',0.6,'Теплота related to Кинетическая энергия','{}','2026-07-12 21:04:07.316426','2026-07-12 21:04:07.316426'),
+	 ('mist_edge_46061ba2','mist_6090ccd2','q_20542e62','related_to',0.6,'Кинетическая энергия related to Аккумулятор','{}','2026-07-12 21:04:07.334636','2026-07-12 21:04:07.334636'),
+	 ('mist_edge_33ddf7d3','mist_13d895ea','mist_a44760a6','related_to',0.6,'Потенциальная энергия related to Электрическая энергия','{}','2026-07-12 21:04:07.345929','2026-07-12 21:04:07.345929'),
+	 ('mist_edge_484f254c','mist_53a5a7de','mist_4938a324','related_to',0.6,'Ядерная энергия related to Теплота','{}','2026-07-12 21:04:07.356289','2026-07-12 21:04:07.356289'),
+	 ('mist_edge_9e1dee3c','q_c7b6d11f','mist_0282367d','related_to',0.6,'Ферма related to Механизм висячей конструкции','{}','2026-07-12 21:04:07.367292','2026-07-12 21:04:07.367292'),
+	 ('mist_edge_9b878ef6','q_1b8283bc','mist_cff8c665','related_to',0.6,'Балка related to Двойная несущая стена','{}','2026-07-12 21:04:07.379484','2026-07-12 21:04:07.379484'),
+	 ('mist_edge_9ecd6efb','q_ae902010','mist_cff8c665','related_to',0.6,'Колонна related to Двойная несущая стена','{}','2026-07-12 21:04:07.401753','2026-07-12 21:04:07.401753'),
+	 ('mist_edge_6d39b6c2','mist_4155f491','mist_0efc9257','related_to',0.6,'Слон related to Крыша','{}','2026-07-12 21:04:07.417505','2026-07-12 21:04:07.417505');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_70f0e743','mist_42e30e66','mist_0282367d','related_to',0.6,'Арка related to Механизм висячей конструкции','{}','2026-07-12 21:04:07.428908','2026-07-12 21:04:07.428908'),
+	 ('mist_edge_96cbdf9e','mist_0efc9257','q_1b8283bc','related_to',0.6,'Крыша related to Балка','{}','2026-07-12 21:04:07.439662','2026-07-12 21:04:07.439662'),
+	 ('mist_edge_cee770ce','mist_0282367d','q_1b8283bc','related_to',0.6,'Механизм висячей конструкции related to Балка','{}','2026-07-12 21:04:07.4501','2026-07-12 21:04:07.4501'),
+	 ('mist_edge_d99aae14','mist_cff8c665','mist_0282367d','related_to',0.6,'Двойная несущая стена related to Механизм висячей конструкции','{}','2026-07-12 21:04:07.460751','2026-07-12 21:04:07.460751'),
+	 ('mist_edge_2242e587','article_a44e7bb6','article_ed731b86','related_to',0.6,'Воздух related to Ветер','{}','2026-07-12 21:04:07.471592','2026-07-12 21:04:07.471592'),
+	 ('mist_edge_7740b89c','q_d587b9b5','q_5cf3b9bd','related_to',0.6,'Подшипник related to Шестерня','{}','2026-07-12 21:04:06.66018','2026-07-12 21:04:06.66018'),
+	 ('mist_edge_9ec6e5bc','q_f63785b8','q_5cf3b9bd','related_to',0.6,'Рычаг related to Шестерня','{}','2026-07-12 21:04:06.684167','2026-07-12 21:04:06.684167'),
+	 ('mist_edge_c6b1235e','q_54e9ea08','q_5cf3b9bd','related_to',0.6,'Вал related to Шестерня','{}','2026-07-12 21:04:06.712752','2026-07-12 21:04:06.712752'),
+	 ('mist_edge_0e79da80','q_5cf3b9bd','q_43b224d3','related_to',0.6,'Шестерня related to Муфта','{}','2026-07-12 21:04:06.742455','2026-07-12 21:04:06.742455'),
+	 ('mist_edge_6ca4c2f8','mist_fd65c761','q_5cf3b9bd','related_to',0.6,'Колёса related to Шестерня','{}','2026-07-12 21:04:06.760089','2026-07-12 21:04:06.760089');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_f08306d9','mist_4e0e5684','mist_6f058843','related_to',0.6,'Спиральная шпилька related to Насос','{}','2026-07-12 21:04:06.780627','2026-07-12 21:04:06.780627'),
+	 ('mist_edge_a3d97dc9','mist_6f058843','q_c03313c0','related_to',0.6,'Насос related to Ремень','{}','2026-07-12 21:04:06.799476','2026-07-12 21:04:06.799476'),
+	 ('mist_edge_ac89ee5e','mist_502030c4','mist_217eb98b','related_to',0.6,'Ресора related to Клапаны газораспределения','{}','2026-07-12 21:04:06.815678','2026-07-12 21:04:06.815678'),
+	 ('mist_edge_fe1c3049','q_016cb1d5','mist_3e54abfb','related_to',0.6,'Конденсатор related to Трансформатор','{}','2026-07-12 21:04:06.83397','2026-07-12 21:04:06.83397'),
+	 ('mist_edge_3fcc0c91','q_ddfd2a55','q_9c14c410','related_to',0.6,'Транзистор related to Резистор','{}','2026-07-12 21:04:06.854229','2026-07-12 21:04:06.854229'),
+	 ('mist_edge_c025e3cb','mist_3e54abfb','q_016cb1d5','related_to',0.6,'Трансформатор related to Конденсатор','{}','2026-07-12 21:04:06.876864','2026-07-12 21:04:06.876864'),
+	 ('mist_edge_9c2cb2b1','mist_9bacee5a','q_016cb1d5','related_to',0.6,'Индуктор related to Конденсатор','{}','2026-07-12 21:04:06.898027','2026-07-12 21:04:06.898027'),
+	 ('mist_edge_f590a93d','q_f97804c5','article_c0de28b8','related_to',0.6,'Пропеллер related to Самолет','{}','2026-07-12 21:04:06.915569','2026-07-12 21:04:06.915569'),
+	 ('mist_edge_db620c91','q_bf2cff94','article_e8d15e6a','related_to',0.6,'Фюзеляж related to Воздушный шар','{}','2026-07-12 21:04:06.934263','2026-07-12 21:04:06.934263'),
+	 ('mist_edge_2df4a8a0','article_c0de28b8','mist_2753e264','related_to',0.6,'Самолет related to Самолёт-лайнер','{}','2026-07-12 21:04:06.951043','2026-07-12 21:04:06.951043');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_b629f868','article_e8d15e6a','mist_e2655226','related_to',0.6,'Воздушный шар related to Ракета-носитель','{}','2026-07-12 21:04:06.970611','2026-07-12 21:04:06.970611'),
+	 ('mist_edge_4cd750d9','article_ef02eef7','q_bf2cff94','related_to',0.6,'Биплан related to Фюзеляж','{}','2026-07-12 21:04:06.986329','2026-07-12 21:04:06.986329'),
+	 ('mist_edge_98dae6f9','mist_e2655226','article_5d84dcd4','related_to',0.6,'Ракета-носитель related to Воздушный змей','{}','2026-07-12 21:04:07.003419','2026-07-12 21:04:07.003419'),
+	 ('mist_edge_443bb4a8','mist_5b66acf3','q_100f624e','related_to',0.6,'Спутник related to Крыло','{}','2026-07-12 21:04:07.019566','2026-07-12 21:04:07.019566'),
+	 ('mist_edge_8f5363d5','mist_7d64010b','article_e8d15e6a','related_to',0.6,'Космический корабль related to Воздушный шар','{}','2026-07-12 21:04:07.035464','2026-07-12 21:04:07.035464'),
+	 ('mist_edge_dc391e1c','q_f6e94361','q_8c959d74','related_to',0.6,'Алюминий related to Сталь','{}','2026-07-12 21:04:07.051687','2026-07-12 21:04:07.051687'),
+	 ('mist_edge_91bf2546','q_68159e8a','q_8c959d74','related_to',0.6,'Композит related to Сталь','{}','2026-07-12 21:04:07.067338','2026-07-12 21:04:07.067338'),
+	 ('mist_edge_544ab0a2','mist_f5d5d406','q_f6e94361','related_to',0.6,'Стеклофибергласс related to Алюминий','{}','2026-07-12 21:04:07.084628','2026-07-12 21:04:07.084628'),
+	 ('mist_edge_e691c838','mist_f4b03598','q_8fdca40c','related_to',0.6,'Керамика related to Титан','{}','2026-07-12 21:04:07.105879','2026-07-12 21:04:07.105879'),
+	 ('mist_edge_8b247aad','q_5e48e488','q_a2ca8117','related_to',0.6,'Гидравлическая система related to Электрическая система','{}','2026-07-12 21:04:07.129713','2026-07-12 21:04:07.129713');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_8d3cee96','q_95d29f47','mist_579ea4ca','related_to',0.6,'Пневматическая система related to Электрическая сеть','{}','2026-07-12 21:04:07.154941','2026-07-12 21:04:07.154941'),
+	 ('mist_edge_6fd4537a','mist_d0375fda','q_5e48e488','related_to',0.6,'Теплообменник related to Гидравлическая система','{}','2026-07-12 21:04:07.182165','2026-07-12 21:04:07.182165'),
+	 ('mist_edge_b1e16d1a','mist_579ea4ca','q_a2ca8117','related_to',0.6,'Электрическая сеть related to Электрическая система','{}','2026-07-12 21:04:07.201397','2026-07-12 21:04:07.201397'),
+	 ('mist_edge_87a18042','mist_83002350','q_5e48e488','related_to',0.6,'Автоматизированная система управления related to Гидравлическая система','{}','2026-07-12 21:04:07.221952','2026-07-12 21:04:07.221952'),
+	 ('mist_edge_299a83a8','mist_f7f8d118','mist_83002350','related_to',0.6,'Водопроводная система related to Автоматизированная система управления','{}','2026-07-12 21:04:07.249345','2026-07-12 21:04:07.249345'),
+	 ('mist_edge_87e80d9c','q_a792bf4e','mist_a44760a6','related_to',0.6,'Турбина related to Электрическая энергия','{}','2026-07-12 21:04:07.278306','2026-07-12 21:04:07.278306'),
+	 ('mist_edge_e0b9027f','q_9c542a8b','mist_13d895ea','related_to',0.6,'Генератор related to Потенциальная энергия','{}','2026-07-12 21:04:07.30326','2026-07-12 21:04:07.30326'),
+	 ('mist_edge_ff4da6d7','mist_a44760a6','q_a792bf4e','related_to',0.6,'Электрическая энергия related to Турбина','{}','2026-07-12 21:04:07.323387','2026-07-12 21:04:07.323387'),
+	 ('mist_edge_c204c795','mist_6090ccd2','mist_a44760a6','related_to',0.6,'Кинетическая энергия related to Электрическая энергия','{}','2026-07-12 21:04:07.340564','2026-07-12 21:04:07.340564'),
+	 ('mist_edge_c0fed9ac','mist_13d895ea','mist_53a5a7de','related_to',0.6,'Потенциальная энергия related to Ядерная энергия','{}','2026-07-12 21:04:07.351047','2026-07-12 21:04:07.351047');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_879adfb8','mist_53a5a7de','mist_6090ccd2','related_to',0.6,'Ядерная энергия related to Кинетическая энергия','{}','2026-07-12 21:04:07.361454','2026-07-12 21:04:07.361454'),
+	 ('mist_edge_458f24b5','q_c7b6d11f','q_1b8283bc','related_to',0.6,'Ферма related to Балка','{}','2026-07-12 21:04:07.373234','2026-07-12 21:04:07.373234'),
+	 ('mist_edge_7c157c3d','q_1b8283bc','q_c7b6d11f','related_to',0.6,'Балка related to Ферма','{}','2026-07-12 21:04:07.38646','2026-07-12 21:04:07.38646'),
+	 ('mist_edge_a2639407','mist_4155f491','mist_42e30e66','related_to',0.6,'Слон related to Арка','{}','2026-07-12 21:04:07.410453','2026-07-12 21:04:07.410453'),
+	 ('mist_edge_25446f9c','mist_42e30e66','q_c7b6d11f','related_to',0.6,'Арка related to Ферма','{}','2026-07-12 21:04:07.423389','2026-07-12 21:04:07.423389'),
+	 ('mist_edge_2f767c70','mist_0efc9257','mist_0282367d','related_to',0.6,'Крыша related to Механизм висячей конструкции','{}','2026-07-12 21:04:07.434209','2026-07-12 21:04:07.434209'),
+	 ('mist_edge_40eb7062','mist_0282367d','mist_cff8c665','related_to',0.6,'Механизм висячей конструкции related to Двойная несущая стена','{}','2026-07-12 21:04:07.444872','2026-07-12 21:04:07.444872'),
+	 ('mist_edge_ece24660','mist_cff8c665','q_1b8283bc','related_to',0.6,'Двойная несущая стена related to Балка','{}','2026-07-12 21:04:07.45572','2026-07-12 21:04:07.45572'),
+	 ('mist_edge_95cd2160','article_a44e7bb6','article_8367df65','related_to',0.6,'Воздух related to Аэродинамика','{}','2026-07-12 21:04:07.466081','2026-07-12 21:04:07.466081'),
+	 ('mist_edge_655978a1','article_429b589e','article_8367df65','related_to',0.6,'Подъемная сила related to Аэродинамика','{}','2026-07-12 21:04:07.476776','2026-07-12 21:04:07.476776');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_b35bbfb7','q_5008a288','mist_502030c4','related_to',0.6,'Пружина related to Ресора','{}','2026-07-12 21:04:06.665545','2026-07-12 21:04:06.665545'),
+	 ('mist_edge_9636c4bf','q_43b224d3','q_f63785b8','related_to',0.6,'Муфта related to Рычаг','{}','2026-07-12 21:04:06.691065','2026-07-12 21:04:06.691065'),
+	 ('mist_edge_4635e33b','q_319885be','q_5008a288','related_to',0.6,'Цепь related to Пружина','{}','2026-07-12 21:04:06.720981','2026-07-12 21:04:06.720981'),
+	 ('mist_edge_0d77fc5f','q_c03313c0','mist_6f058843','related_to',0.6,'Ремень related to Насос','{}','2026-07-12 21:04:06.7483','2026-07-12 21:04:06.7483'),
+	 ('mist_edge_4119dfab','mist_fd65c761','mist_6f058843','related_to',0.6,'Колёса related to Насос','{}','2026-07-12 21:04:06.766738','2026-07-12 21:04:06.766738'),
+	 ('mist_edge_51c92329','mist_217eb98b','q_319885be','related_to',0.6,'Клапаны газораспределения related to Цепь','{}','2026-07-12 21:04:06.787796','2026-07-12 21:04:06.787796'),
+	 ('mist_edge_e87ff4eb','mist_6f058843','q_319885be','related_to',0.6,'Насос related to Цепь','{}','2026-07-12 21:04:06.804879','2026-07-12 21:04:06.804879'),
+	 ('mist_edge_231ffeb4','q_9c14c410','q_016cb1d5','related_to',0.6,'Резистор related to Конденсатор','{}','2026-07-12 21:04:06.821845','2026-07-12 21:04:06.821845'),
+	 ('mist_edge_b4a6677b','q_016cb1d5','mist_9bacee5a','related_to',0.6,'Конденсатор related to Индуктор','{}','2026-07-12 21:04:06.840131','2026-07-12 21:04:06.840131'),
+	 ('mist_edge_fd830799','q_adc4a19c','q_ddfd2a55','related_to',0.6,'Диод related to Транзистор','{}','2026-07-12 21:04:06.861409','2026-07-12 21:04:06.861409');
+INSERT INTO agi_evolution.knowledge_edges (id,source_id,target_id,edge_type,weight,description,metadata,created_at,updated_at) VALUES
+	 ('mist_edge_255dd06d','mist_3e54abfb','q_adc4a19c','related_to',0.6,'Трансформатор related to Диод','{}','2026-07-12 21:04:06.884014','2026-07-12 21:04:06.884014'),
+	 ('mist_edge_d9fe4e9f','q_e7b88f30','article_c0de28b8','related_to',0.6,'Двигатель related to Самолет','{}','2026-07-12 21:04:06.904821','2026-07-12 21:04:06.904821'),
+	 ('mist_edge_db63cb05','q_f97804c5','article_ef02eef7','related_to',0.6,'Пропеллер related to Биплан','{}','2026-07-12 21:04:06.920838','2026-07-12 21:04:06.920838'),
+	 ('mist_edge_583f0e88','q_100f624e','article_5d84dcd4','related_to',0.6,'Крыло related to Воздушный змей','{}','2026-07-12 21:04:06.939428','2026-07-12 21:04:06.939428'),
+	 ('mist_edge_e51acec6','article_c0de28b8','q_e7b88f30','related_to',0.6,'Самолет related to Двигатель','{}','2026-07-12 21:04:06.957875','2026-07-12 21:04:06.957875'),
+	 ('mist_edge_1f1cf07a','article_5d84dcd4','q_e7b88f30','related_to',0.6,'Воздушный змей related to Двигатель','{}','2026-07-12 21:04:06.975774','2026-07-12 21:04:06.975774'),
+	 ('mist_edge_621ee688','article_ef02eef7','q_100f624e','related_to',0.6,'Биплан related to Крыло','{}','2026-07-12 21:04:06.991566','2026-07-12 21:04:06.991566'),
+	 ('mist_edge_fce353e1','mist_2753e264','q_e7b88f30','related_to',0.6,'Самолёт-лайнер related to Двигатель','{}','2026-07-12 21:04:07.008513','2026-07-12 21:04:07.008513'),
+	 ('mist_edge_302ead8d','mist_5b66acf3','article_c0de28b8','related_to',0.6,'Спутник related to Самолет','{}','2026-07-12 21:04:07.024761','2026-07-12 21:04:07.024761'),
+	 ('mist_edge_b32eda7b','q_8c959d74','mist_f5d5d406','related_to',0.6,'Сталь related to Стеклофибергласс','{}','2026-07-12 21:04:07.04094','2026-07-12 21:04:07.04094');
+...
+
+
+-- agi_evolution.mental_models definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.mental_models;
+
+CREATE TABLE agi_evolution.mental_models (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar(100) NOT NULL,
+	model_type varchar(30) NOT NULL,
+	properties jsonb DEFAULT '{}'::jsonb NULL,
+	related_models _uuid DEFAULT '{}'::uuid[] NULL,
+	embedding _float8 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	"sequence" _text DEFAULT '{}'::text[] NULL,
+	description text NULL,
+	metadata jsonb DEFAULT '{}'::jsonb NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT mental_models_pkey PRIMARY KEY (id)
+);
+
+-- agi_evolution.object_templates definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.object_templates;
+
+CREATE TABLE agi_evolution.object_templates (
+	id serial4 NOT NULL,
+	"name" varchar(100) NOT NULL,
+	object_type varchar(50) NOT NULL,
+	danger_level float8 NULL,
+	energy_value float8 NULL,
+	vision_embedding _float8 NULL,
+	sound_embedding _float8 NULL,
+	smell_embedding _float8 NULL,
+	vision_signature varchar(50) DEFAULT NULL::character varying NULL,
+	sound_signature varchar(50) DEFAULT NULL::character varying NULL,
+	smell_signature varchar(50) DEFAULT NULL::character varying NULL,
+	icon_path varchar(255) DEFAULT NULL::character varying NULL,
+	sound_path varchar(255) DEFAULT NULL::character varying NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT object_templates_pkey PRIMARY KEY (id)
+);
+
+
+-- agi_evolution.reflex_pattern definition
+
+-- Drop table
+
+-- DROP TABLE agi_evolution.reflex_pattern;
+
+CREATE TABLE agi_evolution.reflex_pattern (
+	id serial4 NOT NULL,
+	sense_type varchar NULL,
+	signal_type varchar NULL,
+	signal_threshold float8 NULL,
+	"action" varchar NULL,
+	success_rate float4 NULL,
+	usage_count int4 NULL,
+	last_used timestamp NULL,
+	CONSTRAINT reflex_pattern_pkey PRIMARY KEY (id)
+);
+
+INSERT INTO agi_evolution.reflex_pattern (sense_type,signal_type,signal_threshold,"action",success_rate,usage_count,last_used) VALUES
+	 ('smell','food_smell',0.0,'grab',NULL,NULL,NULL),
+	 ('smell','predator_smel',0.0,'move_on',NULL,NULL,NULL),
+	 ('visual','bright_flash',1.0,'move_on',NULL,NULL,NULL),
+	 ('sound','loud_crash',1.0,'move_on',NULL,NULL,NULL),
+	 ('touch','temperature_sense',50.0,'move_on',NULL,NULL,NULL),
+	 ('sound','predator_roar',1.0,'move_on',NULL,NULL,NULL);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

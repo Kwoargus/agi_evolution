@@ -115,6 +115,42 @@ def load_best_genome(schema='agi_evolution'):
         print(f"Ошибка загрузки лучшего генома: {e}")
         return None
 
+def save_reflex_stats(reflex_id: int, success_count: int, total_count: int, success_rate: float):
+    """Сохраняет статистику рефлекса."""
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE agi_evolution.reflex_pattern 
+            SET success_count = %s, total_count = %s, success_rate = %s
+            WHERE id = %s
+        """, (success_count, total_count, success_rate, reflex_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"❌ Ошибка сохранения статистики рефлекса: {e}")
+        return False
 
+def save_gan_training_log(generation_id: int, epoch: int, g_loss: float, d_loss: float,
+                         pattern_diversity: float, best_score: float, avg_score: float):
+    """Сохраняет лог тренировки GAN."""
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO agi_evolution.gan_training_log 
+            (generation_id, epoch, g_loss, d_loss, pattern_diversity, 
+             best_pattern_score, avg_pattern_score)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (generation_id, epoch, g_loss, d_loss, pattern_diversity, best_score, avg_score))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"❌ Ошибка сохранения лога GAN: {e}")
+        return False
 
 
