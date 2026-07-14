@@ -289,34 +289,105 @@ class GAN:
         pattern = self.generate_pattern()
 
         # Преобразуем паттерн в правило
-        # state (первые 21) → sense_type
+        # state (первые 21) → sense_type и signal_type
         # action (следующие 4) → action
-        # reward → threshold
+        # reward (25-й) → threshold
 
         state_part = pattern[:21]
         action_part = pattern[21:25]
-        reward_part = pattern[25]
+        reward_part = pattern[25] if len(pattern) > 25 else 0.5
 
-        # Определяем сенсор
+        # Определяем сенсор на основе максимального значения в state
         max_state_idx = np.argmax(np.abs(state_part))
-        sense_types = ['smell', 'sound', 'vision', 'touch', 'position']
-        sense_type = sense_types[max_state_idx % len(sense_types)]
+
+        # Определяем signal_type на основе индекса
+        signal_types = [
+            'food_smell',  # 0
+            'predator_smell',  # 1
+            'loud_crash',  # 2
+            'bright_flash',  # 3
+            'temperature_sense',  # 4
+            'predator_roar',  # 5
+            'danger_signal',  # 6
+            'food_vision',  # 7
+            'movement',  # 8
+            'unknown'  # 9+
+        ]
+
+        # Индекс для signal_type
+        signal_idx = max_state_idx % len(signal_types)
+        signal_type = signal_types[signal_idx]
+
+        # Определяем sense_type на основе signal_type
+        sense_map = {
+            'food_smell': 'smell',
+            'predator_smell': 'smell',
+            'loud_crash': 'sound',
+            'bright_flash': 'vision',
+            'temperature_sense': 'touch',
+            'predator_roar': 'sound',
+            'danger_signal': 'sound',
+            'food_vision': 'vision',
+            'movement': 'vision',
+            'unknown': 'sense'
+        }
+        sense_type = sense_map.get(signal_type, 'sense')
 
         # Определяем действие
         action_idx = np.argmax(action_part)
         actions = ['grab', 'move_on', 'avoid', 'investigate']
         action = actions[action_idx % len(actions)]
 
-        # Порог
+        # Порог (нормализуем от 0.1 до 0.9)
         threshold = 0.3 + 0.4 * (reward_part + 1) / 2
+        threshold = float(np.clip(threshold, 0.1, 0.9))
+
+        # Приоритет (на основе силы сигнала)
+        priority = float(0.5 + 0.5 * np.abs(state_part[max_state_idx]))
+        priority = float(np.clip(priority, 0.3, 1.0))
 
         return {
             'sense_type': sense_type,
+            'signal_type': signal_type,  # ← ТЕПЕРЬ ЗАПОЛНЯЕТСЯ!
+            'threshold': threshold,
+            'priority': priority,
             'action': action,
-            'threshold': float(np.clip(threshold, 0.1, 0.9)),
-            'priority': float(0.5 + 0.5 * np.abs(state_part[max_state_idx])),
             'confidence': float(np.abs(reward_part))
         }
+
+    # def generate_rule(self) -> Dict[str, Any]:
+    #     """Генерирует правило поведения из паттерна."""
+    #     pattern = self.generate_pattern()
+    #
+    #     # Преобразуем паттерн в правило
+    #     # state (первые 21) → sense_type
+    #     # action (следующие 4) → action
+    #     # reward → threshold
+    #
+    #     state_part = pattern[:21]
+    #     action_part = pattern[21:25]
+    #     reward_part = pattern[25]
+    #
+    #     # Определяем сенсор
+    #     max_state_idx = np.argmax(np.abs(state_part))
+    #     sense_types = ['smell', 'sound', 'vision', 'touch', 'position']
+    #     sense_type = sense_types[max_state_idx % len(sense_types)]
+    #
+    #     # Определяем действие
+    #     action_idx = np.argmax(action_part)
+    #     actions = ['grab', 'move_on', 'avoid', 'investigate']
+    #     action = actions[action_idx % len(actions)]
+    #
+    #     # Порог
+    #     threshold = 0.3 + 0.4 * (reward_part + 1) / 2
+    #
+    #     return {
+    #         'sense_type': sense_type,
+    #         'action': action,
+    #         'threshold': float(np.clip(threshold, 0.1, 0.9)),
+    #         'priority': float(0.5 + 0.5 * np.abs(state_part[max_state_idx])),
+    #         'confidence': float(np.abs(reward_part))
+    #     }
 
 
 class PatternRepository:

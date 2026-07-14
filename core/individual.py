@@ -8,6 +8,7 @@ from core.base_strategy import Perception, ActionSuggestion
 import random
 from collections import deque
 from typing import List, Dict, Optional, Tuple, Any, Union
+import numpy as np
 
 class Individual:
     def __init__(self, x=0, z=0, angle=0, move_delay=5, reflex_rules=None, instinct_patterns=None, genome=None,  max_buffer_size=10000):
@@ -43,7 +44,7 @@ class Individual:
         self.visited_edges_set = set()
         self.frame_counter = 0
         self.move_delay = genome.get('move_delay', 5)
-        self.max_steps = genome.get('max_steps', 500)
+        self.max_steps = genome.get('max_steps', 1000)
 
         # Модули рефлексов и инстинктов
         self.reflex_module = ReflexModule(
@@ -321,6 +322,50 @@ class Individual:
         # ============================================================
         self._explore(world)
 
+        # ============================================================
+        # ОБНОВЛЕНИЕ ЭМОЦИОНАЛЬНОЙ СИСТЕМЫ
+        # ============================================================
+        if hasattr(self, 'emotion_system') and self.emotion_system:
+            sensory_data = self._get_sensory_data(world)
+            self.emotion_system.update(sensory_data)
+
+    def _get_sensory_data(self, world) -> Dict:
+        """Собирает сенсорные данные для эмоциональной системы."""
+        sensory_data = {
+            'vision': self._get_vision(world),
+            'sound': self._get_sound(world),
+            'smell': self._get_smell(world),
+            'position': (self.x, self.z),
+            'context': {
+                'nearby_object': self.nearby_params,
+                'visited_count': len(self.visited_nodes),
+                'food_collected': self.food_collected
+            }
+        }
+        return sensory_data
+
+    def _get_vision(self, world) -> np.ndarray:
+        """Получает визуальные данные."""
+        # Простая реализация: смотрим, что рядом
+        vision = np.zeros(8)
+        if self.nearby_object:
+            vision[0] = 1.0
+        return vision
+
+    def _get_sound(self, world) -> np.ndarray:
+        """Получает звуковые данные."""
+        sound = np.zeros(8)
+        # Простая реализация
+        return sound
+
+    def _get_smell(self, world) -> np.ndarray:
+        """Получает данные о запахах."""
+        smell = np.zeros(8)
+        if self.nearby_params:
+            if 'smell' in self.nearby_params:
+                smell[0] = 1.0
+        return smell
+
     def _is_safe(self, world) -> bool:
         """Проверяет, безопасно ли当前位置."""
         # Проверяем, нет ли рядом опасных объектов
@@ -547,12 +592,38 @@ class Individual:
 
     # ---------- Фитнес ----------
     def calculate_fitness(self):
-        # Компоненты:
-        visited_score = len(self.visited_nodes) * 1.0  # покрытие территории
-        food_score = self.food_collected * 10.0  # если добавить счётчик собранной еды
-        survival_score = 1.0 if self.alive else 0.0  # бонус за выживание
-        # Можно добавить штраф за столкновения с хищниками
-        return visited_score + food_score + survival_score
+        """
+        Расчёт фитнеса с учётом разных факторов.
+        """
+        # 1. Количество посещённых узлов (максимум 500)
+        visited_score = len(self.visited_nodes) * 1.0
+
+        # 2. Бонус за собранную еду
+        food_score = self.food_collected * 10.0
+
+        # 3. Бонус за выживание
+        survival_score = 50.0 if self.alive else 0.0
+
+        # 4. Штраф за повторение узлов (чем меньше повторов, тем лучше)
+        unique_nodes = len(set(self.visited_nodes))
+        repeat_penalty = (len(self.visited_nodes) - unique_nodes) * 0.5
+
+        # 5. Бонус за разнообразие посещённых узлов
+        diversity_bonus = unique_nodes * 0.1
+
+        # Итоговый фитнес
+        fitness = visited_score + food_score + survival_score - repeat_penalty + diversity_bonus
+
+        return max(0, fitness)
+
+
+    # def calculate_fitness(self):
+    #     # Компоненты:
+    #     visited_score = len(self.visited_nodes) * 1.0  # покрытие территории
+    #     food_score = self.food_collected * 10.0  # если добавить счётчик собранной еды
+    #     survival_score = 1.0 if self.alive else 0.0  # бонус за выживание
+    #     # Можно добавить штраф за столкновения с хищниками
+    #     return visited_score + food_score + survival_score
 
     # ---------- Отрисовка ----------
     def draw_path(self, screen, world_to_screen_func):

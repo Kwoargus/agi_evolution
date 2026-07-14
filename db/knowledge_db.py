@@ -401,107 +401,393 @@ class KnowledgeDB:
             return []
 
     def save_mental_model(self, model) -> bool:
-        """Сохраняет ментальную модель в БД."""
+        """
+        Сохраняет ментальную модель в БД.
+        """
         try:
             conn = self._get_connection()
             cur = conn.cursor()
 
-            # Проверяем существование колонок
+            # Генерируем UUID, если id не является валидным UUID
+            import uuid
+            try:
+                uuid.UUID(model.id)
+                model_id = model.id
+            except (ValueError, AttributeError, TypeError):
+                model_id = str(uuid.uuid4())
+                print(f"   ⚠️ ID {model.id} не является UUID, заменён на {model_id}")
+
+            # Подготовка данных
+            model_name = model.name if hasattr(model, 'name') else "Ментальная модель"
+            model_type = getattr(model, 'model_type', 'mental_model')
+
+            # Свойства - JSONB
+            if hasattr(model, 'properties'):
+                if isinstance(model.properties, dict):
+                    properties_json = json.dumps(model.properties)
+                else:
+                    properties_json = json.dumps({'props': model.properties})
+            else:
+                properties_json = json.dumps({})
+
+            # Последовательность - ТЕКСТОВЫЙ МАССИВ (text[])
+            if hasattr(model, 'sequence') and model.sequence:
+                if isinstance(model.sequence, list):
+                    sequence_array = '{' + ','.join(f'"{s}"' for s in model.sequence) + '}'
+                else:
+                    sequence_array = '{}'
+            else:
+                sequence_array = '{}'
+
+            # Эмбеддинг - МАССИВ DOUBLE PRECISION (double precision[])
+            if hasattr(model, 'embedding') and model.embedding is not None:
+                if hasattr(model.embedding, 'tolist'):
+                    embedding_list = model.embedding.tolist()
+                elif isinstance(model.embedding, list):
+                    embedding_list = model.embedding
+                else:
+                    embedding_list = list(model.embedding)
+
+                # Формат для double precision[]: {1.0, 0.5, 0.2}
+                embedding_array = '{' + ','.join(str(float(x)) for x in embedding_list) + '}'
+            else:
+                # Пустой массив
+                embedding_array = '{}'
+
+            # Метаданные - JSONB
+            if hasattr(model, 'metadata'):
+                metadata_json = json.dumps(model.metadata)
+            else:
+                metadata_json = json.dumps({})
+
+            # Описание
+            description = getattr(model, 'description', model_name)
+
+            # Выполняем запрос
             cur.execute("""
-                SELECT column_name 
-                FROM information_schema.columns 
-                WHERE table_schema = 'agi_evolution' 
-                  AND table_name = 'mental_models'
-            """)
-            existing_columns = [row[0] for row in cur.fetchall()]
-
-            # Формируем запрос в зависимости от существующих колонок
-            columns = ['id']
-            placeholders = ['%s']
-            values = [model.id]
-
-            # name
-            if 'name' in existing_columns:
-                columns.append('name')
-                placeholders.append('%s')
-                values.append(model.name)
-
-            # model_type
-            if 'model_type' in existing_columns:
-                columns.append('model_type')
-                placeholders.append('%s')
-                values.append('mental_model')
-
-            # properties (бывшие attributes)
-            if 'properties' in existing_columns:
-                columns.append('properties')
-                placeholders.append('%s')
-                values.append(self._to_json(model.properties if hasattr(model, 'properties') else {}))
-
-            # sequence
-            if 'sequence' in existing_columns:
-                columns.append('sequence')
-                placeholders.append('%s')
-                values.append(model.sequence if hasattr(model, 'sequence') else [])
-
-            # embedding
-            if 'embedding' in existing_columns:
-                columns.append('embedding')
-                placeholders.append('%s')
-                values.append(model.embedding if hasattr(model, 'embedding') else None)
-
-            # description
-            if 'description' in existing_columns:
-                columns.append('description')
-                placeholders.append('%s')
-                values.append(model.name)
-
-            # metadata
-            if 'metadata' in existing_columns:
-                columns.append('metadata')
-                placeholders.append('%s')
-                values.append(self._to_json(model.metadata if hasattr(model, 'metadata') else {}))
-
-            # created_at
-            if 'created_at' in existing_columns:
-                columns.append('created_at')
-                placeholders.append('%s')
-                values.append(datetime.now())
-
-            # updated_at
-            if 'updated_at' in existing_columns:
-                columns.append('updated_at')
-                placeholders.append('%s')
-                values.append(datetime.now())
-
-            # Строим и выполняем запрос
-            columns_str = ', '.join(columns)
-            placeholders_str = ', '.join(placeholders)
-            update_parts = []
-
-            for col in columns:
-                if col != 'id' and col != 'created_at':
-                    update_parts.append(f"{col} = EXCLUDED.{col}")
-
-            update_str = ', '.join(update_parts) if update_parts else 'updated_at = EXCLUDED.updated_at'
-
-            query = f"""
                 INSERT INTO agi_evolution.mental_models 
-                ({columns_str})
-                VALUES ({placeholders_str})
+                (id, name, model_type, properties, sequence, embedding, description, metadata, created_at)
+                VALUES (%s, %s, %s, %s::jsonb, %s::text[], %s::double precision[], %s, %s::jsonb, %s)
                 ON CONFLICT (id) DO UPDATE SET
-                    {update_str}
-            """
+                    name = EXCLUDED.name,
+                    model_type = EXCLUDED.model_type,
+                    properties = EXCLUDED.properties,
+                    sequence = EXCLUDED.sequence,
+                    embedding = EXCLUDED.embedding,
+                    description = EXCLUDED.description,
+                    metadata = EXCLUDED.metadata,
+                    updated_at = CURRENT_TIMESTAMP
+            """, (
+                model_id,
+                model_name,
+                model_type,
+                properties_json,  # ::jsonb
+                sequence_array,  # ::text[]
+                embedding_array,  # ::double precision[]  ← ИСПРАВЛЕНО!
+                description,
+                metadata_json,  # ::jsonb
+                datetime.now()
+            ))
 
-            cur.execute(query, values)
             conn.commit()
             cur.close()
             conn.close()
+
+            print(f"✅ Ментальная модель сохранена: {model_id} ({model_name})")
             return True
 
         except Exception as e:
-            print(f"❌ Ошибка сохранения ментальной модели {model.id}: {e}")
+            print(f"❌ Ошибка сохранения ментальной модели: {e}")
+            import traceback
+            traceback.print_exc()
             return False
+
+    # def save_mental_model(self, model) -> bool:
+    #     """
+    #     Сохраняет ментальную модель в БД.
+    #     """
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor()
+    #
+    #         # Генерируем UUID, если id не является валидным UUID
+    #         import uuid
+    #         try:
+    #             uuid.UUID(model.id)
+    #             model_id = model.id
+    #         except (ValueError, AttributeError, TypeError):
+    #             model_id = str(uuid.uuid4())
+    #             print(f"   ⚠️ ID {model.id} не является UUID, заменён на {model_id}")
+    #
+    #         # Подготовка данных
+    #         model_name = model.name if hasattr(model, 'name') else "Ментальная модель"
+    #         model_type = getattr(model, 'model_type', 'mental_model')
+    #
+    #         # Свойства - ДЛЯ JSONB ИСПОЛЬЗУЕМ json.dumps()
+    #         if hasattr(model, 'properties'):
+    #             if isinstance(model.properties, dict):
+    #                 properties_json = json.dumps(model.properties)
+    #             else:
+    #                 properties_json = json.dumps({'props': model.properties})
+    #         else:
+    #             properties_json = json.dumps({})
+    #
+    #         # Последовательность - ДЛЯ JSONB ИСПОЛЬЗУЕМ json.dumps()
+    #         if hasattr(model, 'sequence'):
+    #             sequence_json = json.dumps(model.sequence)
+    #         else:
+    #             sequence_json = json.dumps([])
+    #
+    #         # Эмбеддинг
+    #         if hasattr(model, 'embedding') and model.embedding is not None:
+    #             if hasattr(model.embedding, 'tolist'):
+    #                 embedding_json = json.dumps(model.embedding.tolist())
+    #             else:
+    #                 embedding_json = json.dumps(model.embedding)
+    #         else:
+    #             embedding_json = None
+    #
+    #         # Метаданные - ДЛЯ JSONB ИСПОЛЬЗУЕМ json.dumps()
+    #         if hasattr(model, 'metadata'):
+    #             metadata_json = json.dumps(model.metadata)
+    #         else:
+    #             metadata_json = json.dumps({})
+    #
+    #         # Описание
+    #         description = getattr(model, 'description', model_name)
+    #
+    #         # Выполняем запрос - используем jsonb_set или просто передаём JSON
+    #         cur.execute("""
+    #             INSERT INTO agi_evolution.mental_models
+    #             (id, name, model_type, properties, sequence, embedding, description, metadata, created_at)
+    #             VALUES (%s, %s, %s, %s::jsonb, %s::jsonb, %s::jsonb, %s, %s::jsonb, %s)
+    #             ON CONFLICT (id) DO UPDATE SET
+    #                 name = EXCLUDED.name,
+    #                 model_type = EXCLUDED.model_type,
+    #                 properties = EXCLUDED.properties,
+    #                 sequence = EXCLUDED.sequence,
+    #                 embedding = EXCLUDED.embedding,
+    #                 description = EXCLUDED.description,
+    #                 metadata = EXCLUDED.metadata,
+    #                 updated_at = CURRENT_TIMESTAMP
+    #         """, (
+    #             model_id,
+    #             model_name,
+    #             model_type,
+    #             properties_json,  # ← json.dumps()
+    #             sequence_json,  # ← json.dumps()
+    #             embedding_json,  # ← json.dumps()
+    #             description,
+    #             metadata_json,  # ← json.dumps()
+    #             datetime.now()
+    #         ))
+    #
+    #         conn.commit()
+    #         cur.close()
+    #         conn.close()
+    #
+    #         print(f"✅ Ментальная модель сохранена: {model_id} ({model_name})")
+    #         return True
+    #
+    #     except Exception as e:
+    #         print(f"❌ Ошибка сохранения ментальной модели: {e}")
+    #         import traceback
+    #         traceback.print_exc()
+    #         return False
+
+
+    # def save_mental_model(self, model) -> bool:
+    #     """
+    #     Сохраняет ментальную модель в БД.
+    #
+    #     Args:
+    #         model: Объект MentalModel из core.thinking.models
+    #
+    #     Returns:
+    #         True если сохранено успешно
+    #     """
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor()
+    #
+    #         # Подготовка данных
+    #         model_id = model.id
+    #         model_name = model.name if hasattr(model, 'name') else "Ментальная модель"
+    #         model_type = getattr(model, 'model_type', 'mental_model')
+    #
+    #         # Свойства
+    #         if hasattr(model, 'properties'):
+    #             if isinstance(model.properties, dict):
+    #                 properties_json = json.dumps(model.properties)
+    #             else:
+    #                 properties_json = json.dumps({'props': model.properties})
+    #         else:
+    #             properties_json = '{}'
+    #
+    #         # Последовательность
+    #         if hasattr(model, 'sequence'):
+    #             sequence_json = json.dumps(model.sequence)
+    #         else:
+    #             sequence_json = '[]'
+    #
+    #         # Эмбеддинг
+    #         if hasattr(model, 'embedding') and model.embedding is not None:
+    #             if hasattr(model.embedding, 'tolist'):
+    #                 embedding_json = json.dumps(model.embedding.tolist())
+    #             else:
+    #                 embedding_json = json.dumps(model.embedding)
+    #         else:
+    #             embedding_json = None
+    #
+    #         # Метаданные
+    #         if hasattr(model, 'metadata'):
+    #             metadata_json = json.dumps(model.metadata)
+    #         else:
+    #             metadata_json = '{}'
+    #
+    #         # Описание
+    #         description = getattr(model, 'description', model_name)
+    #
+    #         # Выполняем запрос
+    #         cur.execute("""
+    #             INSERT INTO agi_evolution.mental_models
+    #             (id, name, model_type, properties, sequence, embedding, description, metadata, created_at)
+    #             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    #             ON CONFLICT (id) DO UPDATE SET
+    #                 name = EXCLUDED.name,
+    #                 model_type = EXCLUDED.model_type,
+    #                 properties = EXCLUDED.properties,
+    #                 sequence = EXCLUDED.sequence,
+    #                 embedding = EXCLUDED.embedding,
+    #                 description = EXCLUDED.description,
+    #                 metadata = EXCLUDED.metadata,
+    #                 updated_at = CURRENT_TIMESTAMP
+    #         """, (
+    #             model_id,
+    #             model_name,
+    #             model_type,
+    #             properties_json,
+    #             sequence_json,
+    #             embedding_json,
+    #             description,
+    #             metadata_json,
+    #             datetime.now()
+    #         ))
+    #
+    #         conn.commit()
+    #         cur.close()
+    #         conn.close()
+    #
+    #         print(f"✅ Ментальная модель сохранена: {model_id} ({model_name})")
+    #         return True
+    #
+    #     except Exception as e:
+    #         print(f"❌ Ошибка сохранения ментальной модели {model.id if hasattr(model, 'id') else 'unknown'}: {e}")
+    #         return False
+
+    # def save_mental_model(self, model) -> bool:
+    #     """Сохраняет ментальную модель в БД."""
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor()
+    #
+    #         # Проверяем существование колонок
+    #         cur.execute("""
+    #             SELECT column_name
+    #             FROM information_schema.columns
+    #             WHERE table_schema = 'agi_evolution'
+    #               AND table_name = 'mental_models'
+    #         """)
+    #         existing_columns = [row[0] for row in cur.fetchall()]
+    #
+    #         # Формируем запрос в зависимости от существующих колонок
+    #         columns = ['id']
+    #         placeholders = ['%s']
+    #         values = [model.id]
+    #
+    #         # name
+    #         if 'name' in existing_columns:
+    #             columns.append('name')
+    #             placeholders.append('%s')
+    #             values.append(model.name)
+    #
+    #         # model_type
+    #         if 'model_type' in existing_columns:
+    #             columns.append('model_type')
+    #             placeholders.append('%s')
+    #             values.append('mental_model')
+    #
+    #         # properties (бывшие attributes)
+    #         if 'properties' in existing_columns:
+    #             columns.append('properties')
+    #             placeholders.append('%s')
+    #             values.append(self._to_json(model.properties if hasattr(model, 'properties') else {}))
+    #
+    #         # sequence
+    #         if 'sequence' in existing_columns:
+    #             columns.append('sequence')
+    #             placeholders.append('%s')
+    #             values.append(model.sequence if hasattr(model, 'sequence') else [])
+    #
+    #         # embedding
+    #         if 'embedding' in existing_columns:
+    #             columns.append('embedding')
+    #             placeholders.append('%s')
+    #             values.append(model.embedding if hasattr(model, 'embedding') else None)
+    #
+    #         # description
+    #         if 'description' in existing_columns:
+    #             columns.append('description')
+    #             placeholders.append('%s')
+    #             values.append(model.name)
+    #
+    #         # metadata
+    #         if 'metadata' in existing_columns:
+    #             columns.append('metadata')
+    #             placeholders.append('%s')
+    #             values.append(self._to_json(model.metadata if hasattr(model, 'metadata') else {}))
+    #
+    #         # created_at
+    #         if 'created_at' in existing_columns:
+    #             columns.append('created_at')
+    #             placeholders.append('%s')
+    #             values.append(datetime.now())
+    #
+    #         # updated_at
+    #         if 'updated_at' in existing_columns:
+    #             columns.append('updated_at')
+    #             placeholders.append('%s')
+    #             values.append(datetime.now())
+    #
+    #         # Строим и выполняем запрос
+    #         columns_str = ', '.join(columns)
+    #         placeholders_str = ', '.join(placeholders)
+    #         update_parts = []
+    #
+    #         for col in columns:
+    #             if col != 'id' and col != 'created_at':
+    #                 update_parts.append(f"{col} = EXCLUDED.{col}")
+    #
+    #         update_str = ', '.join(update_parts) if update_parts else 'updated_at = EXCLUDED.updated_at'
+    #
+    #         query = f"""
+    #             INSERT INTO agi_evolution.mental_models
+    #             ({columns_str})
+    #             VALUES ({placeholders_str})
+    #             ON CONFLICT (id) DO UPDATE SET
+    #                 {update_str}
+    #         """
+    #
+    #         cur.execute(query, values)
+    #         conn.commit()
+    #         cur.close()
+    #         conn.close()
+    #         return True
+    #
+    #     except Exception as e:
+    #         print(f"❌ Ошибка сохранения ментальной модели {model.id}: {e}")
+    #         return False
+
 
     def load_all_mental_models(self) -> List:
         """Загружает все ментальные модели из БД."""
@@ -509,8 +795,10 @@ class KnowledgeDB:
             conn = self._get_connection()
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-            cur.execute(f"""
-                SELECT * FROM agi_evolution.mental_models
+            cur.execute("""
+                SELECT id, name, model_type, properties, sequence, embedding, 
+                       description, metadata, created_at
+                FROM agi_evolution.mental_models
                 ORDER BY created_at DESC
             """)
 
@@ -522,21 +810,105 @@ class KnowledgeDB:
 
             models = []
             for row in rows:
+                # Восстанавливаем свойства
+                if row.get('properties'):
+                    if isinstance(row['properties'], dict):
+                        properties = row['properties']
+                    else:
+                        try:
+                            properties = json.loads(row['properties'])
+                        except:
+                            properties = {}
+                else:
+                    properties = {}
+
+                # Восстанавливаем последовательность
+                if row.get('sequence'):
+                    if isinstance(row['sequence'], list):
+                        sequence = row['sequence']
+                    else:
+                        try:
+                            sequence = json.loads(row['sequence'])
+                        except:
+                            sequence = []
+                else:
+                    sequence = []
+
+                # Восстанавливаем эмбеддинг
+                if row.get('embedding'):
+                    if isinstance(row['embedding'], list):
+                        embedding = row['embedding']
+                    else:
+                        try:
+                            embedding = json.loads(row['embedding'])
+                        except:
+                            embedding = None
+                else:
+                    embedding = None
+
+                # Восстанавливаем метаданные
+                if row.get('metadata'):
+                    if isinstance(row['metadata'], dict):
+                        metadata = row['metadata']
+                    else:
+                        try:
+                            metadata = json.loads(row['metadata'])
+                        except:
+                            metadata = {}
+                else:
+                    metadata = {}
+
                 model = MentalModel(
                     id=row['id'],
                     name=row.get('name', ''),
-                    sequence=row.get('sequence', []),
-                    embedding=row.get('embedding'),
-                    properties=row.get('properties', {}) if isinstance(row.get('properties'), dict) else row.get('properties', []),
-                    metadata=row.get('metadata', {}),
-                    created_at=row.get('created_at').timestamp() if row.get('created_at') else time.time()
+                    sequence=sequence,
+                    embedding=embedding,
+                    properties=properties,
+                    metadata=metadata,
+                    created_at=row['created_at'].timestamp() if row.get('created_at') else time.time()
                 )
+                model.model_type = row.get('model_type', 'mental_model')
                 models.append(model)
 
             return models
         except Exception as e:
             print(f"❌ Ошибка загрузки ментальных моделей: {e}")
             return []
+
+    # def load_all_mental_models(self) -> List:
+    #     """Загружает все ментальные модели из БД."""
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    #
+    #         cur.execute(f"""
+    #             SELECT * FROM agi_evolution.mental_models
+    #             ORDER BY created_at DESC
+    #         """)
+    #
+    #         rows = cur.fetchall()
+    #         cur.close()
+    #         conn.close()
+    #
+    #         from core.thinking.models import MentalModel
+    #
+    #         models = []
+    #         for row in rows:
+    #             model = MentalModel(
+    #                 id=row['id'],
+    #                 name=row.get('name', ''),
+    #                 sequence=row.get('sequence', []),
+    #                 embedding=row.get('embedding'),
+    #                 properties=row.get('properties', {}) if isinstance(row.get('properties'), dict) else row.get('properties', []),
+    #                 metadata=row.get('metadata', {}),
+    #                 created_at=row.get('created_at').timestamp() if row.get('created_at') else time.time()
+    #             )
+    #             models.append(model)
+    #
+    #         return models
+    #     except Exception as e:
+    #         print(f"❌ Ошибка загрузки ментальных моделей: {e}")
+    #         return []
 
     def get_mental_model(self, model_id: str):
         """Загружает ментальную модель по ID."""

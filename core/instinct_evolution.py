@@ -136,29 +136,37 @@ class InstinctEvaluator:
                     reward = exp[2]
                     next_state = exp[3]
 
-                    state_arr = np.array(state).flatten() if hasattr(state, '__len__') else np.array([state])
-                    next_state_arr = np.array(next_state).flatten() if hasattr(next_state, '__len__') else np.array([next_state])
+                    # Приводим к массивам
+                    if hasattr(state, '__len__'):
+                        state_arr = np.array(state).flatten()
+                    else:
+                        state_arr = np.array([state])
+
+                    if hasattr(next_state, '__len__'):
+                        next_state_arr = np.array(next_state).flatten()
+                    else:
+                        next_state_arr = np.array([next_state])
+
                     action_arr = np.array([action])
                     reward_arr = np.array([reward])
 
                     combined = np.concatenate([state_arr, action_arr, reward_arr, next_state_arr])
 
-                    # Нормализуем до размерности паттерна
-                    if len(combined) >= len(pattern):
-                        other = combined[:len(pattern)]
+                    if len(combined) >= 256:
+                        other = combined[:256]
                     else:
-                        other = np.zeros(len(pattern))
+                        other = np.zeros(256)
                         other[:len(combined)] = combined
                 except Exception:
                     continue
             else:
                 continue
 
-            if other is not None and len(other) == len(pattern):
+            if other is not None and len(other) == 256 and len(pattern) == 256:
                 try:
-                    sim = np.dot(pattern, other) / (
-                            np.linalg.norm(pattern) * np.linalg.norm(other) + 1e-8
-                    )
+                    norm_pattern = np.linalg.norm(pattern) + 1e-8
+                    norm_other = np.linalg.norm(other) + 1e-8
+                    sim = np.dot(pattern, other) / (norm_pattern * norm_other)
                     similarities.append(sim)
                 except Exception:
                     continue
@@ -173,11 +181,166 @@ class InstinctEvaluator:
         """
         Оценивает сложность паттерна.
         """
-        normalized = (pattern - np.min(pattern)) / (np.max(pattern) - np.min(pattern) + 1e-8)
+        if pattern is None or len(pattern) == 0:
+            return 0.0
+
+        min_val = np.min(pattern)
+        max_val = np.max(pattern)
+        if max_val - min_val < 1e-8:
+            return 0.0
+
+        normalized = (pattern - min_val) / (max_val - min_val + 1e-8)
         unique_ratio = len(np.unique(normalized)) / len(normalized)
         variance = np.var(pattern)
         complexity = 0.5 * unique_ratio + 0.5 * min(variance * 10, 1.0)
+
         return complexity
+
+# class InstinctEvaluator:
+#     """
+#     Оценщик качества инстинктов.
+#     Использует дискриминатор InstinctGAN и реальный опыт.
+#     """
+#
+#     def __init__(self, gan_discriminator, experience_buffer):
+#         self.discriminator = gan_discriminator
+#         self.experience_buffer = experience_buffer
+#
+#     def evaluate_pattern(self, pattern: np.ndarray) -> float:
+#         """
+#         Оценивает качество паттерна инстинкта.
+#         """
+#         # 1. Оценка дискриминатора
+#         discriminator_score = self._evaluate_by_discriminator(pattern)
+#
+#         # 2. Оценка новизны
+#         novelty_score = self._evaluate_novelty(pattern)
+#
+#         # 3. Оценка сложности
+#         complexity_score = self._evaluate_complexity(pattern)
+#
+#         # Комбинированная оценка
+#         final_score = (
+#                 0.6 * discriminator_score +
+#                 0.3 * novelty_score +
+#                 0.1 * complexity_score
+#         )
+#
+#         return float(np.clip(final_score, 0.0, 1.0))
+#
+#     def _evaluate_by_discriminator(self, pattern: np.ndarray) -> float:
+#         """Оценивает паттерн дискриминатором GAN."""
+#         try:
+#             if hasattr(self.discriminator, 'evaluate_pattern'):
+#                 return self.discriminator.evaluate_pattern(pattern)
+#             else:
+#                 # Убеждаемся, что паттерн имеет правильную размерность
+#                 if len(pattern) != 256:
+#                     if len(pattern) > 256:
+#                         pattern = pattern[:256]
+#                     else:
+#                         padded = np.zeros(256)
+#                         padded[:len(pattern)] = pattern
+#                         pattern = padded
+#
+#                 pattern_tensor = torch.FloatTensor(pattern).unsqueeze(0)
+#                 if hasattr(self.discriminator, 'to'):
+#                     device = next(self.discriminator.parameters()).device
+#                     pattern_tensor = pattern_tensor.to(device)
+#                     with torch.no_grad():
+#                         score = self.discriminator(pattern_tensor).cpu().item()
+#                     return score
+#                 return 0.5
+#         except Exception:
+#             return 0.5
+#
+#     def _evaluate_novelty(self, pattern: np.ndarray) -> float:
+#         """
+#         Оценивает новизну паттерна.
+#         Штрафует за слишком похожие на существующие.
+#         """
+#         if not self.experience_buffer:
+#             return 1.0
+#
+#         buffer_size = min(len(self.experience_buffer), 50)
+#         sample = random.sample(self.experience_buffer, buffer_size)
+#
+#         similarities = []
+#         for exp in sample:
+#             other = None
+#
+#             if isinstance(exp, np.ndarray):
+#                 if len(exp) == len(pattern):
+#                     other = exp
+#                 else:
+#                     continue
+#
+#             elif isinstance(exp, (list, tuple)) and len(exp) >= 4:
+#                 try:
+#                     state = exp[0]
+#                     action = exp[1]
+#                     reward = exp[2]
+#                     next_state = exp[3]
+#
+#                     # Приводим к массивам
+#                     if hasattr(state, '__len__'):
+#                         state_arr = np.array(state).flatten()
+#                     else:
+#                         state_arr = np.array([state])
+#
+#                     if hasattr(next_state, '__len__'):
+#                         next_state_arr = np.array(next_state).flatten()
+#                     else:
+#                         next_state_arr = np.array([next_state])
+#
+#                     action_arr = np.array([action])
+#                     reward_arr = np.array([reward])
+#
+#                     combined = np.concatenate([state_arr, action_arr, reward_arr, next_state_arr])
+#
+#                     if len(combined) >= 256:
+#                         other = combined[:256]
+#                     else:
+#                         other = np.zeros(256)
+#                         other[:len(combined)] = combined
+#                 except Exception:
+#                     continue
+#             else:
+#                 continue
+#
+#             if other is not None and len(other) == 256 and len(pattern) == 256:
+#                 try:
+#                     norm_pattern = np.linalg.norm(pattern) + 1e-8
+#                     norm_other = np.linalg.norm(other) + 1e-8
+#                     sim = np.dot(pattern, other) / (norm_pattern * norm_other)
+#                     similarities.append(sim)
+#                 except Exception:
+#                     continue
+#
+#         if similarities:
+#             max_similarity = max(similarities)
+#             return 1.0 - max_similarity
+#         else:
+#             return 1.0
+#
+#     def _evaluate_complexity(self, pattern: np.ndarray) -> float:
+#         """
+#         Оценивает сложность паттерна.
+#         """
+#         if pattern is None or len(pattern) == 0:
+#             return 0.0
+#
+#         min_val = np.min(pattern)
+#         max_val = np.max(pattern)
+#         if max_val - min_val < 1e-8:
+#             return 0.0
+#
+#         normalized = (pattern - min_val) / (max_val - min_val + 1e-8)
+#         unique_ratio = len(np.unique(normalized)) / len(normalized)
+#         variance = np.var(pattern)
+#         complexity = 0.5 * unique_ratio + 0.5 * min(variance * 10, 1.0)
+#
+#         return complexity
 
 
 class InstinctPopulation:
@@ -1081,40 +1244,40 @@ class InstinctEvaluator:
     #         # print(f"  ⚠️ Ошибка оценки дискриминатором: {e}")
     #         return 0.5
 
-    def _evaluate_novelty(self, pattern: np.ndarray) -> float:
-        """
-        Оценивает новизну паттерна.
-        Штрафует за слишком похожие на существующие.
-        """
-        # Проверяем сходство с паттернами в буфере
-        if not self.experience_buffer:
-            return 1.0
-
-        # Берем случайные паттерны из буфера
-        buffer_size = min(len(self.experience_buffer), 50)
-        sample = random.sample(self.experience_buffer, buffer_size)
-
-        similarities = []
-        for exp in sample:
-            # Если exp - это паттерн (np.ndarray)
-            if isinstance(exp, np.ndarray):
-                other = exp
-            elif isinstance(exp, (list, tuple)) and len(exp) > 0:
-                # Если это список, берем первый элемент
-                other = exp[0] if isinstance(exp[0], np.ndarray) else np.array(exp[0])
-            else:
-                continue
-
-            # Косинусное сходство
-            sim = np.dot(pattern, other) / (np.linalg.norm(pattern) * np.linalg.norm(other) + 1e-8)
-            similarities.append(sim)
-
-        if similarities:
-            max_similarity = max(similarities)
-            # Чем меньше сходство, тем выше новизна
-            return 1.0 - max_similarity
-        else:
-            return 1.0
+    # def _evaluate_novelty(self, pattern: np.ndarray) -> float:
+    #     """
+    #     Оценивает новизну паттерна.
+    #     Штрафует за слишком похожие на существующие.
+    #     """
+    #     # Проверяем сходство с паттернами в буфере
+    #     if not self.experience_buffer:
+    #         return 1.0
+    #
+    #     # Берем случайные паттерны из буфера
+    #     buffer_size = min(len(self.experience_buffer), 50)
+    #     sample = random.sample(self.experience_buffer, buffer_size)
+    #
+    #     similarities = []
+    #     for exp in sample:
+    #         # Если exp - это паттерн (np.ndarray)
+    #         if isinstance(exp, np.ndarray):
+    #             other = exp
+    #         elif isinstance(exp, (list, tuple)) and len(exp) > 0:
+    #             # Если это список, берем первый элемент
+    #             other = exp[0] if isinstance(exp[0], np.ndarray) else np.array(exp[0])
+    #         else:
+    #             continue
+    #
+    #         # Косинусное сходство
+    #         sim = np.dot(pattern, other) / (np.linalg.norm(pattern) * np.linalg.norm(other) + 1e-8)
+    #         similarities.append(sim)
+    #
+    #     if similarities:
+    #         max_similarity = max(similarities)
+    #         # Чем меньше сходство, тем выше новизна
+    #         return 1.0 - max_similarity
+    #     else:
+    #         return 1.0
 
     def _evaluate_complexity(self, pattern: np.ndarray) -> float:
         """

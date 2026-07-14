@@ -22,6 +22,7 @@ from .models import MentalModel  # <-- Исправленный импорт
 
 
 
+
 # # core/thinking/understanding.py
 # """
 # Модуль "Понимание" - создание новых моделей из описания задачи.
@@ -141,9 +142,27 @@ class UnderstandingEngine:
     }
 
     def __init__(self, global_graph: GlobalKnowledgeGraph = None,
-                 individual_graph: IndividualKnowledgeGraph = None):
-        self.global_graph = global_graph or GlobalKnowledgeGraph()
+                 individual_graph: IndividualKnowledgeGraph = None,
+                 load_from_db: bool = True):  # ← НОВЫЙ ПАРАМЕТР
+        """
+        Инициализирует движок понимания.
+
+        Args:
+            global_graph: Глобальный граф знаний (если None — загружается из БД)
+            individual_graph: Индивидуальный граф знаний
+            load_from_db: Загружать ли ГЗ из БД
+        """
+        self.global_graph = global_graph
         self.individual_graph = individual_graph or IndividualKnowledgeGraph()
+
+        # Если ГЗ не передан, загружаем из БД
+        if self.global_graph is None and load_from_db:
+            print("📥 Загрузка ГЗ из БД...")
+            self.global_graph = GlobalKnowledgeGraph()
+            self.global_graph.load_from_db()
+            print(f"   ✅ Загружено: {len(self.global_graph.nodes)} узлов, {len(self.global_graph.edges)} связей")
+        elif self.global_graph is None:
+            self.global_graph = GlobalKnowledgeGraph()
 
         # Индексы для быстрого поиска
         self._name_index: Dict[str, str] = {}
@@ -156,6 +175,23 @@ class UnderstandingEngine:
         print("🧠 Движок понимания инициализирован")
         print(f"   Узлов в ГЗ: {len(self.global_graph.nodes)}")
         print(f"   Связей в ГЗ: {len(self.global_graph.edges)}")
+
+    # def __init__(self, global_graph: GlobalKnowledgeGraph = None,
+    #              individual_graph: IndividualKnowledgeGraph = None):
+    #     self.global_graph = global_graph or GlobalKnowledgeGraph()
+    #     self.individual_graph = individual_graph or IndividualKnowledgeGraph()
+    #
+    #     # Индексы для быстрого поиска
+    #     self._name_index: Dict[str, str] = {}
+    #     self._property_index: Dict[str, List[str]] = {}
+    #     self._build_indexes()
+    #
+    #     # История понимания
+    #     self.understanding_history: List[UnderstandingResult] = []
+    #
+    #     print("🧠 Движок понимания инициализирован")
+    #     print(f"   Узлов в ГЗ: {len(self.global_graph.nodes)}")
+    #     print(f"   Связей в ГЗ: {len(self.global_graph.edges)}")
 
     def _build_indexes(self):
         """Строит индексы для быстрого поиска."""
@@ -278,16 +314,11 @@ class UnderstandingEngine:
                            task_description: str) -> MentalModel:
         """
         Строит ментальную модель из найденных узлов.
-
-        Args:
-            nodes: Список узлов
-            task_description: Описание задачи
-
-        Returns:
-            Ментальная модель
         """
-        # Создаем ID модели
-        model_id = f"mm_{hashlib.md5(str(time.time()).encode()).hexdigest()[:8]}"
+        import uuid
+
+        # Создаем UUID
+        model_id = str(uuid.uuid4())
 
         # Собираем все свойства
         all_properties = []
@@ -301,11 +332,15 @@ class UnderstandingEngine:
         # В упрощенном виде - список описаний узлов
         sequence = [f"{node.name}: {node.description[:50]}" for node in nodes[:5]]
 
+        # Создаем эмбеддинг
+        embedding = self._create_embedding(nodes)
+
+        # Создаем модель
         model = MentalModel(
             id=model_id,
             name=f"Модель: {task_description[:30]}...",
             sequence=sequence,
-            embedding=self._create_embedding(nodes)
+            embedding=embedding
         )
 
         # Добавляем свойства из узлов
@@ -321,6 +356,54 @@ class UnderstandingEngine:
         }
 
         return model
+
+    # def build_mental_model(self, nodes: List[KnowledgeNode],
+    #                        task_description: str) -> MentalModel:
+    #     """
+    #     Строит ментальную модель из найденных узлов.
+    #
+    #     Args:
+    #         nodes: Список узлов
+    #         task_description: Описание задачи
+    #
+    #     Returns:
+    #         Ментальная модель
+    #     """
+    #     # Создаем ID модели
+    #     model_id = f"mm_{hashlib.md5(str(time.time()).encode()).hexdigest()[:8]}"
+    #
+    #     # Собираем все свойства
+    #     all_properties = []
+    #     all_functions = []
+    #     for node in nodes:
+    #         all_properties.extend(node.properties)
+    #         for func in node.functions:
+    #             all_functions.append(func.name)
+    #
+    #     # Создаем последовательность (для ментальной модели)
+    #     # В упрощенном виде - список описаний узлов
+    #     sequence = [f"{node.name}: {node.description[:50]}" for node in nodes[:5]]
+    #
+    #     model = MentalModel(
+    #         id=model_id,
+    #         name=f"Модель: {task_description[:30]}...",
+    #         sequence=sequence,
+    #         embedding=self._create_embedding(nodes)
+    #     )
+    #
+    #     # Добавляем свойства из узлов
+    #     model.properties = list(set(all_properties))
+    #
+    #     # Добавляем метаданные
+    #     model.metadata = {
+    #         "task": task_description,
+    #         "node_ids": [n.id for n in nodes],
+    #         "node_names": [n.name for n in nodes],
+    #         "created_at": time.time(),
+    #         "source": "understanding_engine"
+    #     }
+    #
+    #     return model
 
     def _create_embedding(self, nodes: List[KnowledgeNode]) -> List[float]:
         """
@@ -344,12 +427,6 @@ class UnderstandingEngine:
     def understand(self, task_description: str) -> UnderstandingResult:
         """
         Основной метод "Понимания".
-
-        Args:
-            task_description: Текстовое описание задачи
-
-        Returns:
-            UnderstandingResult с результатами понимания
         """
         start_time = time.time()
         result = UnderstandingResult(
@@ -402,22 +479,30 @@ class UnderstandingEngine:
             print(f"   Свойств: {len(model.properties)}")
             print(f"   Узлов: {len(nodes)}")
 
-            # Создаем комбинацию для совместимости
-            combo = Combination(
-                id=f"combo_{model.id}",
-                nodes=nodes,
-                properties=model.properties,
-                metadata=model.metadata
-            )
-            result.new_model = combo
+            # ============================================================
+            # 4. СОХРАНЕНИЕ В БД
+            # ============================================================
+            try:
+                from db.knowledge_db import KnowledgeDB
+                db = KnowledgeDB()
 
-            # 4. СОХРАНЕНИЕ В ИГЗ
+                # Сохраняем ментальную модель в БД
+                if db.save_mental_model(model):
+                    print(f"   💾 Ментальная модель сохранена в БД: {model.id}")
+                else:
+                    print(f"   ⚠️ Не удалось сохранить модель в БД")
+
+            except Exception as e:
+                print(f"   ❌ Ошибка сохранения в БД: {e}")
+                result.errors.append(f"Ошибка сохранения: {e}")
+
+            # 5. СОХРАНЕНИЕ В ИГЗ
             result.status = UnderstandingStatus.SAVING
             if self.individual_graph:
                 self._save_to_individual_graph(model, task_description, nodes)
                 print("📌 Сохранено в ИГЗ")
 
-            # 5. ФОРМИРОВАНИЕ ОПЫТА
+            # 6. ФОРМИРОВАНИЕ ОПЫТА
             result.experience = {
                 "task": task_description,
                 "concepts": concepts,
@@ -428,6 +513,15 @@ class UnderstandingEngine:
                 "created_at": time.time()
             }
 
+            # Создаем комбинацию для совместимости
+            combo = Combination(
+                id=f"combo_{model.id}",
+                nodes=nodes,
+                properties=model.properties,
+                metadata=model.metadata
+            )
+            result.new_model = combo
+
             result.status = UnderstandingStatus.COMPLETED
             print("✅ Понимание завершено")
 
@@ -435,19 +529,175 @@ class UnderstandingEngine:
             result.status = UnderstandingStatus.COMPLETED
             result.errors.append(str(e))
             print(f"❌ Ошибка: {e}")
+            import traceback
+            traceback.print_exc()
 
         result.execution_time = time.time() - start_time
         self.understanding_history.append(result)
         return result
 
+    # def understand(self, task_description: str) -> UnderstandingResult:
+    #     """
+    #     Основной метод "Понимания".
+    #     """
+    #     start_time = time.time()
+    #     result = UnderstandingResult(
+    #         task_description=task_description,
+    #         status=UnderstandingStatus.EXTRACTING
+    #     )
+    #
+    #     try:
+    #         # ... существующий код (извлечение концептов, поиск узлов) ...
+    #
+    #         # 3. ПОСТРОЕНИЕ МОДЕЛИ
+    #         result.status = UnderstandingStatus.BUILDING
+    #         model = self.build_mental_model(nodes, task_description)
+    #         result.mental_model = model
+    #         print(f"📌 Создана ментальная модель: {model.id}")
+    #         print(f"   Свойств: {len(model.properties)}")
+    #         print(f"   Узлов: {len(nodes)}")
+    #
+    #         # ============================================================
+    #         # 4. СОХРАНЕНИЕ В БД (НОВОЕ!)
+    #         # ============================================================
+    #         try:
+    #             from db.knowledge_db import KnowledgeDB
+    #             db = KnowledgeDB()
+    #
+    #             # Сохраняем ментальную модель в БД
+    #             if db.save_mental_model(model):
+    #                 print(f"   💾 Ментальная модель сохранена в БД: {model.id}")
+    #             else:
+    #                 print(f"   ⚠️ Не удалось сохранить модель в БД")
+    #
+    #         except Exception as e:
+    #             print(f"   ❌ Ошибка сохранения в БД: {e}")
+    #             result.errors.append(f"Ошибка сохранения: {e}")
+    #
+    #         # 5. СОХРАНЕНИЕ В ИГЗ
+    #         result.status = UnderstandingStatus.SAVING
+    #         if self.individual_graph:
+    #             self._save_to_individual_graph(model, task_description, nodes)
+    #             print("📌 Сохранено в ИГЗ")
+    #
+    #         # ... остальной код ...
+    #
+    #     except Exception as e:
+    #         result.status = UnderstandingStatus.COMPLETED
+    #         result.errors.append(str(e))
+    #         print(f"❌ Ошибка: {e}")
+    #
+    #     result.execution_time = time.time() - start_time
+    #     self.understanding_history.append(result)
+    #     return result
+
+    # def understand(self, task_description: str) -> UnderstandingResult:
+    #     """
+    #     Основной метод "Понимания".
+    #
+    #     Args:
+    #         task_description: Текстовое описание задачи
+    #
+    #     Returns:
+    #         UnderstandingResult с результатами понимания
+    #     """
+    #     start_time = time.time()
+    #     result = UnderstandingResult(
+    #         task_description=task_description,
+    #         status=UnderstandingStatus.EXTRACTING
+    #     )
+    #
+    #     try:
+    #         # 1. ИЗВЛЕЧЕНИЕ КОНЦЕПТОВ
+    #         print("\n🧠 ПОНИМАНИЕ ЗАДАЧИ")
+    #         print("=" * 60)
+    #         print(f"📝 {task_description[:100]}...")
+    #
+    #         result.status = UnderstandingStatus.EXTRACTING
+    #         concepts = self.extract_concepts(task_description)
+    #         result.extracted_concepts = concepts
+    #         print(f"📌 Извлечено концептов: {len(concepts)}")
+    #         if concepts:
+    #             print(f"   {', '.join(concepts[:5])}")
+    #
+    #         if not concepts:
+    #             result.status = UnderstandingStatus.COMPLETED
+    #             result.errors.append("Не удалось извлечь концепты из текста")
+    #             print("⚠️ Не удалось извлечь концепты")
+    #             result.execution_time = time.time() - start_time
+    #             self.understanding_history.append(result)
+    #             return result
+    #
+    #         # 2. ПОИСК УЗЛОВ
+    #         result.status = UnderstandingStatus.SEARCHING
+    #         nodes = self.find_nodes_by_concepts(concepts)
+    #         result.found_nodes = nodes
+    #         print(f"📌 Найдено узлов: {len(nodes)}")
+    #         if nodes:
+    #             print(f"   {', '.join([n.name for n in nodes[:5]])}")
+    #
+    #         if not nodes:
+    #             result.status = UnderstandingStatus.COMPLETED
+    #             result.errors.append("Не найдено подходящих узлов в ГЗ")
+    #             print("⚠️ Не найдено подходящих узлов")
+    #             result.execution_time = time.time() - start_time
+    #             self.understanding_history.append(result)
+    #             return result
+    #
+    #         # 3. ПОСТРОЕНИЕ МОДЕЛИ
+    #         result.status = UnderstandingStatus.BUILDING
+    #         model = self.build_mental_model(nodes, task_description)
+    #         result.mental_model = model
+    #         print(f"📌 Создана ментальная модель: {model.id}")
+    #         print(f"   Свойств: {len(model.properties)}")
+    #         print(f"   Узлов: {len(nodes)}")
+    #
+    #         # Создаем комбинацию для совместимости
+    #         combo = Combination(
+    #             id=f"combo_{model.id}",
+    #             nodes=nodes,
+    #             properties=model.properties,
+    #             metadata=model.metadata
+    #         )
+    #         result.new_model = combo
+    #
+    #         # 4. СОХРАНЕНИЕ В ИГЗ
+    #         result.status = UnderstandingStatus.SAVING
+    #         if self.individual_graph:
+    #             self._save_to_individual_graph(model, task_description, nodes)
+    #             print("📌 Сохранено в ИГЗ")
+    #
+    #         # 5. ФОРМИРОВАНИЕ ОПЫТА
+    #         result.experience = {
+    #             "task": task_description,
+    #             "concepts": concepts,
+    #             "node_ids": [n.id for n in nodes],
+    #             "node_names": [n.name for n in nodes],
+    #             "model_id": model.id,
+    #             "model_properties": model.properties,
+    #             "created_at": time.time()
+    #         }
+    #
+    #         result.status = UnderstandingStatus.COMPLETED
+    #         print("✅ Понимание завершено")
+    #
+    #     except Exception as e:
+    #         result.status = UnderstandingStatus.COMPLETED
+    #         result.errors.append(str(e))
+    #         print(f"❌ Ошибка: {e}")
+    #
+    #     result.execution_time = time.time() - start_time
+    #     self.understanding_history.append(result)
+    #     return result
+
     def _save_to_individual_graph(self, model: MentalModel,
                                   task_description: str,
                                   nodes: List[KnowledgeNode]):
-        """Сохраняет модель в индивидуальный граф знаний."""
+        """Сохраняет модель в индивидуальный граф знаний и синхронизирует с ГГЗ."""
         if not self.individual_graph:
             return
 
-        # Создаем запись
+        # 1. Сохраняем как обычное знание
         record = {
             "id": model.id,
             "type": "understanding",
@@ -458,9 +708,50 @@ class UnderstandingEngine:
             "created_at": time.time(),
             "source": "understanding_engine"
         }
-
-        # Добавляем в ИГЗ
         self.individual_graph.add_knowledge(record)
+
+        # 2. Сохраняем как ментальную модель
+        self.individual_graph.add_mental_model(model.id, {
+            'name': model.name,
+            'properties': model.properties,
+            'nodes': [n.id for n in nodes],
+            'task': task_description,
+            'model_type': getattr(model, 'model_type', 'mental_model')
+        })
+
+        # 3. Синхронизируем узлы с ГГЗ
+        node_ids = [n.id for n in nodes]
+        results = self.individual_graph.sync_with_global(self.global_graph, node_ids)
+
+        success_count = sum(1 for v in results.values() if v)
+        print(f"📌 Синхронизировано с ГГЗ: {success_count}/{len(node_ids)} узлов")
+
+        # 4. Синхронизируем ментальную модель с ГГЗ
+        if self.individual_graph.sync_mental_model_to_global(self.global_graph, model.id):
+            print(f"📌 Ментальная модель {model.id} синхронизирована с ГГЗ")
+
+
+    # def _save_to_individual_graph(self, model: MentalModel,
+    #                               task_description: str,
+    #                               nodes: List[KnowledgeNode]):
+    #     """Сохраняет модель в индивидуальный граф знаний."""
+    #     if not self.individual_graph:
+    #         return
+    #
+    #     # Создаем запись
+    #     record = {
+    #         "id": model.id,
+    #         "type": "understanding",
+    #         "name": model.name,
+    #         "nodes": [n.id for n in nodes],
+    #         "properties": model.properties,
+    #         "task": task_description,
+    #         "created_at": time.time(),
+    #         "source": "understanding_engine"
+    #     }
+    #
+    #     # Добавляем в ИГЗ
+    #     self.individual_graph.add_knowledge(record)
 
     def get_statistics(self) -> Dict[str, Any]:
         """Возвращает статистику понимания."""
@@ -475,13 +766,13 @@ class UnderstandingEngine:
         }
 
 
-# Функция-обертка для быстрого использования
-def understand_task(task_description: str) -> UnderstandingResult:
+def understand_task(task_description: str, load_from_db: bool = True) -> UnderstandingResult:
     """
     Быстрый запуск понимания задачи.
 
     Args:
         task_description: Описание задачи
+        load_from_db: Загружать ли ГЗ из БД
 
     Returns:
         Результат понимания
@@ -489,12 +780,44 @@ def understand_task(task_description: str) -> UnderstandingResult:
     from core.knowledge.global_knowledge_graph import GlobalKnowledgeGraph
     from db.knowledge_db import KnowledgeDB
 
-    # Загружаем ГЗ из БД
     graph = GlobalKnowledgeGraph()
-    db = KnowledgeDB()
-    nodes = db.load_all_nodes()
-    for node in nodes:
-        graph.add_node(node)
 
-    engine = UnderstandingEngine(graph)
+    if load_from_db:
+        print("📥 Загрузка ГЗ из БД...")
+        db = KnowledgeDB()
+        nodes = db.load_all_nodes()
+        for node in nodes:
+            graph.add_node(node)
+        edges = db.load_all_edges()
+        for edge in edges:
+            graph.add_edge(edge)
+        print(f"   ✅ Загружено {len(nodes)} узлов и {len(edges)} связей")
+    else:
+        print("⚠️ Используется пустой ГЗ")
+
+    engine = UnderstandingEngine(graph, load_from_db=False)
     return engine.understand(task_description)
+
+# # Функция-обертка для быстрого использования
+# def understand_task(task_description: str) -> UnderstandingResult:
+#     """
+#     Быстрый запуск понимания задачи.
+#
+#     Args:
+#         task_description: Описание задачи
+#
+#     Returns:
+#         Результат понимания
+#     """
+#     from core.knowledge.global_knowledge_graph import GlobalKnowledgeGraph
+#     from db.knowledge_db import KnowledgeDB
+#
+#     # Загружаем ГЗ из БД
+#     graph = GlobalKnowledgeGraph()
+#     db = KnowledgeDB()
+#     nodes = db.load_all_nodes()
+#     for node in nodes:
+#         graph.add_node(node)
+#
+#     engine = UnderstandingEngine(graph)
+#     return engine.understand(task_description)

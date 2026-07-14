@@ -14,6 +14,7 @@ import numpy as np
 from typing import List, Dict, Optional, Tuple, Any, Union
 from .emotion_engine import EmotionEngine
 from .mental_model import MentalModelManager
+from core.emotions.emotion_base import MentalModel
 from .intuition_engine import IntuitionEngine
 from core.emotions.emotion_base import EmotionalEvent, EmotionalResponse, EmotionType
 from core.emotions.emotion_graph import EmotionGraph
@@ -42,6 +43,42 @@ class EmotionSystem:
         self.instinct_system = None  # Будет подключен позже
 
         print("✅ Полная эмоциональная подсистема инициализирована")
+
+    def synchronize_with_knowledge_graph(self, model_id: str) -> bool:
+        """
+        Синхронизирует ментальную модель с глобальным графом знаний.
+        """
+        model = self.models.get_model(model_id)
+        if not model:
+            return False
+
+        try:
+            from core.knowledge.knowledge_node import KnowledgeNode
+            from db.knowledge_db import KnowledgeDB
+
+            db = KnowledgeDB()
+
+            # Создаём узел в ГЗ
+            node = KnowledgeNode(
+                id=model.id,
+                name=model.name,
+                node_type="mental_model",
+                properties=list(model.attributes.keys()),
+                description=f"Ментальная модель: {model.name} (тип: {model.type})"
+            )
+
+            # Добавляем эмбеддинг
+            if hasattr(model, 'embedding') and model.embedding is not None:
+                node.embedding = model.embedding
+
+            # Сохраняем
+            db.save_node(node)
+            print(f"✅ Модель {model.name} синхронизирована с ГЗ")
+            return True
+
+        except Exception as e:
+            print(f"⚠️ Ошибка синхронизации модели {model.name}: {e}")
+            return False
 
     def process_sensory_input(self, sensory_data: Dict) -> List[EmotionalResponse]:
         """

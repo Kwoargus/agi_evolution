@@ -55,55 +55,122 @@ class World:
     def get_state(self, bot):
         """
         Возвращает состояние мира для бота.
-        Размерность ФИКСИРОВАННАЯ: всегда 21 (8 + 13 объектов).
+        РАЗМЕРНОСТЬ ВСЕГДА 21: [x, z] + 6 объектов × 3 + 1 резерв
         """
         half = self.world_size / 2.0
+
+        # Если бот не передан, возвращаем нулевое состояние
+        if bot is None:
+            return [0.0] * 21
+
         state = [bot.x / half, bot.z / half]  # 2 значения
 
-        # Фиксируем список объектов для консистентности
-        # Берем до 6 объектов (2 + 6*3 = 20, плюс резерв)
-        max_objects = 6
-        objects_list = list(self.objects)[:max_objects]
+        # Берем ровно 6 объектов из мира (или меньше)
+        objects_list = list(self.objects)[:6]
 
-        # Дополняем до max_objects пустыми объектами
-        while len(objects_list) < max_objects:
-            objects_list.append(None)
-
-        for obj in objects_list[:max_objects]:
+        # Добавляем информацию о каждом объекте
+        for obj in objects_list:
             if obj is None:
-                # Пустой объект: тип 0, позиция 0, 0
                 state.extend([0.0, 0.0, 0.0])
             else:
                 # Кодируем тип объекта числом
                 if hasattr(obj, 'type'):
-                    type_code = obj.type
-                elif isinstance(obj, GameObject):
-                    type_code = 1  # огонь/костёр
+                    # Если type - строка, преобразуем в число
+                    if isinstance(obj.type, str):
+                        if obj.type == 'food' or obj.type == 'Food':
+                            type_code = 2.0
+                        elif obj.type == 'predator' or obj.type == 'Predator':
+                            type_code = 3.0
+                        elif obj.type == 'fire' or obj.type == 'Fire':
+                            type_code = 1.0
+                        else:
+                            type_code = 4.0  # неизвестный тип
+                    else:
+                        type_code = float(obj.type)
                 elif isinstance(obj, Food):
-                    type_code = 2  # еда
+                    type_code = 2.0
                 elif isinstance(obj, Predator):
-                    type_code = 3  # хищник
+                    type_code = 3.0
+                elif isinstance(obj, GameObject):
+                    if hasattr(obj, 'type') and obj.type == 'fire':
+                        type_code = 1.0
+                    else:
+                        type_code = 4.0
                 else:
-                    type_code = 0  # неизвестный тип
+                    type_code = 0.0
 
-                # Нормализуем относительное положение
                 dx = (obj.x - bot.x) / half
                 dz = (obj.z - bot.z) / half
-
                 state.extend([float(type_code), float(dx), float(dz)])
 
-        # Гарантируем размерность 2 + max_objects * 3 = 2 + 6*3 = 20
-        # Добавляем ещё один резервный объект для 21
-        state.extend([0.0, 0.0, 0.0])  # +3 = 23, но оставим 21
+        # Если объектов меньше 6, дополняем нулями
+        while len(objects_list) < 6:
+            state.extend([0.0, 0.0, 0.0])
+            objects_list.append(None)
 
-        # Обрезаем до 21
-        state = state[:21]
+        # У нас должно быть 2 + 6*3 = 20 значений
+        # Добавляем 1 резервный ноль для размерности 21
+        state.append(0.0)
 
-        # Если меньше 21, дополняем нулями
+        # Гарантируем ровно 21
         while len(state) < 21:
             state.append(0.0)
+        state = state[:21]
 
         return state
+
+    # def get_state(self, bot):
+    #     """
+    #     Возвращает состояние мира для бота.
+    #     Размерность ФИКСИРОВАННАЯ: всегда 21 (8 + 13 объектов).
+    #     """
+    #     half = self.world_size / 2.0
+    #     state = [bot.x / half, bot.z / half]  # 2 значения
+    #
+    #     # Фиксируем список объектов для консистентности
+    #     # Берем до 6 объектов (2 + 6*3 = 20, плюс резерв)
+    #     max_objects = 6
+    #     objects_list = list(self.objects)[:max_objects]
+    #
+    #     # Дополняем до max_objects пустыми объектами
+    #     while len(objects_list) < max_objects:
+    #         objects_list.append(None)
+    #
+    #     for obj in objects_list[:max_objects]:
+    #         if obj is None:
+    #             # Пустой объект: тип 0, позиция 0, 0
+    #             state.extend([0.0, 0.0, 0.0])
+    #         else:
+    #             # Кодируем тип объекта числом
+    #             if hasattr(obj, 'type'):
+    #                 type_code = obj.type
+    #             elif isinstance(obj, GameObject):
+    #                 type_code = 1  # огонь/костёр
+    #             elif isinstance(obj, Food):
+    #                 type_code = 2  # еда
+    #             elif isinstance(obj, Predator):
+    #                 type_code = 3  # хищник
+    #             else:
+    #                 type_code = 0  # неизвестный тип
+    #
+    #             # Нормализуем относительное положение
+    #             dx = (obj.x - bot.x) / half
+    #             dz = (obj.z - bot.z) / half
+    #
+    #             state.extend([float(type_code), float(dx), float(dz)])
+    #
+    #     # Гарантируем размерность 2 + max_objects * 3 = 2 + 6*3 = 20
+    #     # Добавляем ещё один резервный объект для 21
+    #     state.extend([0.0, 0.0, 0.0])  # +3 = 23, но оставим 21
+    #
+    #     # Обрезаем до 21
+    #     state = state[:21]
+    #
+    #     # Если меньше 21, дополняем нулями
+    #     while len(state) < 21:
+    #         state.append(0.0)
+    #
+    #     return state
 
     # def get_state(self, bot):
     #     half = self.world_size / 2.0  # половина размера мира (10)

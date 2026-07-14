@@ -31,42 +31,88 @@ class IntuitionEngine:
                               success: bool, intensity: float = 1.0):
         """
         Обучает интуицию на основе опыта.
-
-        Args:
-            situation: Описание ситуации (например, "вижу яблоко рядом с волком")
-            action: Действие (например, "пойти за яблоком")
-            consequence: Последствие (например, "волк напал")
-            emotion: Эмоция, связанная с последствием
-            success: Успешно ли было действие
-            intensity: Интенсивность эмоции
         """
         memory_key = f"{situation}_{action}"
 
-        self.intuition_memory[memory_key].append({
+        memory = {
             'situation': situation,
             'action': action,
             'consequence': consequence,
             'emotion': emotion,
             'success': success,
             'intensity': intensity,
-            'weight': 1.0 if success else -1.0
-        })
+            'weight': 1.0 if success else -1.0,
+            'timestamp': time.time()
+        }
+
+        self.intuition_memory[memory_key].append(memory)
 
         # Ограничиваем размер памяти
         if len(self.intuition_memory[memory_key]) > 100:
             self.intuition_memory[memory_key] = self.intuition_memory[memory_key][-100:]
 
         # Сохраняем в историю опыта
-        self.experience_history.append({
-            'situation': situation,
-            'action': action,
-            'consequence': consequence,
-            'emotion': emotion,
-            'success': success,
-            'intensity': intensity
-        })
+        self.experience_history.append(memory)
+
+        # 💾 СОХРАНЯЕМ В БД
+        try:
+            from db.emotion_db import EmotionDB
+            db = EmotionDB()
+            db.save_intuition_memory(
+                situation=situation,
+                action=action,
+                consequence=consequence,
+                emotion=emotion,
+                success=success,
+                intensity=intensity
+            )
+        except Exception as e:
+            print(f"⚠️ Ошибка сохранения интуитивной памяти: {e}")
 
         print(f"🧠 Интуиция запомнила: {situation} → {action} → {consequence} ({emotion})")
+
+
+    # def learn_from_experience(self, situation: str, action: str,
+    #                           consequence: str, emotion: str,
+    #                           success: bool, intensity: float = 1.0):
+    #     """
+    #     Обучает интуицию на основе опыта.
+    #
+    #     Args:
+    #         situation: Описание ситуации (например, "вижу яблоко рядом с волком")
+    #         action: Действие (например, "пойти за яблоком")
+    #         consequence: Последствие (например, "волк напал")
+    #         emotion: Эмоция, связанная с последствием
+    #         success: Успешно ли было действие
+    #         intensity: Интенсивность эмоции
+    #     """
+    #     memory_key = f"{situation}_{action}"
+    #
+    #     self.intuition_memory[memory_key].append({
+    #         'situation': situation,
+    #         'action': action,
+    #         'consequence': consequence,
+    #         'emotion': emotion,
+    #         'success': success,
+    #         'intensity': intensity,
+    #         'weight': 1.0 if success else -1.0
+    #     })
+    #
+    #     # Ограничиваем размер памяти
+    #     if len(self.intuition_memory[memory_key]) > 100:
+    #         self.intuition_memory[memory_key] = self.intuition_memory[memory_key][-100:]
+    #
+    #     # Сохраняем в историю опыта
+    #     self.experience_history.append({
+    #         'situation': situation,
+    #         'action': action,
+    #         'consequence': consequence,
+    #         'emotion': emotion,
+    #         'success': success,
+    #         'intensity': intensity
+    #     })
+    #
+    #     print(f"🧠 Интуиция запомнила: {situation} → {action} → {consequence} ({emotion})")
 
     def predict_consequence(self, situation: str, action: str) -> Optional[Dict]:
         """

@@ -5,6 +5,7 @@ from dataclasses import dataclass, field  # <-- ДОБАВЛЯЕМ field
 from typing import Optional, Dict, Any
 import numpy as np
 from enum import Enum
+import time
 
 
 class EmotionType(Enum):
@@ -128,6 +129,7 @@ class EmotionalResponse:
 class MentalModel:
     """
     Ментальная модель объекта/ситуации/процесса.
+    ЕДИНЫЙ КЛАСС для всей системы.
     """
     id: str
     name: str
@@ -144,3 +146,30 @@ class MentalModel:
 
     # Прогностические свойства
     predictions: List[Dict[str, any]]
+
+    # Метаданные
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    created_at: float = field(default_factory=time.time)
+
+
+
+# @dataclass
+# class MentalModel:
+#     """
+#     Ментальная модель объекта/ситуации/процесса.
+#     """
+#     id: str
+#     name: str
+#     type: str  # 'object', 'situation', 'process', 'social'
+#
+#     # Векторное представление модели
+#     embedding: np.ndarray  # 256-dim
+#
+#     # Атрибуты модели
+#     attributes: Dict[str, float]
+#
+#     # Связи с другими моделями
+#     related_models: List[str]
+#
+#     # Прогностические свойства
+#     predictions: List[Dict[str, any]]

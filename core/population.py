@@ -40,13 +40,14 @@ class Population:
         return sorted_inds[:top_k]
 
     def next_generation(self, elite_count=2, mutation_rate=0.1):
-        """Создаёт следующее поколение."""
-        best = self.select_best(elite_count)
+        """Создаёт следующее поколение с учётом разнообразия."""
+        # Используем отбор с разнообразием
+        best = self.select_best_with_diversity(elite_count * 2, diversity_weight=0.3)
+        best = best[:elite_count]  # Оставляем только elite_count
+
         new_individuals = []
-        # Элита сохраняется без изменений
         new_individuals.extend(best)
 
-        # Заполняем остальных потомками от элиты
         while len(new_individuals) < self.size:
             parent1 = random.choice(best)
             parent2 = random.choice(best)
@@ -57,6 +58,25 @@ class Population:
 
         self.individuals = new_individuals
         self.generation += 1
+
+    # def next_generation(self, elite_count=2, mutation_rate=0.1):
+    #     """Создаёт следующее поколение."""
+    #     best = self.select_best(elite_count)
+    #     new_individuals = []
+    #     # Элита сохраняется без изменений
+    #     new_individuals.extend(best)
+    #
+    #     # Заполняем остальных потомками от элиты
+    #     while len(new_individuals) < self.size:
+    #         parent1 = random.choice(best)
+    #         parent2 = random.choice(best)
+    #         child_genome = parent1.genome.crossover(parent2.genome)
+    #         child_genome = child_genome.mutate(mutation_rate)
+    #         child = Individual(x=0, z=0, genome=child_genome)
+    #         new_individuals.append(child)
+    #
+    #     self.individuals = new_individuals
+    #     self.generation += 1
 
     def get_statistics(self) -> Dict:
         """Возвращает статистику популяции."""
@@ -73,3 +93,41 @@ class Population:
             'alive': sum(1 for ind in self.individuals if ind.alive),
             'food_collected': sum(ind.food_collected for ind in self.individuals if hasattr(ind, 'food_collected'))
         }
+
+    def select_best_with_diversity(self, top_k: int, diversity_weight: float = 0.3):
+        """
+        Выбирает лучших с учётом разнообразия.
+        """
+        if len(self.individuals) <= top_k:
+            return self.individuals
+
+        # Сортируем по фитнесу
+        sorted_inds = sorted(self.individuals, key=lambda ind: ind.fitness, reverse=True)
+
+        # Берём top_k * 2 кандидатов
+        candidates = sorted_inds[:top_k * 2]
+
+        # Выбираем top_k с учётом разнообразия
+        selected = []
+        for i in range(top_k):
+            if not candidates:
+                break
+
+            # Берём лучшего из оставшихся
+            best = candidates[0]
+            selected.append(best)
+            candidates.pop(0)
+
+            # Если остались кандидаты, применяем штраф за схожесть
+            if candidates:
+                # Удаляем слишком похожих на выбранного
+                candidates = [ind for ind in candidates
+                              if abs(ind.fitness - best.fitness) > 0.1]
+
+        # Если не хватило, добираем из оставшихся
+        while len(selected) < top_k and sorted_inds:
+            ind = sorted_inds.pop(0)
+            if ind not in selected:
+                selected.append(ind)
+
+        return selected[:top_k]

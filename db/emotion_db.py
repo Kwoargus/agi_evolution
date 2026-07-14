@@ -37,7 +37,7 @@ def save_emotion(self, emotion: EmotionalResponse) -> bool:
                 embedding = EXCLUDED.embedding,
                 updated_at = CURRENT_TIMESTAMP
         """, (
-            emotion.id,
+            emotion.id,  # ← ИСПОЛЬЗУЕМ UUID, А НЕ emotion_type!
             emotion.emotion_type.value,
             emotion.intensity,
             emotion.valence,
@@ -55,10 +55,43 @@ def save_emotion(self, emotion: EmotionalResponse) -> bool:
         print(f"❌ Ошибка сохранения эмоции {emotion.id}: {e}")
         return False
 
-
-
-
-
+# def save_emotion(self, emotion: EmotionalResponse) -> bool:
+#     """Сохраняет эмоциональную реакцию в БД."""
+#     try:
+#         conn = self._get_connection()
+#         cur = conn.cursor()
+#
+#         cur.execute(f"""
+#             INSERT INTO {self.schema}.emotion_responses
+#             (id, emotion_type, intensity, valence, arousal, context, source, embedding)
+#             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+#             ON CONFLICT (id) DO UPDATE SET
+#                 emotion_type = EXCLUDED.emotion_type,
+#                 intensity = EXCLUDED.intensity,
+#                 valence = EXCLUDED.valence,
+#                 arousal = EXCLUDED.arousal,
+#                 context = EXCLUDED.context,
+#                 source = EXCLUDED.source,
+#                 embedding = EXCLUDED.embedding,
+#                 updated_at = CURRENT_TIMESTAMP
+#         """, (
+#             emotion.id,
+#             emotion.emotion_type.value,
+#             emotion.intensity,
+#             emotion.valence,
+#             emotion.arousal,
+#             json.dumps(emotion.context),
+#             emotion.source,
+#             emotion.embedding.tolist() if hasattr(emotion.embedding, 'tolist') else emotion.embedding
+#         ))
+#
+#         conn.commit()
+#         cur.close()
+#         conn.close()
+#         return True
+#     except Exception as e:
+#         print(f"❌ Ошибка сохранения эмоции {emotion.id}: {e}")
+#         return False
 
 class EmotionDB:
     """

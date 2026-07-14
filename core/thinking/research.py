@@ -10,11 +10,14 @@ from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 
+from core.knowledge import IndividualKnowledgeGraph
 from core.knowledge.knowledge_node import KnowledgeNode
 from core.knowledge.knowledge_edge import KnowledgeEdge, EdgeType
 from core.knowledge.global_knowledge_graph import GlobalKnowledgeGraph
 from core.knowledge.combination import Combination
 from core.knowledge.hypothesis import Hypothesis, HypothesisStatus
+
+from core.knowledge.analogy_engine import AnalogyEngine
 
 
 class HypothesisStatus(Enum):
@@ -41,10 +44,16 @@ class ResearchEngine:
     """
 
     def __init__(self, global_graph: GlobalKnowledgeGraph,
+                 individual_graph: IndividualKnowledgeGraph = None,
                  test_environment: Any = None):
         self.global_graph = global_graph
         self.test_environment = test_environment
         self.analogy_cache = {}
+
+        # ИНИЦИАЛИЗИРУЕМ AnalogyEngine
+        self.analogy_engine = AnalogyEngine(
+            global_graph=self.global_graph,
+            individual_graph=self.individual_graph)
 
     def extract_requirements(self, problem_description: str) -> List[str]:
         """
@@ -199,13 +208,7 @@ class ResearchEngine:
 
     def research(self, problem_description: str) -> ResearchResult:
         """
-        Основной метод "Исследования".
-
-        Args:
-            problem_description: Текстовое описание проблемы
-
-        Returns:
-            ResearchResult с результатами исследования
+        Основной метод "Исследования" с использованием AnalogyEngine.
         """
         print("🔬 ЗАПУСК ИССЛЕДОВАНИЯ...")
         print(f"   Проблема: {problem_description[:100]}...")
@@ -214,14 +217,37 @@ class ResearchEngine:
         requirements = self.extract_requirements(problem_description)
         print(f"   📍 Требований: {len(requirements)}")
 
-        # 2. Находим аналогии
-        analogies = self.find_analogies(requirements)
+        # 2. Находим аналогии через AnalogyEngine
+        analogies = self.analogy_engine.find_analogies(
+            task_description=problem_description,
+            required_properties=requirements,
+            max_results=10
+        )
         print(f"   📍 Найдено аналогий: {len(analogies)}")
 
-        # 3. Генерируем гипотезы
+        # Логируем источники
+        sources = {}
+        for a in analogies:
+            source = a.metadata.get('source', 'unknown')
+            sources[source] = sources.get(source, 0) + 1
+        print(f"   📍 Источники: {sources}")
+
+        # 3. Генерируем гипотезы на основе аналогий
         hypotheses = []
         for analogy in analogies[:5]:
-            hyp = self.generate_hypothesis(analogy, requirements)
+            # Модифицируем аналогию
+            modifications = []
+
+            # Если аналогия из ИГЗ, пробуем дополнить из ГГЗ
+            if analogy.metadata.get('source') == 'individual_graph':
+                modifications.append("add_feature_надежный")
+                modifications.append("replace_part")
+
+            # Модифицируем
+            modified = self.analogy_engine.modify_analogy(analogy, modifications)
+
+            # Создаём гипотезу
+            hyp = self.generate_hypothesis(modified, requirements)
             hypotheses.append(hyp)
 
         print(f"   📍 Сгенерировано гипотез: {len(hypotheses)}")
@@ -245,3 +271,52 @@ class ResearchEngine:
             generated_hypotheses=hypotheses,
             validated_hypotheses=validated
         )
+
+    # def research(self, problem_description: str) -> ResearchResult:
+    #     """
+    #     Основной метод "Исследования".
+    #
+    #     Args:
+    #         problem_description: Текстовое описание проблемы
+    #
+    #     Returns:
+    #         ResearchResult с результатами исследования
+    #     """
+    #     print("🔬 ЗАПУСК ИССЛЕДОВАНИЯ...")
+    #     print(f"   Проблема: {problem_description[:100]}...")
+    #
+    #     # 1. Извлекаем требования
+    #     requirements = self.extract_requirements(problem_description)
+    #     print(f"   📍 Требований: {len(requirements)}")
+    #
+    #     # 2. Находим аналогии
+    #     analogies = self.find_analogies(requirements)
+    #     print(f"   📍 Найдено аналогий: {len(analogies)}")
+    #
+    #     # 3. Генерируем гипотезы
+    #     hypotheses = []
+    #     for analogy in analogies[:5]:
+    #         hyp = self.generate_hypothesis(analogy, requirements)
+    #         hypotheses.append(hyp)
+    #
+    #     print(f"   📍 Сгенерировано гипотез: {len(hypotheses)}")
+    #
+    #     # 4. Проверяем гипотезы
+    #     validated = []
+    #     for hyp in hypotheses:
+    #         is_valid, score = self.test_hypothesis(hyp)
+    #         if is_valid:
+    #             validated.append(hyp)
+    #             print(f"   ✅ Гипотеза {hyp.id}: {score:.2f} - валидна")
+    #         else:
+    #             print(f"   ❌ Гипотеза {hyp.id}: {score:.2f} - отклонена")
+    #
+    #     print(f"   📍 Валидных гипотез: {len(validated)}")
+    #
+    #     return ResearchResult(
+    #         problem_description=problem_description,
+    #         required_properties=requirements,
+    #         found_analogies=analogies,
+    #         generated_hypotheses=hypotheses,
+    #         validated_hypotheses=validated
+    #     )
