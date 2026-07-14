@@ -35,6 +35,350 @@ class KnowledgeDB:
         }
         self.schema = 'agi_evolution'
 
+        # db/knowledge_db.py - ИСПРАВЛЕННЫЙ save_hypothesis()
+
+    def save_combination(self, combination) -> bool:
+        try:
+            conn = self._get_connection()
+            cur = conn.cursor()
+
+            node_ids = [n.id for n in combination.nodes]
+            edge_ids = []
+            properties = combination.properties
+            score = combination.metadata.get('score', 0.0)
+            metadata = json.dumps(combination.metadata)
+
+            cur.execute(f"""
+                INSERT INTO {self.schema}.combinations 
+                (id, node_ids, edge_ids, properties, score, metadata, created_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO UPDATE SET
+                    node_ids = EXCLUDED.node_ids,
+                    edge_ids = EXCLUDED.edge_ids,
+                    properties = EXCLUDED.properties,
+                    score = EXCLUDED.score,
+                    metadata = EXCLUDED.metadata
+            """, (
+                combination.id,
+                node_ids,
+                edge_ids,
+                properties,
+                score,
+                metadata,
+                datetime.now()
+            ))
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"❌ Ошибка сохранения комбинации {combination.id}: {e}")
+            return False
+
+    def load_all_hypotheses(self) -> List[Dict]:
+        """
+        Загружает все гипотезы из БД (возвращает список словарей).
+        """
+        try:
+            conn = self._get_connection()
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            cur.execute(f"""
+                SELECT * FROM {self.schema}.hypotheses
+                ORDER BY created_at DESC
+            """)
+
+            rows = cur.fetchall()
+            cur.close()
+            conn.close()
+
+            # Преобразуем JSONB в dict
+            for row in rows:
+                if row.get('test_results'):
+                    if isinstance(row['test_results'], str):
+                        row['test_results'] = json.loads(row['test_results'])
+                if row.get('metadata'):
+                    if isinstance(row['metadata'], str):
+                        row['metadata'] = json.loads(row['metadata'])
+                # modifications уже массив
+            return rows
+
+        except Exception as e:
+            print(f"❌ Ошибка загрузки гипотез: {e}")
+            return []
+
+    # def load_all_hypotheses(self) -> List:
+    #     """Загружает все гипотезы из БД."""
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    #
+    #         cur.execute(f"""
+    #             SELECT id, task_description, source_combination_id, modifications,
+    #                    description, predicted_score, actual_score, status,
+    #                    test_results, metadata, created_at, updated_at
+    #             FROM {self.schema}.hypotheses
+    #             ORDER BY created_at DESC
+    #         """)
+    #
+    #         rows = cur.fetchall()
+    #         cur.close()
+    #         conn.close()
+    #
+    #         from core.knowledge.hypothesis import Hypothesis, HypothesisStatus
+    #         from core.knowledge.combination import Combination
+    #
+    #         hypotheses = []
+    #         for row in rows:
+    #             # Восстанавливаем modifications из text[]
+    #             if row['modifications']:
+    #                 if isinstance(row['modifications'], list):
+    #                     modifications = row['modifications']
+    #                 else:
+    #                     # Если пришла строка, парсим
+    #                     modifications = row['modifications'].strip('{}').split(',') if row['modifications'] != '{}' else []
+    #             else:
+    #                 modifications = []
+    #
+    #             # Восстанавливаем комбинацию (упрощённо)
+    #             combo = Combination(
+    #                 id=row['source_combination_id'],
+    #                 nodes=[],
+    #                 properties=[]
+    #             )
+    #
+    #             hypothesis = Hypothesis(
+    #                 id=row['id'],
+    #                 task_description=row['task_description'] or '',
+    #                 source_combination=combo,
+    #                 modifications=modifications,
+    #                 description=row['description'] or '',
+    #                 predicted_score=row['predicted_score'] or 0.0,
+    #                 actual_score=row['actual_score'] or 0.0,
+    #                 status=HypothesisStatus(row['status']) if row['status'] else HypothesisStatus.PROPOSED,
+    #                 test_results=row['test_results'] if row['test_results'] else [],
+    #                 metadata=row['metadata'] if row['metadata'] else {},
+    #                 created_at=row['created_at'].timestamp() if row['created_at'] else None
+    #             )
+    #             hypotheses.append(hypothesis)
+    #
+    #         return hypotheses
+    #
+    #     except Exception as e:
+    #         print(f"❌ Ошибка загрузки гипотез: {e}")
+    #         return []
+
+    def save_hypothesis(self, hypothesis) -> bool:
+        """
+        Сохраняет гипотезу в БД.
+        """
+        try:
+            conn = self._get_connection()
+            cur = conn.cursor()
+
+            # modifications — массив строк
+            modifications = hypothesis.modifications  # список строк
+
+            # created_at — конвертируем в datetime
+            from datetime import datetime
+            created_at = datetime.fromtimestamp(hypothesis.created_at) if hasattr(hypothesis, 'created_at') else datetime.now()
+            updated_at = datetime.now()
+
+            # test_results и metadata — JSONB
+            test_results_json = json.dumps(hypothesis.test_results)
+            metadata_json = json.dumps(hypothesis.metadata)
+
+            cur.execute(f"""
+                INSERT INTO {self.schema}.hypotheses 
+                (id, task_description, source_combination_id, modifications, 
+                 description, predicted_score, actual_score, status, 
+                 test_results, metadata, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s)
+                ON CONFLICT (id) DO UPDATE SET
+                    task_description = EXCLUDED.task_description,
+                    source_combination_id = EXCLUDED.source_combination_id,
+                    modifications = EXCLUDED.modifications,
+                    description = EXCLUDED.description,
+                    predicted_score = EXCLUDED.predicted_score,
+                    actual_score = EXCLUDED.actual_score,
+                    status = EXCLUDED.status,
+                    test_results = EXCLUDED.test_results,
+                    metadata = EXCLUDED.metadata,
+                    updated_at = EXCLUDED.updated_at
+            """, (
+                hypothesis.id,
+                hypothesis.task_description,
+                hypothesis.source_combination.id,
+                modifications,          # ← список строк (массив)
+                hypothesis.description,
+                hypothesis.predicted_score,
+                hypothesis.actual_score,
+                hypothesis.status.value,
+                test_results_json,
+                metadata_json,
+                created_at,
+                updated_at
+            ))
+
+            conn.commit()
+            cur.close()
+            conn.close()
+            return True
+
+        except Exception as e:
+            print(f"❌ Ошибка сохранения гипотезы {hypothesis.id}: {e}")
+            return False
+
+
+    # def save_hypothesis(self, hypothesis) -> bool:
+    #     """
+    #     Сохраняет гипотезу в БД.
+    #     """
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor()
+    #
+    #         # Сериализуем модификации как JSONB (не как массив)
+    #         modifications_json = json.dumps(hypothesis.modifications)
+    #         test_results_json = json.dumps(hypothesis.test_results)
+    #         metadata_json = json.dumps(hypothesis.metadata)
+    #
+    #         cur.execute(f"""
+    #             INSERT INTO {self.schema}.hypotheses
+    #             (id, task_description, source_combination_id, modifications,
+    #              description, predicted_score, actual_score, status,
+    #              test_results, metadata, created_at, updated_at)
+    #             VALUES (%s, %s, %s, %s::jsonb, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s)
+    #             ON CONFLICT (id) DO UPDATE SET
+    #                 task_description = EXCLUDED.task_description,
+    #                 source_combination_id = EXCLUDED.source_combination_id,
+    #                 modifications = EXCLUDED.modifications,
+    #                 description = EXCLUDED.description,
+    #                 predicted_score = EXCLUDED.predicted_score,
+    #                 actual_score = EXCLUDED.actual_score,
+    #                 status = EXCLUDED.status,
+    #                 test_results = EXCLUDED.test_results,
+    #                 metadata = EXCLUDED.metadata,
+    #                 updated_at = EXCLUDED.updated_at
+    #         """, (
+    #             hypothesis.id,
+    #             hypothesis.task_description,
+    #             hypothesis.source_combination.id,
+    #             modifications_json,  # ::jsonb
+    #             hypothesis.description,
+    #             hypothesis.predicted_score,
+    #             hypothesis.actual_score,
+    #             hypothesis.status.value,
+    #             test_results_json,  # ::jsonb
+    #             metadata_json,  # ::jsonb
+    #             hypothesis.created_at,
+    #             datetime.now()
+    #         ))
+    #
+    #         conn.commit()
+    #         cur.close()
+    #         conn.close()
+    #         return True
+    #
+    #     except Exception as e:
+    #         print(f"❌ Ошибка сохранения гипотезы {hypothesis.id}: {e}")
+    #         return False
+
+
+    # def save_hypothesis(self, hypothesis) -> bool:
+    #     """
+    #     Сохраняет гипотезу в БД.
+    #
+    #     Args:
+    #         hypothesis: Объект Hypothesis из core.knowledge.hypothesis
+    #
+    #     Returns:
+    #         True если сохранение успешно
+    #     """
+    #     try:
+    #         conn = self._get_connection()
+    #         cur = conn.cursor()
+    #
+    #         # Сериализуем данные
+    #         modifications_json = json.dumps(hypothesis.modifications)
+    #         metadata_json = json.dumps(hypothesis.metadata)
+    #         test_results_json = json.dumps(hypothesis.test_results)
+    #
+    #         cur.execute(f"""
+    #             INSERT INTO {self.schema}.hypotheses
+    #             (id, task_description, source_combination_id, modifications,
+    #              description, predicted_score, actual_score, status,
+    #              test_results, metadata, created_at, updated_at)
+    #             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    #             ON CONFLICT (id) DO UPDATE SET
+    #             task_description = EXCLUDED.task_description,
+    #             source_combination_id = EXCLUDED.source_combination_id,
+    #             modifications = EXCLUDED.modifications,
+    #             description = EXCLUDED.description,
+    #             predicted_score = EXCLUDED.predicted_score,
+    #             actual_score = EXCLUDED.actual_score,
+    #             status = EXCLUDED.status,
+    #             test_results = EXCLUDED.test_results,
+    #             metadata = EXCLUDED.metadata,
+    #             updated_at = EXCLUDED.updated_at
+    #         """, (
+    #             hypothesis.id,
+    #             hypothesis.task_description,
+    #             hypothesis.source_combination.id,
+    #             modifications_json,
+    #             hypothesis.description,
+    #             hypothesis.predicted_score,
+    #             hypothesis.actual_score,
+    #             hypothesis.status.value,
+    #             test_results_json,
+    #             metadata_json,
+    #             getattr(hypothesis, 'created_at', time.time()),  # ← ИСПРАВЛЕНО
+    #             datetime.now()
+    #         ))
+    #
+    #
+    #         # cur.execute(f"""
+    #         #     INSERT INTO {self.schema}.hypotheses
+    #         #     (id, task_description, source_combination_id, modifications,
+    #         #      description, predicted_score, actual_score, status,
+    #         #      test_results, metadata, created_at, updated_at)
+    #         #     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    #         #     ON CONFLICT (id) DO UPDATE SET
+    #         #         task_description = EXCLUDED.task_description,
+    #         #         source_combination_id = EXCLUDED.source_combination_id,
+    #         #         modifications = EXCLUDED.modifications,
+    #         #         description = EXCLUDED.description,
+    #         #         predicted_score = EXCLUDED.predicted_score,
+    #         #         actual_score = EXCLUDED.actual_score,
+    #         #         status = EXCLUDED.status,
+    #         #         test_results = EXCLUDED.test_results,
+    #         #         metadata = EXCLUDED.metadata,
+    #         #         updated_at = EXCLUDED.updated_at
+    #         # """, (
+    #         #     hypothesis.id,
+    #         #     hypothesis.task_description,
+    #         #     hypothesis.source_combination.id,
+    #         #     modifications_json,
+    #         #     hypothesis.description,
+    #         #     hypothesis.predicted_score,
+    #         #     hypothesis.actual_score,
+    #         #     hypothesis.status.value,
+    #         #     test_results_json,
+    #         #     metadata_json,
+    #         #     hypothesis.created_at,
+    #         #     datetime.now()
+    #         # ))
+    #
+    #         conn.commit()
+    #         cur.close()
+    #         conn.close()
+    #         return True
+    #
+    #     except Exception as e:
+    #         print(f"❌ Ошибка сохранения гипотезы {hypothesis.id}: {e}")
+    #         return False
+
     def _get_connection(self):
         """Возвращает соединение с БД."""
         return psycopg2.connect(**self.conn_params)
@@ -79,6 +423,7 @@ class KnowledgeDB:
                 node.embedding.tolist() if hasattr(node.embedding, 'tolist') else node.embedding,
                 self._to_json(node.parameters),
                 self._to_json(node.metadata)
+
             ))
 
             conn.commit()

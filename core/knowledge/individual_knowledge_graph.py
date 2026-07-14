@@ -246,6 +246,48 @@ class IndividualKnowledgeGraph:
         graph.last_synced = data.get('last_synced', time.time())
         return graph
 
+    def add_hypothesis(self, hypothesis) -> None:
+        """
+        Добавляет гипотезу в ИГЗ.
+        """
+        record = {
+            'id': hypothesis.id,
+            'type': 'hypothesis',
+            'task_description': hypothesis.task_description,
+            'source_combination_id': hypothesis.source_combination.id,
+            'modifications': hypothesis.modifications,
+            'description': hypothesis.description,
+            'predicted_score': hypothesis.predicted_score,
+            'actual_score': hypothesis.actual_score,
+            'status': hypothesis.status.value,
+            'metadata': hypothesis.metadata,
+            'created_at': getattr(hypothesis, 'created_at', time.time()),
+            'added_at': time.time()
+        }
+        self.knowledge.append(record)
+
+    # def add_hypothesis(self, hypothesis) -> None:
+    #     """
+    #     Добавляет гипотезу в ИГЗ.
+    #
+    #     Args:
+    #         hypothesis: Объект Hypothesis
+    #     """
+    #     record = {
+    #         'id': hypothesis.id,
+    #         'type': 'hypothesis',
+    #         'task_description': hypothesis.task_description,
+    #         'source_combination_id': hypothesis.source_combination.id,
+    #         'modifications': hypothesis.modifications,
+    #         'description': hypothesis.description,
+    #         'predicted_score': hypothesis.predicted_score,
+    #         'actual_score': hypothesis.actual_score,
+    #         'status': hypothesis.status.value,
+    #         'metadata': hypothesis.metadata,
+    #         'created_at': hypothesis.created_at,
+    #         'added_at': time.time()
+    #     }
+    #     self.knowledge.append(record)
 
 # @dataclass
 # class IndividualKnowledgeGraph:

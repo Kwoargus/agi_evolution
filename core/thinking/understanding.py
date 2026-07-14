@@ -92,7 +92,7 @@ class UnderstandingEngine:
     # Инженерные ключевые слова
     ENGINEERING_KEYWORDS = [
         # Аэрокосмические
-        "крыло", "фюзеляж", "двигатель", "турбина", "пропеллер", "самолет",
+        "летательный аппарат", "крыло", "фюзеляж", "двигатель", "турбина", "пропеллер", "самолет",
         "вертолет", "ракета", "спутник", "беспилотник", "дрон",
 
         # Механические
@@ -212,18 +212,12 @@ class UnderstandingEngine:
     def extract_concepts(self, text: str) -> List[str]:
         """
         Извлекает ключевые концепты из текста.
-
-        Args:
-            text: Текстовое описание задачи
-
-        Returns:
-            Список извлеченных концептов
         """
         text_lower = text.lower()
         concepts = []
         seen = set()
 
-        # 1. Поиск по инженерным ключевым словам
+        # 1. Поиск по инженерным ключевым словам (включая фразы)
         for keyword in self.ENGINEERING_KEYWORDS:
             if keyword in text_lower and keyword not in seen:
                 concepts.append(keyword)
@@ -239,25 +233,94 @@ class UnderstandingEngine:
                     concepts.append(syn)
                     seen.add(syn)
 
-        # 3. Извлечение фраз "существительное + существительное"
+        # 3. ИЗВЛЕЧЕНИЕ БИГРАММ (ДВУХСЛОВНЫХ ФРАЗ) — НОВОЕ!
         words = re.findall(r'[а-яА-Яa-zA-Z]+', text_lower)
+        for i in range(len(words) - 1):
+            # Пропускаем короткие слова
+            if len(words[i]) < 3 or len(words[i + 1]) < 3:
+                continue
+
+            # Создаём биграмму
+            bigram = f"{words[i]} {words[i + 1]}"
+
+            # Проверяем, есть ли такой узел в ГЗ или это ключевое слово
+            if bigram not in seen:
+                # Проверяем в индексе имён
+                if bigram in self._name_index:
+                    concepts.append(bigram)
+                    seen.add(bigram)
+                # Проверяем в ключевых словах
+                elif bigram in self.ENGINEERING_KEYWORDS:
+                    concepts.append(bigram)
+                    seen.add(bigram)
+
+        # 4. Извлечение фраз "существительное + существительное" (уже было)
         for i in range(len(words) - 1):
             if len(words[i]) > 3 and len(words[i + 1]) > 3:
                 phrase = f"{words[i]} {words[i + 1]}"
                 if phrase not in seen and phrase in text_lower:
-                    # Проверяем, есть ли такой узел
                     if phrase in self._name_index or any(phrase in n.name.lower() for n in self.global_graph.nodes.values()):
                         concepts.append(phrase)
                         seen.add(phrase)
 
-        # 4. Удаляем стоп-слова
+        # 5. Удаляем стоп-слова
         concepts = [c for c in concepts if c not in self.STOP_WORDS]
 
-        # 5. Удаляем дубликаты и сортируем
+        # 6. Удаляем дубликаты и сортируем
         concepts = list(set(concepts))
         concepts.sort(key=len, reverse=True)
 
         return concepts
+
+    # def extract_concepts(self, text: str) -> List[str]:
+    #     """
+    #     Извлекает ключевые концепты из текста.
+    #
+    #     Args:
+    #         text: Текстовое описание задачи
+    #
+    #     Returns:
+    #         Список извлеченных концептов
+    #     """
+    #     text_lower = text.lower()
+    #     concepts = []
+    #     seen = set()
+    #
+    #     # 1. Поиск по инженерным ключевым словам
+    #     for keyword in self.ENGINEERING_KEYWORDS:
+    #         if keyword in text_lower and keyword not in seen:
+    #             concepts.append(keyword)
+    #             seen.add(keyword)
+    #
+    #     # 2. Поиск по синонимам
+    #     for key, synonyms in self.SYNONYM_MAP.items():
+    #         if key in text_lower and key not in seen:
+    #             concepts.append(key)
+    #             seen.add(key)
+    #         for syn in synonyms:
+    #             if syn in text_lower and syn not in seen:
+    #                 concepts.append(syn)
+    #                 seen.add(syn)
+    #
+    #     # 3. Извлечение фраз "существительное + существительное"
+    #     words = re.findall(r'[а-яА-Яa-zA-Z]+', text_lower)
+    #     for i in range(len(words) - 1):
+    #         if len(words[i]) > 3 and len(words[i + 1]) > 3:
+    #             phrase = f"{words[i]} {words[i + 1]}"
+    #             if phrase not in seen and phrase in text_lower:
+    #                 # Проверяем, есть ли такой узел
+    #                 if phrase in self._name_index or any(phrase in n.name.lower() for n in self.global_graph.nodes.values()):
+    #                     concepts.append(phrase)
+    #                     seen.add(phrase)
+    #
+    #     # 4. Удаляем стоп-слова
+    #     concepts = [c for c in concepts if c not in self.STOP_WORDS]
+    #
+    #     # 5. Удаляем дубликаты и сортируем
+    #     concepts = list(set(concepts))
+    #     concepts.sort(key=len, reverse=True)
+    #
+    #     return concepts
 
     def find_nodes_by_concepts(self, concepts: List[str],
                                max_nodes: int = 10) -> List[KnowledgeNode]:
