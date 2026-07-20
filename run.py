@@ -28,6 +28,12 @@ def run_script(script_path):
 
 
 if __name__ == "__main__":
+
+    import pandas as pd
+
+    df = pd.read_parquet('text_units.parquet')
+    print(df.head())
+
     scripts = [
         ("scripts/test_gan.py", "Тестирование GAN"),
         ("experiments/run_evolution.py", "Запуск эволюции"),
