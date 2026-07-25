@@ -5,12 +5,13 @@ from typing import List, Dict, Optional, Tuple, Any
 from collections import defaultdict
 from .emotion_graph import EmotionGraph
 from .emotion_base import EmotionalEvent, EmotionalResponse, EmotionType
-
+import time
 
 class IntuitionEngine:
     """
-    Движок интуиции.
-    Предсказывает последствия действий на основе прошлого опыта.
+
+    [ru] Движок интуиции. Предсказывает последствия действий на основе прошлого опыта.
+    [en] Intuition Engine. Predicts the consequences of actions based on past experience.
     """
 
     def __init__(self, emotion_graph: EmotionGraph):
@@ -47,14 +48,18 @@ class IntuitionEngine:
 
         self.intuition_memory[memory_key].append(memory)
 
-        # Ограничиваем размер памяти
+        # [ru] Ограничиваем размер памяти
+        # [en] Limiting memory size
         if len(self.intuition_memory[memory_key]) > 100:
             self.intuition_memory[memory_key] = self.intuition_memory[memory_key][-100:]
 
         # Сохраняем в историю опыта
+        # [ru]
+        # [en]
         self.experience_history.append(memory)
 
-        # 💾 СОХРАНЯЕМ В БД
+        # [ru] СОХРАНЯЕМ В БД
+        # [en] SAVE IN THE DB
         try:
             from db.emotion_db import EmotionDB
             db = EmotionDB()
@@ -67,57 +72,17 @@ class IntuitionEngine:
                 intensity=intensity
             )
         except Exception as e:
-            print(f"⚠️ Ошибка сохранения интуитивной памяти: {e}")
+            print(f"[ru] Ошибка сохранения интуитивной памяти: {e}")
+            print(f"[en] Intuitive Memory Preservation Error: {e}")
 
-        print(f"🧠 Интуиция запомнила: {situation} → {action} → {consequence} ({emotion})")
+        print(f"[ru] Интуиция запомнила: {situation} → {action} → {consequence} ({emotion})")
+        print(f"[en] Intuition remembered: {situation} → {action} → {consequence} ({emotion})")
 
-
-    # def learn_from_experience(self, situation: str, action: str,
-    #                           consequence: str, emotion: str,
-    #                           success: bool, intensity: float = 1.0):
-    #     """
-    #     Обучает интуицию на основе опыта.
-    #
-    #     Args:
-    #         situation: Описание ситуации (например, "вижу яблоко рядом с волком")
-    #         action: Действие (например, "пойти за яблоком")
-    #         consequence: Последствие (например, "волк напал")
-    #         emotion: Эмоция, связанная с последствием
-    #         success: Успешно ли было действие
-    #         intensity: Интенсивность эмоции
-    #     """
-    #     memory_key = f"{situation}_{action}"
-    #
-    #     self.intuition_memory[memory_key].append({
-    #         'situation': situation,
-    #         'action': action,
-    #         'consequence': consequence,
-    #         'emotion': emotion,
-    #         'success': success,
-    #         'intensity': intensity,
-    #         'weight': 1.0 if success else -1.0
-    #     })
-    #
-    #     # Ограничиваем размер памяти
-    #     if len(self.intuition_memory[memory_key]) > 100:
-    #         self.intuition_memory[memory_key] = self.intuition_memory[memory_key][-100:]
-    #
-    #     # Сохраняем в историю опыта
-    #     self.experience_history.append({
-    #         'situation': situation,
-    #         'action': action,
-    #         'consequence': consequence,
-    #         'emotion': emotion,
-    #         'success': success,
-    #         'intensity': intensity
-    #     })
-    #
-    #     print(f"🧠 Интуиция запомнила: {situation} → {action} → {consequence} ({emotion})")
 
     def predict_consequence(self, situation: str, action: str) -> Optional[Dict]:
         """
-        Предсказывает последствие действия на основе интуиции.
-
+        [ru] Предсказывает последствие действия на основе интуиции.
+        [en] Predicts the consequences of an action based on intuition.
         Returns:
             dict: {
                 'consequence': str,
@@ -133,7 +98,8 @@ class IntuitionEngine:
 
         memories = self.intuition_memory[memory_key]
 
-        # Анализируем память
+        # [ru] Анализируем память
+        # [en] Analyzing memory
         consequences = {}
         emotions = {}
         total_weight = 0
@@ -149,11 +115,14 @@ class IntuitionEngine:
         if total_weight == 0:
             return None
 
-        # Находим наиболее вероятное последствие
+        # [ru] Находим наиболее вероятное последствие
+        # [en] We find the most probable consequence
         best_key = max(consequences.items(), key=lambda x: x[1])
         (consequence, emotion), weight = best_key
 
-        # Вычисляем вероятность и интенсивность
+
+        # [ru] Вычисляем вероятность и интенсивность
+        # [en] We calculate the probability and intensity
         probability = abs(weight) / total_weight
         intensity = min(1.0, abs(weight) / 10.0)
 
@@ -167,8 +136,8 @@ class IntuitionEngine:
 
     def get_intuition_decision(self, situation: str, actions: List[str]) -> Dict:
         """
-        Принимает интуитивное решение на основе опыта.
-
+        [ru] Принимает интуитивное решение на основе опыта.
+        [en] Makes an intuitive decision based on experience.
         Args:
             situation: Текущая ситуация
             actions: Список возможных действий
@@ -202,8 +171,9 @@ class IntuitionEngine:
                 'message': 'Нет опыта для принятия решения'
             }
 
-        # Выбираем действие с наилучшим прогнозом
-        # (предпочитаем действия с положительными эмоциями)
+
+        # [ru]  Выбираем действие с наилучшим прогнозом (предпочитаем действия с положительными эмоциями)
+        # [en] We choose the action with the best prognosis (we prefer actions with positive emotions)
         best = max(predictions, key=lambda x:
         x['probability'] * (1 if x['emotion'] in ['joy', 'love', 'trust'] else -0.5))
 
@@ -216,7 +186,8 @@ class IntuitionEngine:
 
     def get_insight(self, event: EmotionalEvent) -> Optional[Dict]:
         """
-        Генерирует "озарение" - неожиданное решение или понимание.
+        [ru] Генерирует "озарение" - неожиданное решение или понимание.
+        [en] Generates "insight" - an unexpected solution or understanding.
         """
         insights = []
 
@@ -255,7 +226,10 @@ class IntuitionEngine:
 
     def find_path(self, start_event: str, target_event: str,
                   max_depth: int = 10) -> List[List[str]]:
-        """Находит пути от начального события к целевому."""
+        """
+        [ru] Находит пути от начального события к целевому.
+        [en] Finds paths from a start event to a target event.
+        """
         paths = []
 
         event_paths = self._find_event_path(start_event, target_event, max_depth)
@@ -275,7 +249,10 @@ class IntuitionEngine:
 
     def _find_event_path(self, start: str, target: str,
                          max_depth: int) -> List[List[str]]:
-        """Находит пути в графе событий."""
+        """
+        [ru] Находит пути в графе событий.
+        [en] Finds paths in an event graph.
+        """
         paths = []
 
         def dfs(current: str, path: List[str], depth: int):
@@ -299,7 +276,10 @@ class IntuitionEngine:
 
     def _find_emotion_mediated_path(self, start: str, target: str,
                                     max_depth: int) -> List[List[str]]:
-        """Находит пути через эмоции."""
+        """
+        [ru] Находит пути через эмоции.
+        [en] Finds ways through emotions.
+        """
         paths = []
 
         if start not in self.graph.event_to_emotion:
@@ -325,7 +305,10 @@ class IntuitionEngine:
 
     def _find_emotion_path(self, start_emotion: str, target_emotion: str,
                            max_depth: int) -> List[str]:
-        """Находит путь в графе эмоций."""
+        """
+        [ru] Находит путь в графе эмоций.
+        [en] Finds a way in the emotion graph.
+        """
 
         def dfs(current: str, path: List[str], depth: int):
             if depth > max_depth:
@@ -350,7 +333,10 @@ class IntuitionEngine:
         return dfs(start_emotion, [start_emotion], 0) or []
 
     def _evaluate_path_confidence(self, path: List[str]) -> float:
-        """Оценивает вероятность пути."""
+        """
+        [ru] Оценивает вероятность пути.
+        [en] Estimates the probability of a path.
+        """
         if not path:
             return 0.0
 
@@ -384,7 +370,10 @@ class IntuitionEngine:
         return float(np.clip(confidence, 0.0, 1.0))
 
     def _predict_likely_emotion(self, path: List[str]) -> Optional[str]:
-        """Предсказывает наиболее вероятную эмоцию в конце пути."""
+        """
+        [ru] Предсказывает наиболее вероятную эмоцию в конце пути.
+        [en] Predicts the most likely emotion at the end of the journey.
+        """
         for item in reversed(path):
             if item.startswith('emotion:'):
                 return item.replace('emotion:', '')

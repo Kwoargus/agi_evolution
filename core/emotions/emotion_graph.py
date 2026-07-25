@@ -12,61 +12,77 @@ from core.emotions.emotion_base import EmotionalEvent, EmotionalResponse, Emotio
 
 class EmotionGraph:
     """
-    Биграф событий и эмоциональных реакций с объектами-связями.
+
+    [ru] Биграф событий и эмоциональных реакций с объектами-связями.
+    [en] Bigraph of events and emotional reactions with objects-links.
     """
 
     def __init__(self):
-        # Узлы
+        # [ru] Узлы
+        # [en] Nodes
         self.events: Dict[str, EmotionalEvent] = {}
         self.emotions: Dict[str, EmotionalResponse] = {}
         self.models: Dict[str, MentalModel] = {}
 
-        # Связи как объекты
+        # [ru] Связи как объекты
+        # [en] Relationships as objects
         self.causal_links: Dict[str, CausalLink] = {}
         self.emotion_chain_links: Dict[str, EmotionChainLink] = {}
         self.event_emotion_links: Dict[str, EventEmotionLink] = {}
         self.emotion_event_links: Dict[str, EmotionEventLink] = {}
 
-        # Индексы для быстрого поиска
+        # [ru] Индексы для быстрого поиска
+        # [en] Indexes for quick searching
         self._event_outgoing: Dict[str, Set[str]] = {}
         self._event_incoming: Dict[str, Set[str]] = {}
         self._emotion_outgoing: Dict[str, Set[str]] = {}
         self._emotion_incoming: Dict[str, Set[str]] = {}
 
-        # Графы для визуализации
+        # [ru] Графы для визуализации
+        # [en] Graphs for visualization
         self.event_graph = nx.DiGraph()
         self.emotion_graph = nx.DiGraph()
         self.event_to_emotion = nx.DiGraph()
         self.emotion_to_event = nx.DiGraph()
 
-        # Эмбеддинги для сравнения
+        # [ru] Эмбеддинги для сравнения
+        # [en] Embeddings for comparison
         self.event_embeddings: List[np.ndarray] = []
         self.emotion_embeddings: List[np.ndarray] = []
 
         self._initialize_indexes()
 
-        print("✅ Биграф событий/эмоций инициализирован (с объектами-связями)")
+        print("[ru] Биграф событий/эмоций инициализирован (с объектами-связями)")
+        print("[en] Event/emotion bigraph initialized (with relationship objects)")
 
     def _initialize_indexes(self):
-        """Инициализирует индексы для быстрого поиска."""
+        """
+        [ru] Инициализирует индексы для быстрого поиска.
+        [en] Initializes indexes for fast searching.
+        """
         self._event_outgoing = {}
         self._event_incoming = {}
         self._emotion_outgoing = {}
         self._emotion_incoming = {}
 
     def _add_to_index(self, index: Dict[str, Set[str]], key: str, link_id: str):
-        """Добавляет связь в индекс."""
+        """
+        [ru] Добавляет связь в индекс.
+        [en] Adds a relationship to the index.
+        """
         if key not in index:
             index[key] = set()
         index[key].add(link_id)
 
     # ============================================================
-    # МЕТОДЫ ДЛЯ ДОБАВЛЕНИЯ УЗЛОВ
+    # [ru] МЕТОДЫ ДЛЯ ДОБАВЛЕНИЯ УЗЛОВ
+    # [en] METHODS FOR ADDING NODES
     # ============================================================
 
     def add_event(self, event: EmotionalEvent):
         """
-        Добавляет событие в граф.
+        [ru] Добавляет событие в граф.
+        [en] Adds an event to the graph.
         """
         self.events[event.id] = event
         self.event_graph.add_node(event.id, embedding=event.embedding)
@@ -74,9 +90,11 @@ class EmotionGraph:
 
     def add_emotion(self, emotion: EmotionalResponse):
         """
-        Добавляет эмоциональную реакцию в граф.
+        [ru] Добавляет эмоциональную реакцию в граф.
+        [en] Adds an emotional reaction to the graph.
         """
-        # Получаем строковое представление типа эмоции
+        # [ru] Получаем строковое представление типа эмоции
+        # [en] We get a string representation of the emotion type
         emotion_type_str = emotion.emotion_type.value if hasattr(emotion.emotion_type, 'value') else str(emotion.emotion_type)
 
         self.emotions[emotion_type_str] = emotion
@@ -85,14 +103,16 @@ class EmotionGraph:
         self.emotion_embeddings.append(emotion.embedding)
 
     # ============================================================
-    # МЕТОДЫ ДЛЯ СВЯЗЕЙ
+    # [ru] МЕТОДЫ ДЛЯ СВЯЗЕЙ
+    # [en] METHODS FOR CONNECTIONS
     # ============================================================
 
     def add_causal_link(self, event1_id: str, event2_id: str,
                         weight: float = 1.0, delay: float = 0.0,
                         probability: float = 0.5) -> CausalLink:
         """
-        Добавляет причинно-следственную связь между событиями.
+        [ru] Добавляет причинно-следственную связь между событиями.
+        [en] Adds a cause and effect relationship between events.
         """
         link = LinkFactory.create_causal_link(
             event1_id, event2_id, weight, delay, probability
@@ -102,7 +122,8 @@ class EmotionGraph:
         self._add_to_index(self._event_outgoing, event1_id, link.id)
         self._add_to_index(self._event_incoming, event2_id, link.id)
 
-        # Обновляем граф для визуализации
+        # [ru] Обновляем граф для визуализации
+        # [en] Updating the graph for visualization
         self.event_graph.add_edge(event1_id, event2_id,
                                   weight=weight, delay=delay, link_id=link.id)
 
@@ -112,7 +133,8 @@ class EmotionGraph:
                           emotion2_type: EmotionType,
                           weight: float = 1.0) -> EmotionChainLink:
         """
-        Добавляет связь: эмоция1 → эмоция2.
+        [ru] Добавляет связь: эмоция1 → эмоция2.
+        [en] Adds a connection: emotion1 → emotion2.
         """
         link = LinkFactory.create_emotion_chain_link(
             emotion1_type.value, emotion2_type.value,
@@ -133,7 +155,9 @@ class EmotionGraph:
                                probability: float = 0.5,
                                intensity_factor: float = 1.0) -> EventEmotionLink:
         """
-        Добавляет связь: событие → эмоция.
+
+        [ru] Добавляет связь: событие → эмоция.
+        [en] Adds a connection: event → emotion.
         """
         link = LinkFactory.create_event_emotion_link(
             event_id, emotion_type.value,
@@ -155,7 +179,9 @@ class EmotionGraph:
                                probability: float = 0.5,
                                action_urgency: float = 0.5) -> EmotionEventLink:
         """
-        Добавляет связь: эмоция → событие (действие).
+
+        [ru] Добавляет связь: эмоция → событие (действие).
+        [en] Adds a connection: emotion → event (action).
         """
         link = LinkFactory.create_emotion_event_link(
             emotion_type.value, event_id,
@@ -173,35 +199,51 @@ class EmotionGraph:
         return link
 
     # ============================================================
-    # МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ СВЯЗЕЙ
+    # [ru] МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ СВЯЗЕЙ
+    # [en] METHODS FOR GETTING CONNECTIONS
     # ============================================================
 
     def get_causal_links_from_event(self, event_id: str) -> List[CausalLink]:
-        """Возвращает все причинные связи, исходящие из события."""
+        """
+        [ru] Возвращает все причинные связи, исходящие из события.
+        [en] Returns all causal relationships emanating from an event.
+        """
         link_ids = self._event_outgoing.get(event_id, set())
         return [self.causal_links[lid] for lid in link_ids
                 if lid in self.causal_links]
 
     def get_causal_links_to_event(self, event_id: str) -> List[CausalLink]:
-        """Возвращает все причинные связи, входящие в событие."""
+        """
+        [ru] Возвращает все причинные связи, входящие в событие.
+        [en] Returns all causal relationships included in the event.
+        """
         link_ids = self._event_incoming.get(event_id, set())
         return [self.causal_links[lid] for lid in link_ids
                 if lid in self.causal_links]
 
     def get_event_emotion_links(self, event_id: str) -> List[EventEmotionLink]:
-        """Возвращает все связи событие→эмоция."""
+        """
+        [ru] Возвращает все связи событие→эмоция.
+        [en] Returns all event→emotion relationships.
+        """
         link_ids = self._event_outgoing.get(event_id, set())
         return [self.event_emotion_links[lid] for lid in link_ids
                 if lid in self.event_emotion_links]
 
     def get_emotion_event_links(self, emotion_type: str) -> List[EmotionEventLink]:
-        """Возвращает все связи эмоция→событие."""
+        """
+        [ru] Возвращает все связи эмоция→событие.
+        [en] Returns all emotion→event connections.
+        """
         link_ids = self._emotion_outgoing.get(emotion_type, set())
         return [self.emotion_event_links[lid] for lid in link_ids
                 if lid in self.emotion_event_links]
 
     def successors(self, node_id: str) -> List[str]:
-        """Возвращает наследников узла."""
+        """
+        [ru] Возвращает наследников узла.
+        [en] Returns the descendants of a node.
+        """
         successors = []
 
         for link in self.causal_links.values():
@@ -223,7 +265,10 @@ class EmotionGraph:
         return successors
 
     def predecessors(self, node_id: str) -> List[str]:
-        """Возвращает предшественников узла."""
+        """
+        [ru] Возвращает предшественников узла.
+        [en] Returns the predecessors of a node.
+        """
         predecessors = []
 
         for link in self.causal_links.values():
@@ -245,13 +290,15 @@ class EmotionGraph:
         return predecessors
 
     # ============================================================
-    # МЕТОДЫ ДЛЯ ПОИСКА
+    # [ru] МЕТОДЫ ДЛЯ ПОИСКА
+    # [en]SEARCH METHODS
     # ============================================================
 
     def get_similar_events(self, embedding: np.ndarray,
                            top_k: int = 5) -> List[Tuple[str, float]]:
         """
-        Находит похожие события по эмбеддингу.
+        [ru] Находит похожие события по эмбеддингу.
+        [en] Finds similar events by embedding.
         """
         similarities = []
         for event_id, event in self.events.items():
@@ -263,7 +310,8 @@ class EmotionGraph:
 
     def trace_event_chain(self, event_id: str) -> List[List[str]]:
         """
-        Трассирует цепочку событий: причины данного события.
+        [ru] Трассирует цепочку событий: причины данного события.
+        [en] Traces the chain of events: the causes of a given event.
         """
         chains = []
 
@@ -274,7 +322,9 @@ class EmotionGraph:
             for predecessor in self.event_graph.predecessors(current):
                 trace_back(predecessor, path.copy())
 
-        # Проверяем, существует ли событие
+        #
+        # [ru] Проверяем, существует ли событие.
+        # [en] Checking if an event exists.
         if event_id not in self.events:
             return [[event_id]]
 
@@ -284,7 +334,8 @@ class EmotionGraph:
     def get_emotion_chain(self, start_emotion: EmotionType,
                           max_depth: int = 10) -> List[List[str]]:
         """
-        Находит все цепочки эмоций, начинающиеся с данной.
+        [ru] Находит все цепочки эмоций, начинающиеся с данной.
+        [en] Finds all emotion chains that start with the given one.
         """
         chains = []
 
@@ -302,17 +353,24 @@ class EmotionGraph:
         return chains
 
     def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
-        """Косинусное сходство."""
+        """
+        [ru] Косинусное сходство.
+        [en] Cosine similarity.
+        """
         if np.linalg.norm(a) == 0 or np.linalg.norm(b) == 0:
             return 0.0
         return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
 
     # ============================================================
-    # МЕТОДЫ ДЛЯ ВИЗУАЛИЗАЦИИ
+    # [ru] МЕТОДЫ ДЛЯ ВИЗУАЛИЗАЦИИ
+    # [en] METHODS FOR VISUALIZATION
     # ============================================================
 
     def to_dict(self) -> Dict:
-        """Сериализация графа."""
+        """
+        [ru] Сериализация графа..
+        [en] Graph serialization..
+        """
         return {
             'event_graph': nx.to_dict_of_dicts(self.event_graph),
             'emotion_graph': nx.to_dict_of_dicts(self.emotion_graph),
@@ -324,43 +382,55 @@ class EmotionGraph:
         }
 
     def visualize(self, path: str = 'emotion_graph.png'):
-        """Визуализация биграфа."""
+        """
+        [ru] Визуализация биграфа.
+        [en] Bigraph visualization.
+        """
         import matplotlib.pyplot as plt
 
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
 
-        # 1. Граф событий
+        # [ru] 1. Граф событий
+        # [en] 1. Event graph
         nx.draw(self.event_graph, ax=ax1, with_labels=True,
                 node_color='lightblue', node_size=500, font_size=8)
         ax1.set_title('Граф событий (причинно-следственные связи)')
 
-        # 2. Граф эмоций
+        # [ru] 2. Граф эмоций
+        # [en] 2. Emotion graph
         nx.draw(self.emotion_graph, ax=ax2, with_labels=True,
                 node_color='pink', node_size=500, font_size=8)
         ax2.set_title('Граф эмоций (порождение эмоций)')
 
-        # 3. Связи событие → эмоция
+        # [ru] 3. Связи событие → эмоция
+        # [en] 3. Event → emotion links
         nx.draw(self.event_to_emotion, ax=ax3, with_labels=True,
                 node_color='lightgreen', node_size=500, font_size=8)
         ax3.set_title('Связи: Событие → Эмоция')
 
-        # 4. Связи эмоция → событие
+        # [ru] 4. Связи эмоция → событие
+        # [en] 4. Emotion → event connections
         nx.draw(self.emotion_to_event, ax=ax4, with_labels=True,
                 node_color='orange', node_size=500, font_size=8)
-        ax4.set_title('Связи: Эмоция → Событие')
+        ax4.set_title('[ru] Связи: Эмоция → Событие [en] Connections: Emotion → Event')
 
         plt.tight_layout()
         plt.savefig(path, dpi=150)
-        print(f"✅ Биграф сохранен в {path}")
+        print(f"✅ [ru] Биграф сохранен в {path}")
+        print(f"✅ [en] The bigraph is saved in {path}")
 
     def get_links_statistics(self) -> Dict[str, Any]:
-        """Возвращает статистику по всем связям."""
+        """
+        [ru] Возвращает статистику по всем связям.
+        [en] Returns statistics for all connections.
+        """
         total_links = (len(self.causal_links) +
                        len(self.emotion_chain_links) +
                        len(self.event_emotion_links) +
                        len(self.emotion_event_links))
 
-        # Считаем средние веса
+        # [ru] Считаем средние веса
+        # [en] We calculate average weights
         def avg_weight(links_dict):
             if not links_dict:
                 return 0.0
@@ -381,10 +451,12 @@ class EmotionGraph:
     def has_node(self, node_id: str, graph_type: str = 'event') -> bool:
         """
         Проверяет существование узла в указанном графе.
+        [ru]
 
         Args:
-            node_id: ID узла
+            node_id: ID of node
             graph_type: 'event', 'emotion', 'event_to_emotion', 'emotion_to_event'
+
         """
         if graph_type == 'event':
             return node_id in self.events or node_id in self.event_graph
@@ -398,4 +470,5 @@ class EmotionGraph:
 
 
 
-# #         print(f"✅ Биграф сохранен в {path}")
+    #         print(f"✅ [ru] Биграф сохранен в {path}")
+    #         print(f"✅ [en] The bigraph is saved in {path}")

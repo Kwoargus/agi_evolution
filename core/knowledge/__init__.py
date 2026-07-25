@@ -1,6 +1,7 @@
 # core/knowledge/__init__.py
 """
-Модуль для работы с графом знаний и мышлением.
+[ru] Модуль для работы с графом знаний и мышлением.
+[en] Module for working with the knowledge graph and reasoning.
 """
 
 from .knowledge_node import KnowledgeNode

@@ -9,7 +9,8 @@ import time
 
 
 class EmotionType(Enum):
-    """Типы эмоций."""
+    """[ru] Типы эмоций."""
+    """[en] Types of emotions."""
     JOY = "joy"
     SADNESS = "sadness"
     ANGER = "anger"
@@ -29,7 +30,8 @@ class EmotionType(Enum):
     EMPATHY = "empathy"
 
 # class EmotionType(Enum):
-#     """Базовые типы эмоций."""
+#     """[ru] Базовые типы эмоций."""
+#     """[en] Basic types of emotions."""
 #     JOY = "joy"  # Радость
 #     SADNESS = "sadness"  # Печаль
 #     ANGER = "anger"  # Гнев
@@ -39,13 +41,15 @@ class EmotionType(Enum):
 #     TRUST = "trust"  # Доверие
 #     ANTICIPATION = "anticipation"  # Ожидание
 #
-#     # Составные эмоции
+#     # [ru] Составные эмоции
+#     # [en] Compound emotions
 #     LOVE = "love"  # Радость + Доверие
 #     OPTIMISM = "optimism"  # Радость + Ожидание
 #     AWE = "awe"  # Страх + Удивление
 #     CONTEMPT = "contempt"  # Гнев + Отвращение
 #
-#     # Сложные эмоции
+#     # [ru] Сложные эмоции
+#     # [en] Complex emotions
 #     RESENTMENT = "resentment"  # Обида
 #     HATRED = "hatred"  # Ненависть
 #     GUILT = "guilt"  # Вина
@@ -56,7 +60,8 @@ class EmotionType(Enum):
 @dataclass
 class EmotionalResponse:
     """
-    Эмоциональная реакция с UUID.
+    [ru] Эмоциональная реакция с UUID.
+    [en] Emotional reaction with UUID.
     """
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     emotion_type: EmotionType = EmotionType.TRUST
@@ -74,7 +79,8 @@ class EmotionalResponse:
             self.embedding = np.zeros(64)
 
     def to_dict(self) -> Dict:
-        """Преобразует в словарь для БД."""
+        """[ru] Преобразует в словарь для БД."""
+        """[en] Converts to a dictionary for the database."""
         return {
             'id': self.id,
             'emotion_type': self.emotion_type.value,
@@ -92,7 +98,8 @@ class EmotionalResponse:
 @dataclass
 class EmotionalEvent:
     """
-    Событие, вызывающее эмоциональную реакцию.
+    [ru] Событие, вызывающее эмоциональную реакцию.
+    [en] An event that evokes an emotional response.
     """
     id: str
     description: str
@@ -100,76 +107,75 @@ class EmotionalEvent:
     context: Dict[str, any]
     participants: List[str]
 
-    # Векторное представление события
+    # [ru] Векторное представление события
+    # [en] Vector representation of an event
     embedding: np.ndarray  # 128-dim
 
 
 @dataclass
 class EmotionalResponse:
     """
-    Эмоциональная реакция (ЭР).
+
+    [ru] Эмоциональная реакция (ЭР).
+    [en] Emotional reaction (ER).
     """
     emotion_type: EmotionType
     intensity: float  # 0.0 - 1.0
     valence: float  # -1.0 (негативная) до +1.0 (позитивная)
     arousal: float  # 0.0 (спокойная) до 1.0 (возбужденная)
 
-    # Векторное представление ЭР
+
+    # [ru] Векторное представление эмоциональной реакции
+    # [en] Vector representation of emotional response
+
     embedding: np.ndarray  # 64-dim
 
-    # Причина возникновения
+
+    # [ru] Причина возникновения
+    # [en] Cause of occurrence
     trigger_event_id: Optional[str] = None
     trigger_emotion_id: Optional[str] = None
 
-    # Цепочка предшествующих ЭР
+
+    # [ru] Цепочка предшествующих эмоциональных реакцйи
+    # [en] Chain of preceding emotional reactions
     chain_id: Optional[str] = None
 
 
 @dataclass
 class MentalModel:
     """
-    Ментальная модель объекта/ситуации/процесса.
-    ЕДИНЫЙ КЛАСС для всей системы.
+    [ru] Ментальная модель объекта/ситуации/процесса. ЕДИНЫЙ КЛАСС для всей системы.
+    [en] Mental model of an object/situation/process. A SINGLE CLASS for the entire system.
     """
     id: str
     name: str
     type: str  # 'object', 'situation', 'process', 'social'
 
-    # Векторное представление модели
+
+    # [ru] Векторное представление модели
+    # [en] Vector representation of the model
     embedding: np.ndarray  # 256-dim
 
-    # Атрибуты модели
+
+    # [ru] Атрибуты модели
+    # [en] Model attributes
     attributes: Dict[str, float]
 
-    # Связи с другими моделями
+
+    # [ru] Связи с другими моделями
+    # [en] Links to other models
     related_models: List[str]
 
-    # Прогностические свойства
+
+    # [ru] Прогностические свойства
+    # [en] Prognostic properties
     predictions: List[Dict[str, any]]
 
-    # Метаданные
+
+    # [ru] Метаданные
+    # [en] Metadata
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
 
-
-# @dataclass
-# class MentalModel:
-#     """
-#     Ментальная модель объекта/ситуации/процесса.
-#     """
-#     id: str
-#     name: str
-#     type: str  # 'object', 'situation', 'process', 'social'
-#
-#     # Векторное представление модели
-#     embedding: np.ndarray  # 256-dim
-#
-#     # Атрибуты модели
-#     attributes: Dict[str, float]
-#
-#     # Связи с другими моделями
-#     related_models: List[str]
-#
-#     # Прогностические свойства
-#     predictions: List[Dict[str, any]]

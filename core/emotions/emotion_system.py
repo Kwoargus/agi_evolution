@@ -1,6 +1,6 @@
 # core/emotions/emotion_system.py
 """
-Главный модуль эмоциональной системы.
+[ru] Главный модуль эмоциональной системы.
 
 Интегрирует все компоненты:
 - Биграф событий/эмоций
@@ -8,6 +8,15 @@
 - Ментальные модели
 - Интуицию
 - Эволюцию эмоций
+
+[en] The main module of the emotional system.
+
+Integrates all components:
+- Event/emotion bigraph
+- Emotional response engine
+- Mental models
+- Intuition
+- Emotional evolution
 """
 
 import numpy as np
@@ -22,9 +31,11 @@ from core.emotions.emotion_graph import EmotionGraph
 
 class EmotionSystem:
     """
-    Полная эмоциональная подсистема AGI.
-
+    [ru] Полная эмоциональная подсистема AGI.
     Интеграция всех компонентов эмоционального восприятия и реагирования.
+
+    [en]AGI's complete emotional subsystem.
+    Integration of all components of emotional perception and response.
     """
 
     def __init__(self):
@@ -42,11 +53,13 @@ class EmotionSystem:
         self.reflex_system = None  # Будет подключен позже
         self.instinct_system = None  # Будет подключен позже
 
-        print("✅ Полная эмоциональная подсистема инициализирована")
+        print("✅ [ru] Полная эмоциональная подсистема инициализирована")
+        print("✅ [en] The complete emotional subsystem is initialized")
 
     def synchronize_with_knowledge_graph(self, model_id: str) -> bool:
         """
-        Синхронизирует ментальную модель с глобальным графом знаний.
+        [ru] Синхронизирует ментальную модель с глобальным графом знаний.
+        [en] Synchronizes the mental model with the global knowledge graph.
         """
         model = self.models.get_model(model_id)
         if not model:
@@ -59,6 +72,8 @@ class EmotionSystem:
             db = KnowledgeDB()
 
             # Создаём узел в ГЗ
+            # [ru]
+            # [en]
             node = KnowledgeNode(
                 id=model.id,
                 name=model.name,
@@ -67,96 +82,74 @@ class EmotionSystem:
                 description=f"Ментальная модель: {model.name} (тип: {model.type})"
             )
 
-            # Добавляем эмбеддинг
+            # [ru] Добавляем эмбеддинг
+            # [en] Adding embedding
             if hasattr(model, 'embedding') and model.embedding is not None:
                 node.embedding = model.embedding
 
-            # Сохраняем
+            # [ru] Сохраняем
+            # [en] Save
             db.save_node(node)
             print(f"✅ Модель {model.name} синхронизирована с ГЗ")
+            print(f"✅ Model {model.name} synchronized with the KG")
             return True
 
         except Exception as e:
-            print(f"⚠️ Ошибка синхронизации модели {model.name}: {e}")
+            print(f"Ошибка синхронизации модели {model.name}: {e}")
+            print(f"Model synchronization error {model.name}: {e}")
             return False
 
     def process_sensory_input(self, sensory_data: Dict) -> List[EmotionalResponse]:
         """
-        Обрабатывает сенсорные данные и генерирует эмоциональные реакции.
+        [ru] Обрабатывает сенсорные данные и генерирует эмоциональные реакции.
+        [en] Processes sensory data and generates emotional responses.
         """
-        # 1. Создаем событие из сенсорных данных
+        # [ru] 1. Создаем событие из сенсорных данных
+        # [en] 1. Create an event from sensor data
         event = self._sensory_to_event(sensory_data)
 
-        # 2. Генерируем эмоциональные реакции
+        # [ru] 2. Генерируем эмоциональные реакции
+        # [en] 2. Generate emotional reactions
         responses = self.engine.process_event(event)
 
-        # 3. Обновляем текущее состояние
+        # [ru] 3. Обновляем текущее состояние
+        # [en] 3. Update the current state
         self.current_emotions = responses
 
-        # 4. Сохраняем в историю
+        # [ru] 4. Сохраняем в историю
+        # [en] 4. Save to history
         self.emotion_history.append({
             'timestamp': event.timestamp,
             'event': event,
             'responses': responses
         })
 
-        # 5. Проверяем интуитивные инсайты (с обработкой ошибок)
+        # [ru] 5. Проверяем интуитивные инсайты (с обработкой ошибок)
+        # [en] 5. Testing intuitive insights (with error handling)
         try:
             insight = self.intuition.get_insight(event)
             if insight and insight.get('confidence', 0) > 0.7:
                 self.insight_history.append(insight)
-                print(f"💡 Интуитивный инсайт: {insight.get('explanation', '')}")
+                print(f"[ru] Интуитивный инсайт: {insight.get('explanation', '')}")
+                print(f"[en] Intuitive insight: {insight.get('explanation', '')}")
         except Exception as e:
-            # Игнорируем ошибки интуиции, чтобы не прерывать основной процесс
+            # [ru] Игнорируем ошибки интуиции, чтобы не прерывать основной процесс
+            # [en] Ignore intuition errors to avoid interrupting the main process
             pass
 
         return responses
 
 
-    # def process_sensory_input(self, sensory_data: Dict) -> List[EmotionalResponse]:
-    #     """
-    #     Обрабатывает сенсорные данные и генерирует эмоциональные реакции.
-    #
-    #     Args:
-    #         sensory_data: {
-    #             'vision': np.ndarray,
-    #             'sound': np.ndarray,
-    #             'smell': np.ndarray,
-    #             'context': dict
-    #         }
-    #     """
-    #     # 1. Создаем событие из сенсорных данных
-    #     event = self._sensory_to_event(sensory_data)
-    #
-    #     # 2. Генерируем эмоциональные реакции
-    #     responses = self.engine.process_event(event)
-    #
-    #     # 3. Обновляем текущее состояние
-    #     self.current_emotions = responses
-    #
-    #     # 4. Сохраняем в историю
-    #     self.emotion_history.append({
-    #         'timestamp': event.timestamp,
-    #         'event': event,
-    #         'responses': responses
-    #     })
-    #
-    #     # 5. Проверяем интуитивные инсайты
-    #     insight = self.intuition.get_insight(event)
-    #     if insight and insight['confidence'] > 0.7:
-    #         self.insight_history.append(insight)
-    #         print(f"💡 Интуитивный инсайт: {insight['explanation']}")
-    #
-    #     return responses
-
     def get_emotional_state(self) -> Dict:
         """
-        Возвращает текущее эмоциональное состояние.
+        [ru] Возвращает текущее эмоциональное состояние.
+        [en] Returns the current emotional state.
         """
         if not self.current_emotions:
             return {'state': 'neutral', 'intensity': 0.0}
 
-        # Определяем доминирующую эмоцию
+        # [ru] Определяем доминирующую эмоцию
+        # [en] Identifying the dominant emotion
         dominant = max(self.current_emotions, key=lambda x: x.intensity)
 
         return {
@@ -173,12 +166,15 @@ class EmotionSystem:
 
     def trace_emotional_chain(self, depth: int = 10) -> List[Dict]:
         """
-        Трассирует цепочку эмоциональных реакций.
+        [ru] Трассирует цепочку эмоциональных реакций.
+        [en] Traces the chain of emotional reactions.
         """
         if not self.emotion_history:
             return []
 
         # Начинаем с последней реакции
+        # [ru]
+        # [en]
         last_response = self.emotion_history[-1]['responses'][0]
         chain = self.engine.trace_response_chain(last_response)
 
@@ -187,15 +183,19 @@ class EmotionSystem:
     def predict_emotional_development(self, emotion_type: EmotionType,
                                       max_depth: int = 5) -> List[List[str]]:
         """
-        Прогнозирует развитие эмоциональной цепочки.
+        [ru] Прогнозирует развитие эмоциональной цепочки.
+        [en] Predicts the development of the emotional chain.
         """
         return self.engine.predict_emotion_chain(emotion_type, max_depth)
 
     def compare_mental_models(self, model1_name: str, model2_name: str) -> Dict:
         """
-        Сравнивает две ментальные модели.
+        [ru] Сравнивает две ментальные модели.
+        [en] Compares two mental models.
+
         """
-        # Находим модели по имени
+        # [ru] Находим модели по имени
+        # [en] Find models by name
         model1 = None
         model2 = None
 
@@ -212,9 +212,12 @@ class EmotionSystem:
 
     def synchronize_mental_models(self, model1_name: str, model2_name: str):
         """
-        Синхронизирует две ментальные модели.
+        [ru] Синхронизирует две ментальные модели.
+        [en] Synchronizes two mental models.
         """
-        # Находим модели по имени
+
+        # [ru] Находим модели по имени
+        # [en] Find models by name
         model1 = None
         model2 = None
 
@@ -225,18 +228,22 @@ class EmotionSystem:
                 model2 = m
 
         if not model1 or not model2:
-            print(f"❌ Модели не найдены: {model1_name}, {model2_name}")
+            print(f"[ru] Модели не найдены: {model1_name}, {model2_name}")
+            print(f"[en] No models found: {model1_name}, {model2_name}")
             return None
 
         return self.models.synchronize_models(model1.id, model2.id)
 
     def _sensory_to_event(self, sensory_data: Dict) -> EmotionalEvent:
         """
-        Преобразует сенсорные данные в событие.
+        [ru] Преобразует сенсорные данные в событие.
+        [en] Converts sensor data into an event.
+
         """
         import time
 
-        # Создаем эмбеддинг из сенсорных данных
+        # [ru] Создаем эмбеддинг из сенсорных данных
+        # [en] Creating an embedding from sensory data
         embedding = self._sensory_to_embedding(sensory_data)
 
         event = EmotionalEvent(
@@ -251,10 +258,14 @@ class EmotionSystem:
         return event
 
     def _sensory_to_embedding(self, sensory_data: Dict) -> np.ndarray:
-        """Преобразует сенсорные данные в эмбеддинг."""
+        """
+        [ru] Преобразует сенсорные данные в эмбеддинг.
+        [en] Converts sensory data into embedding.
+        """
         embedding = np.zeros(128)
 
-        # Vision
+        # [ru] Зрение
+        # [en] Vision
         if 'vision' in sensory_data:
             vision = sensory_data['vision']
             if len(vision) >= 64:
@@ -262,7 +273,8 @@ class EmotionSystem:
             else:
                 embedding[:len(vision)] = vision
 
-        # Sound
+        # [ru] Слух
+        # [en] Sound
         if 'sound' in sensory_data:
             sound = sensory_data['sound']
             if len(sound) >= 32:
@@ -270,7 +282,8 @@ class EmotionSystem:
             else:
                 embedding[64:64 + len(sound)] = sound
 
-        # Smell
+        # [ru] Запах
+        # [en] Smell
         if 'smell' in sensory_data:
             smell = sensory_data['smell']
             if len(smell) >= 32:
@@ -278,12 +291,16 @@ class EmotionSystem:
             else:
                 embedding[96:96 + len(smell)] = smell
 
-        # Нормализуем
+        # [ru] Нормализуем
+        # [en] Let's normalize
         norm = np.linalg.norm(embedding) + 1e-8
         return embedding / norm
 
     def _describe_sensory(self, sensory_data: Dict) -> str:
-        """Генерирует текстовое описание сенсорных данных."""
+        """
+        [ru] Генерирует текстовое описание сенсорных данных.
+        [en] Generates a text description of sensory data.
+        """
         parts = []
         if 'vision' in sensory_data:
             parts.append("визуальный стимул")
@@ -296,44 +313,50 @@ class EmotionSystem:
 
     def connect_systems(self, reflex_system, instinct_system):
         """
-        Подключает эмоциональную систему к рефлексам и инстинктам.
+        [ru] Подключает эмоциональную систему к рефлексам и инстинктам.
+        [en] Connects the emotional system to reflexes and instincts.
         """
         self.reflex_system = reflex_system
         self.instinct_system = instinct_system
-        print("✅ Эмоциональная система подключена к рефлексам и инстинктам")
+        print("[ru] Эмоциональная система подключена к рефлексам и инстинктам")
+        print("[en] The emotional system is connected to reflexes and instincts.")
 
     def influence_reflexes(self):
         """
-        Эмоции влияют на рефлексы.
-        Например: страх усиливает рефлекс убегания.
+        [ru] Эмоции влияют на рефлексы. Например: страх усиливает рефлекс убегания.
+        [en] Emotions influence reflexes. For example, fear increases the flight reflex.
         """
         if not self.reflex_system:
             return
 
         state = self.get_emotional_state()
 
-        # Пример: страх усиливает рефлексы
+        # [ru] Пример: страх усиливает рефлексы
+        # [en] Example: fear enhances reflexes
         if state['dominant_emotion'] == EmotionType.FEAR.value:
             self.reflex_system.boost_reflex('run_away', state['intensity'])
 
-        # Гнев усиливает агрессивные рефлексы
+        # [ru] Гнев усиливает агрессивные рефлексы
+        # [en] Anger increases aggressive reflexes
         if state['dominant_emotion'] == EmotionType.ANGER.value:
             self.reflex_system.boost_reflex('attack', state['intensity'])
 
     def influence_instincts(self):
         """
-        Эмоции влияют на инстинкты.
-        Например: страх может подавлять инстинкт исследования.
+        [ru] Эмоции влияют на инстинкты. Например: страх может подавлять инстинкт исследования.
+        [en] Emotions influence instincts. For example, fear can suppress the instinct to explore.
         """
         if not self.instinct_system:
             return
 
         state = self.get_emotional_state()
 
-        # Пример: страх подавляет инстинкт исследования
+        # [ru] Пример: страх подавляет инстинкт исследования
+        # [en] Example: fear suppresses the instinct of exploration
         if state['dominant_emotion'] == EmotionType.FEAR.value:
             self.instinct_system.suppress_instinct('explore', state['intensity'])
 
-        # Радость усиливает инстинкт исследования
+         # [ru] Радость усиливает инстинкт исследования
+        # [en] Joy strengthens the instinct of exploration
         if state['dominant_emotion'] == EmotionType.JOY.value:
             self.instinct_system.boost_instinct('explore', state['intensity'])

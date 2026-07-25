@@ -1,6 +1,7 @@
 # core/emotions/emotion_graph_db.py
 """
-Расширение EmotionGraph с поддержкой БД.
+[ru] Расширение EmotionGraph с поддержкой БД.
+[en] EmotionGraph extension with database support.
 """
 
 from core.emotions.emotion_graph import EmotionGraph
@@ -10,11 +11,13 @@ from core.emotions.emotion_base import EmotionalEvent, EmotionalResponse, Emotio
 
 class EmotionGraphDB(EmotionGraph):
     """
-    Биграф с поддержкой сохранения в БД.
+    [ru] Биграф с поддержкой сохранения в БД.
+    [en] Bi`graph with support for saving to a database.
     """
 
     def __init__(self, db: Optional[EmotionDB] = None, load_from_db: bool = True):
-        # Инициализируем родительский класс
+        # [ru]  Инициализируем родительский класс
+        # [en]  Initialize the parent class
         super().__init__()
 
         self.db = db or EmotionDB()
@@ -23,22 +26,30 @@ class EmotionGraphDB(EmotionGraph):
             self._load_from_db()
 
     def _load_from_db(self):
-        """Загружает данные из БД."""
-        print("📥 Загрузка биграфа из БД...")
+        """
+        [ru] Загружает данные из БД.
+        [en] Loads data from the database.
+        """
+        print("📥 [ru] Загрузка биграфа из БД...")
+        print("📥 [en] Loading bi`graph from database...")
 
         graph_data = self.db.load_full_graph()
 
-        # Загружаем события
+        # [ru] Загружаем события
+        # [en] Loading events
         for event in graph_data['events']:
             # Используем метод родительского класса для добавления события
             self._add_event_internal(event)
 
-        # Загружаем эмоции
+        # [ru] Загружаем эмоции
+        # [en] Loading emotions
         for emotion in graph_data['emotions']:
-            # Используем метод родительского класса для добавления эмоции
+            # [ru] Используем метод родительского класса для добавления эмоции
+            # [en] We use the parent class method to add an emotion
             self._add_emotion_internal(emotion)
 
-        # Загружаем причинные связи
+        # [ru] Загружаем причинные связи
+        # [en] Loading causal relationships
         for link in graph_data['causal_links'].values():
             self.causal_links[link.id] = link
             self.event_graph.add_edge(link.source_id, link.target_id,
@@ -46,7 +57,8 @@ class EmotionGraphDB(EmotionGraph):
             self._add_to_index(self._event_outgoing, link.source_id, link.id)
             self._add_to_index(self._event_incoming, link.target_id, link.id)
 
-        # Загружаем цепочки эмоций
+        # [ru] Загружаем цепочки эмоций
+        # [en] Loading emotion chains
         for link in graph_data['emotion_chain_links'].values():
             self.emotion_chain_links[link.id] = link
             self.emotion_graph.add_edge(link.source_id, link.target_id,
@@ -54,7 +66,8 @@ class EmotionGraphDB(EmotionGraph):
             self._add_to_index(self._emotion_outgoing, link.source_id, link.id)
             self._add_to_index(self._emotion_incoming, link.target_id, link.id)
 
-        # Загружаем связи событие→эмоция
+        # [ru] Загружаем связи событие→эмоция
+        # [en] Loading event→emotion links
         for link in graph_data['event_emotion_links'].values():
             self.event_emotion_links[link.id] = link
             self.event_to_emotion.add_edge(link.source_id, link.target_id,
@@ -62,7 +75,8 @@ class EmotionGraphDB(EmotionGraph):
             self._add_to_index(self._event_outgoing, link.source_id, link.id)
             self._add_to_index(self._emotion_incoming, link.target_id, link.id)
 
-        # Загружаем связи эмоция→событие
+        # [ru] Загружаем связи эмоция→событие
+        # [en] Loading emotion→event connections
         for link in graph_data['emotion_event_links'].values():
             self.emotion_event_links[link.id] = link
             self.emotion_to_event.add_edge(link.source_id, link.target_id,
@@ -70,17 +84,25 @@ class EmotionGraphDB(EmotionGraph):
             self._add_to_index(self._emotion_outgoing, link.source_id, link.id)
             self._add_to_index(self._event_incoming, link.target_id, link.id)
 
-        print(f"✅ Биграф загружен из БД")
+        print(f"✅ [ru] Биграф загружен из БД")
+        print(f"✅ [en] Bi`graph loaded from the database")
 
     def _add_event_internal(self, event: EmotionalEvent):
-        """Внутренний метод добавления события (без сохранения в БД)."""
+        """
+        [ru] Внутренний метод добавления события (без сохранения в БД).
+        [en] Internal method for adding an event (without saving to the database).
+        """
         self.events[event.id] = event
         self.event_graph.add_node(event.id, embedding=event.embedding)
         self.event_embeddings.append(event.embedding)
 
     def _add_emotion_internal(self, emotion: EmotionalResponse):
-        """Внутренний метод добавления эмоции (без сохранения в БД)."""
-        # Получаем строковое представление типа эмоции
+        """
+        [ru] Внутренний метод добавления эмоции (без сохранения в БД).
+        [en] Internal method for adding an emotion (without saving to the database).
+        """
+        # [ru] Получаем строковое представление типа эмоции
+        # [en] We get a string representation of the emotion type
         emotion_type_str = emotion.emotion_type.value if hasattr(emotion.emotion_type, 'value') else str(emotion.emotion_type)
 
         self.emotions[emotion_type_str] = emotion
@@ -89,18 +111,25 @@ class EmotionGraphDB(EmotionGraph):
         self.emotion_embeddings.append(emotion.embedding)
 
     def _save_to_db(self):
-        """Сохраняет текущее состояние в БД."""
-        print("💾 Сохранение биграфа в БД...")
+        """
+        [ru] Сохраняет текущее состояние в БД.
+        [en] Saves the current state in the database.
+        """
+        print("💾 [ru] Сохранение биграфа в БД...")
+        print("💾 [en] Saving the bi`graph to the database...")
 
-        # Сохраняем события
+        # [ru] Сохраняем события
+        # [en] Saving events
         for event in self.events.values():
             self.db.save_event(event)
 
-        # Сохраняем эмоции
+        # [ru] Сохраняем эмоции
+        # [en] Saving emotions
         for emotion in self.emotions.values():
             self.db.save_emotion(emotion)
 
-        # Сохраняем связи
+        # [ru] Сохраняем связи
+        # [en] Saving connections
         for link in self.causal_links.values():
             self.db.save_causal_link(link)
         for link in self.emotion_chain_links.values():
@@ -110,18 +139,28 @@ class EmotionGraphDB(EmotionGraph):
         for link in self.emotion_event_links.values():
             self.db.save_emotion_event_link(link)
 
-        print(f"✅ Биграф сохранен в БД")
+        print(f"✅ [ru] Биграф сохранен в БД")
+        print(f"✅ [en] The bi`graph is saved in the database")
 
     def save(self):
-        """Сохраняет текущее состояние в БД."""
+        """
+        [ru] Сохраняет текущее состояние в БД.
+        [en] Saves the current state in the database.
+        """
         self._save_to_db()
 
     def add_event(self, event: EmotionalEvent):
-        """Добавляет событие и сохраняет в БД."""
+        """
+        [ru] Добавляет событие и сохраняет в БД.
+        [en] Adds an event and saves it to the database.
+        """
         self._add_event_internal(event)
         self.db.save_event(event)
 
     def add_emotion(self, emotion: EmotionalResponse):
-        """Добавляет эмоцию и сохраняет в БД."""
+        """
+        [ru] Добавляет эмоцию и сохраняет в БД.
+        [en] Adds an emotion and saves it in the database.
+        """
         self._add_emotion_internal(emotion)
         self.db.save_emotion(emotion)
