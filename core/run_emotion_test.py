@@ -6,7 +6,8 @@ from core.emotions.emotion_system import EmotionSystem
 
 system = EmotionSystem()
 
-# Тест 1: Создание эмоции
+# [ru] Тест 1: Создание эмоции
+# [en] Test 1: Creating an Emotion
 from core.emotions.emotion_base import EmotionalEvent, EmotionalResponse, EmotionType
 
 event = EmotionalEvent(
@@ -25,5 +26,7 @@ responses = system.process_sensory_input({
     'context': {'type': 'success'}
 })
 
-print(f"Эмоциональные реакции: {responses}")
-print(f"Состояние: {system.get_emotional_state()}")
+print(f" [ru] Эмоциональные реакции: {responses}")
+print(f" [en] Emotional reactions: {responses}")
+print(f" [ru] Состояние: {system.get_emotional_state()}")
+print(f" [en] State: {system.get_emotional_state()}")

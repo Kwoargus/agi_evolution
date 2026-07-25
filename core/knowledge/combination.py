@@ -1,6 +1,7 @@
 # core/knowledge/combination.py
 """
-Модуль для работы с комбинациями узлов.
+[ru] Модуль для работы с комбинациями узлов.
+[en] Module for working with node combinations.
 """
 
 from typing import List, Dict, Any, Optional
@@ -13,8 +14,8 @@ import time
 @dataclass
 class Combination:
     """
-    Комбинация узлов графа знаний.
-    Используется для представления аналогий и гипотез.
+    [ru] Комбинация узлов графа знаний. Используется для представления аналогий и гипотез.
+    [en] Combination of knowledge graph nodes. Used to represent analogies and hypotheses.
     """
 
     id: str
@@ -25,29 +26,41 @@ class Combination:
     created_at: float = field(default_factory=time.time)
 
     def __post_init__(self):
-        """Вычисляет эмбеддинг после инициализации."""
+        """
+        [ru] Вычисляет эмбеддинг после инициализации.
+        [en] Computes the embedding after initialization.
+        """
         if self.embedding is None:
             self._compute_embedding()
 
     def _compute_embedding(self):
-        """Вычисляет эмбеддинг комбинации."""
-        # Простой эмбеддинг на основе свойств
+        """
+        [ru] Вычисляет эмбеддинг комбинации.
+        [en] Computes the combination embedding.
+        """
+        # [ru] Простой эмбеддинг на основе свойств
+        # [en] Simple embedding based on properties
         embedding = np.zeros(64)
 
         for i, prop in enumerate(self.properties[:20]):
             if i < len(embedding):
                 embedding[i] = hash(prop) % 100 / 100.0
 
-        # Добавляем информацию о количестве узлов
+        # [ru] Добавляем информацию о количестве узлов
+        # [en] Add information about the number of nodes
         if len(self.nodes) > 0:
             embedding[-1] = min(len(self.nodes) / 10, 1.0)
 
-        # Нормализуем
+        # [ru] Нормализуем
+        # [en] Normalize
         norm = np.linalg.norm(embedding) + 1e-8
         self.embedding = embedding / norm
 
     def copy(self) -> 'Combination':
-        """Создаёт копию комбинации."""
+        """
+        [ru] Создаёт копию комбинации.
+        [en] Creates a copy of the combination.
+        """
         return Combination(
             id=f"copy_{self.id}",
             nodes=self.nodes.copy(),
@@ -58,7 +71,10 @@ class Combination:
         )
 
     def to_dict(self) -> Dict[str, Any]:
-        """Преобразует в словарь."""
+        """
+        [ru] Преобразует в словарь.
+        [en] Converts to a dictionary.
+        """
         return {
             'id': self.id,
             'node_ids': [n.id if hasattr(n, 'id') else str(n) for n in self.nodes],
@@ -69,10 +85,15 @@ class Combination:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Combination':
-        """Восстанавливает из словаря."""
+        """
+        [ru] Восстанавливает из словаря.
+        [en] Restores from a dictionary.
+        """
         return cls(
             id=data['id'],
-            nodes=[],  # Узлы нужно восстановить отдельно
+            # [ru] Узлы нужно восстановить отдельно
+            # [en] Nodes need to be restored separately
+            nodes=[],
             properties=data.get('properties', []),
             metadata=data.get('metadata', {})
         )
@@ -81,114 +102,89 @@ class Combination:
 
 # # core/knowledge/combination.py
 # """
-# Модуль для работы с комбинациями моделей знаний.
+# Модуль для работы с комбинациями узлов.
 # """
 #
 # from typing import List, Dict, Any, Optional
 # from dataclasses import dataclass, field
 # import numpy as np
-# from .knowledge_node import KnowledgeNode
+# import hashlib
+# import time
 #
 #
 # @dataclass
 # class Combination:
 #     """
-#     Комбинация узлов графа знаний.
-#     Используется как кандидат на роль "аналогии" или "прототипа".
-#
-#     Attributes:
-#         id: Уникальный идентификатор комбинации
-#         nodes: Список узлов, входящих в комбинацию
-#         edges: Список связей между узлами (по ID)
-#         properties: Объединенные свойства всех узлов
-#         embedding: Векторное представление комбинации
-#         score: Оценка соответствия задаче (0-1)
-#         metadata: Дополнительные метаданные
+#     Комбинация узлов графа знаний. Используется для представления аналогий и гипотез.
 #     """
 #
 #     id: str
-#     nodes: List[KnowledgeNode] = field(default_factory=list)
-#     edge_ids: List[str] = field(default_factory=list)
+#     nodes: List[Any] = field(default_factory=list)
 #     properties: List[str] = field(default_factory=list)
-#     embedding: Optional[np.ndarray] = None
-#     score: float = 0.0
 #     metadata: Dict[str, Any] = field(default_factory=dict)
+#     embedding: Optional[np.ndarray] = None
+#     created_at: float = field(default_factory=time.time)
 #
 #     def __post_init__(self):
-#         """Вычисляет объединенные свойства после инициализации."""
-#         if not self.properties:
-#             self._update_properties()
+#         """
+#         Вычисляет эмбеддинг после инициализации.
+#         """
 #         if self.embedding is None:
 #             self._compute_embedding()
 #
-#     def _update_properties(self):
-#         """Обновляет список свойств на основе узлов."""
-#         all_props = set()
-#         for node in self.nodes:
-#             all_props.update(node.properties)
-#         self.properties = list(all_props)
-#
 #     def _compute_embedding(self):
-#         """Вычисляет эмбеддинг комбинации."""
-#         if not self.nodes:
-#             self.embedding = np.zeros(128)
-#             return
+#         """
+#         Вычисляет эмбеддинг комбинации.
+#         """
+#         # Простой эмбеддинг на основе свойств
+#         embedding = np.zeros(64)
 #
-#         # Усредняем эмбеддинги узлов
-#         embeddings = [n.embedding for n in self.nodes if n.embedding is not None]
-#         if embeddings:
-#             self.embedding = np.mean(embeddings, axis=0)
-#         else:
-#             self.embedding = np.zeros(128)
+#         for i, prop in enumerate(self.properties[:20]):
+#             if i < len(embedding):
+#                 embedding[i] = hash(prop) % 100 / 100.0
+#
+#         # Добавляем информацию о количестве узлов
+#         if len(self.nodes) > 0:
+#             embedding[-1] = min(len(self.nodes) / 10, 1.0)
 #
 #         # Нормализуем
-#         norm = np.linalg.norm(self.embedding) + 1e-8
-#         self.embedding = self.embedding / norm
+#         norm = np.linalg.norm(embedding) + 1e-8
+#         self.embedding = embedding / norm
 #
-#     def add_node(self, node: KnowledgeNode):
-#         """Добавляет узел в комбинацию."""
-#         self.nodes.append(node)
-#         self._update_properties()
-#         self._compute_embedding()
-#
-#     def add_edge(self, edge_id: str):
-#         """Добавляет связь в комбинацию."""
-#         if edge_id not in self.edge_ids:
-#             self.edge_ids.append(edge_id)
-#
-#     def get_property_coverage(self, required_properties: List[str]) -> float:
+#     def copy(self) -> 'Combination':
 #         """
-#         Вычисляет покрытие требуемых свойств.
-#
-#         Returns:
-#             Доля требуемых свойств, присутствующих в комбинации
+#         Создаёт копию комбинации.
 #         """
-#         if not required_properties:
-#             return 1.0
-#
-#         covered = sum(1 for p in required_properties if p in self.properties)
-#         return covered / len(required_properties)
+#         return Combination(
+#             id=f"copy_{self.id}",
+#             nodes=self.nodes.copy(),
+#             properties=self.properties.copy(),
+#             metadata=self.metadata.copy(),
+#             embedding=self.embedding.copy() if self.embedding is not None else None,
+#             created_at=self.created_at
+#         )
 #
 #     def to_dict(self) -> Dict[str, Any]:
-#         """Преобразует в словарь для сериализации."""
+#         """
+#         Преобразует в словарь.
+#         """
 #         return {
 #             'id': self.id,
-#             'node_ids': [n.id for n in self.nodes],
-#             'edge_ids': self.edge_ids,
+#             'node_ids': [n.id if hasattr(n, 'id') else str(n) for n in self.nodes],
 #             'properties': self.properties,
-#             'score': self.score,
-#             'metadata': self.metadata
+#             'metadata': self.metadata,
+#             'created_at': self.created_at
 #         }
 #
 #     @classmethod
-#     def from_dict(cls, data: Dict[str, Any], node_map: Dict[str, KnowledgeNode]) -> 'Combination':
-#         """Восстанавливает комбинацию из словаря."""
-#         nodes = [node_map[nid] for nid in data.get('node_ids', []) if nid in node_map]
+#     def from_dict(cls, data: Dict[str, Any]) -> 'Combination':
+#         """
+#         Восстанавливает из словаря.
+#         """
 #         return cls(
 #             id=data['id'],
-#             nodes=nodes,
-#             edge_ids=data.get('edge_ids', []),
+#             nodes=[],  # Узлы нужно восстановить отдельно
 #             properties=data.get('properties', []),
-#             score=data.get('score', 0.0),
 #             metadata=data.get('metadata', {})
 #         )
+#

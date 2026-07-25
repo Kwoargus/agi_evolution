@@ -2,7 +2,10 @@
 from typing import Dict, Any, Optional
 
 class Perception(Dict[str, Any]):
-    """Словарь с сенсорными данными."""
+    """
+    [ru] Словарь с сенсорными данными.
+    [en] Dictionary with sensory data.
+    """
     pass
 
 class ActionSuggestion:

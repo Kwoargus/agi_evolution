@@ -1,6 +1,7 @@
 # core/thinking/__init__.py
 """
-Модуль мышления AGI.
+[ru] Модуль мышления AGI.
+[en] Thinking module AGI.
 """
 
 from .understanding import UnderstandingEngine, UnderstandingResult, UnderstandingStatus

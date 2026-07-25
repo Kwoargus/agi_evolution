@@ -1,6 +1,7 @@
 # db/connector.py
 """
-Модуль для работы с БД.
+[ru] Модуль для работы с БД.
+[en] Module for working with the database.
 """
 
 import json
@@ -13,7 +14,10 @@ from typing import List, Dict, Optional, Tuple, Any, Union
 def get_connection(host='localhost', port=5432,
                    dbname='postgres', user='postgres',
                    password='postgres'):
-    """Возвращает соединение с БД."""
+    """
+    [ru] Возвращает соединение с БД.
+    [en] Returns a database connection.
+    """
     return psycopg2.connect(
         host=host,
         port=port,
@@ -24,7 +28,10 @@ def get_connection(host='localhost', port=5432,
 
 
 def load_reflex_rules(schema='agi_evolution'):
-    """Загружает правила рефлексов из таблицы reflex_pattern."""
+    """
+    [ru] Загружает правила рефлексов из таблицы reflex_pattern.
+    [en] Loads reflex rules from the reflex_pattern table.
+    """
     try:
         conn = get_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -34,12 +41,16 @@ def load_reflex_rules(schema='agi_evolution'):
         conn.close()
         return [dict(row) for row in rows]
     except Exception as e:
-        print(f"Ошибка загрузки рефлексов: {e}")
+        print(f"[ru] Ошибка загрузки рефлексов: {e}")
+        print(f"[en] Error loading reflexes: {e}")
         return []
 
 
 def load_instinct_patterns(schema='agi_evolution'):
-    """Загружает паттерны инстинктов из таблицы instinct_pattern."""
+    """
+    [ru] Загружает паттерны инстинктов из таблицы instinct_pattern.
+    [en] Loads instinct patterns from the instinct_pattern table.
+    """
     try:
         conn = get_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -54,12 +65,16 @@ def load_instinct_patterns(schema='agi_evolution'):
             patterns.append({'pattern': pattern, 'action': action})
         return patterns
     except Exception as e:
-        print(f"Ошибка загрузки инстинктов: {e}")
+        print(f"[ru] Ошибка загрузки инстинктов: {e}")
+        print(f"[en] Error loading instincts: {e}")
         return []
 
 
 def save_generation(generation_num, best_fitness, avg_fitness, schema='agi_evolution'):
-    """Сохраняет поколение и возвращает его id."""
+    """
+    [ru] Сохраняет поколение и возвращает его id.
+    [en] Saves a generation and returns its id.
+    """
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -73,12 +88,16 @@ def save_generation(generation_num, best_fitness, avg_fitness, schema='agi_evolu
         conn.close()
         return gen_id
     except Exception as e:
-        print(f"Ошибка сохранения поколения: {e}")
+        print(f"[ru] Ошибка сохранения поколения: {e}")
+        print(f"[en] Error saving generation: {e}")
         return None
 
 
 def save_genome(generation_id, genome_json, fitness, schema='agi_evolution'):
-    """Сохраняет геном."""
+    """
+    [ru] Сохраняет геном.
+    [en] Saves a genome.
+    """
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -91,12 +110,16 @@ def save_genome(generation_id, genome_json, fitness, schema='agi_evolution'):
         conn.close()
         return True
     except Exception as e:
-        print(f"Ошибка сохранения генома: {e}")
+        print(f"[ru] Ошибка сохранения генома: {e}")
+        print(f"[en] Error saving genome: {e}")
         return False
 
 
 def load_best_genome(schema='agi_evolution'):
-    """Загружает лучший геном из БД."""
+    """
+    [ru] Загружает лучший геном из БД.
+    [en] Loads the best genome from the database.
+    """
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -118,20 +141,24 @@ def load_best_genome(schema='agi_evolution'):
                 genome_json = json.loads(genome_data)
             fitness = row[1]
             generation = row[2]
-            print(f"Загружен лучший геном из поколения {generation} с фитнесом {fitness:.2f}")
+            print(f"[ru] Загружен лучший геном из поколения {generation} с фитнесом {fitness:.2f}")
+            print(f"[en] Loaded best genome from generation {generation} with fitness {fitness:.2f}")
             return genome_json
         else:
-            print("В БД нет сохранённых геномов.")
+            print("[ru] В БД нет сохранённых геномов.")
+            print("[en] No saved genomes in the database.")
             return None
     except Exception as e:
-        print(f"Ошибка загрузки лучшего генома: {e}")
+        print(f"[ru] Ошибка загрузки лучшего генома: {e}")
+        print(f"[en] Error loading best genome: {e}")
         return None
 
 
 def save_generated_pattern(generation_id: int, pattern: np.ndarray,
                            score: float, rule: dict) -> bool:
     """
-    Сохраняет сгенерированный паттерн в БД.
+    [ru] Сохраняет сгенерированный паттерн в БД.
+    [en] Saves a generated pattern to the database.
     """
     try:
         conn = get_connection()
@@ -157,13 +184,15 @@ def save_generated_pattern(generation_id: int, pattern: np.ndarray,
         conn.close()
         return True
     except Exception as e:
-        print(f"❌ Ошибка сохранения паттерна: {e}")
+        print(f"[ru] ❌ Ошибка сохранения паттерна: {e}")
+        print(f"[en] ❌ Error saving pattern: {e}")
         return False
 
 
 def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Dict]:
     """
-    Загружает сгенерированные паттерны из БД.
+    [ru] Загружает сгенерированные паттерны из БД.
+    [en] Loads generated patterns from the database.
     """
     try:
         conn = get_connection()
@@ -197,21 +226,30 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 
         return patterns
     except Exception as e:
-        print(f"❌ Ошибка загрузки паттернов: {e}")
+        print(f"[ru] ❌ Ошибка загрузки паттернов: {e}")
+        print(f"[en] ❌ Error loading patterns: {e}")
         return []
 
 
 
-
 # # db/connector.py
+# """
+# Модуль для работы с БД.
+# """
+#
 # import json
 # import psycopg2
 # import psycopg2.extras
-# from typing import List, Dict, Optional, Tuple, Any, Union
 # import numpy as np
+# from typing import List, Dict, Optional, Tuple, Any, Union
 #
-# def get_connection(host='localhost', port=5432, dbname='postgres', user='postgres', password='postgres'):
-#     """Возвращает соединение с БД."""
+#
+# def get_connection(host='localhost', port=5432,
+#                    dbname='postgres', user='postgres',
+#                    password='postgres'):
+#     """
+#     Возвращает соединение с БД.
+#     """
 #     return psycopg2.connect(
 #         host=host,
 #         port=port,
@@ -220,8 +258,11 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         password=password
 #     )
 #
+#
 # def load_reflex_rules(schema='agi_evolution'):
-#     """Загружает правила рефлексов из таблицы reflex_pattern."""
+#     """
+#     Загружает правила рефлексов из таблицы reflex_pattern.
+#     """
 #     try:
 #         conn = get_connection()
 #         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -234,8 +275,11 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         print(f"Ошибка загрузки рефлексов: {e}")
 #         return []
 #
+#
 # def load_instinct_patterns(schema='agi_evolution'):
-#     """Загружает паттерны инстинктов из таблицы instinct_pattern."""
+#     """
+#     Загружает паттерны инстинктов из таблицы instinct_pattern.
+#     """
 #     try:
 #         conn = get_connection()
 #         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -253,8 +297,11 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         print(f"Ошибка загрузки инстинктов: {e}")
 #         return []
 #
+#
 # def save_generation(generation_num, best_fitness, avg_fitness, schema='agi_evolution'):
-#     """Сохраняет поколение и возвращает его id."""
+#     """
+#     Сохраняет поколение и возвращает его id.
+#     """
 #     try:
 #         conn = get_connection()
 #         cur = conn.cursor()
@@ -271,8 +318,11 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         print(f"Ошибка сохранения поколения: {e}")
 #         return None
 #
+#
 # def save_genome(generation_id, genome_json, fitness, schema='agi_evolution'):
-#     """Сохраняет геном."""
+#     """
+#     Сохраняет геном.
+#     """
 #     try:
 #         conn = get_connection()
 #         cur = conn.cursor()
@@ -288,7 +338,11 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         print(f"Ошибка сохранения генома: {e}")
 #         return False
 #
+#
 # def load_best_genome(schema='agi_evolution'):
+#     """
+#     Загружает лучший геном из БД.
+#     """
 #     try:
 #         conn = get_connection()
 #         cur = conn.cursor()
@@ -304,11 +358,9 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         conn.close()
 #         if row:
 #             genome_data = row[0]
-#             # Если это уже dict (например, при использовании JSONB), используем как есть
 #             if isinstance(genome_data, dict):
 #                 genome_json = genome_data
 #             else:
-#                 # Иначе предполагаем, что это строка JSON
 #                 genome_json = json.loads(genome_data)
 #             fitness = row[1]
 #             generation = row[2]
@@ -321,95 +373,11 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         print(f"Ошибка загрузки лучшего генома: {e}")
 #         return None
 #
-# def save_reflex_stats(reflex_id: int, success_count: int, total_count: int, success_rate: float):
-#     """Сохраняет статистику рефлекса."""
-#     try:
-#         conn = get_connection()
-#         cur = conn.cursor()
-#         cur.execute("""
-#             UPDATE agi_evolution.reflex_pattern
-#             SET success_count = %s, total_count = %s, success_rate = %s
-#             WHERE id = %s
-#         """, (success_count, total_count, success_rate, reflex_id))
-#         conn.commit()
-#         cur.close()
-#         conn.close()
-#         return True
-#     except Exception as e:
-#         print(f"❌ Ошибка сохранения статистики рефлекса: {e}")
-#         return False
-#
-# def save_gan_training_log(generation_id: int, epoch: int, g_loss: float, d_loss: float,
-#                          pattern_diversity: float, best_score: float, avg_score: float):
-#     """Сохраняет лог тренировки GAN."""
-#     try:
-#         conn = get_connection()
-#         cur = conn.cursor()
-#         cur.execute("""
-#             INSERT INTO agi_evolution.gan_training_log
-#             (generation_id, epoch, g_loss, d_loss, pattern_diversity,
-#              best_pattern_score, avg_pattern_score)
-#             VALUES (%s, %s, %s, %s, %s, %s, %s)
-#         """, (generation_id, epoch, g_loss, d_loss, pattern_diversity, best_score, avg_score))
-#         conn.commit()
-#         cur.close()
-#         conn.close()
-#         return True
-#     except Exception as e:
-#         print(f"❌ Ошибка сохранения лога GAN: {e}")
-#         return False
-#
-#
-# def load_generated_patterns(limit: int = 100) -> List[Dict]:
-#     """
-#     Загружает сгенерированные паттерны из БД.
-#     """
-#     try:
-#         conn = get_connection()
-#         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-#
-#         cur.execute("""
-#             SELECT id, generation_id, pattern_vector, pattern_score,
-#                    sense_type, signal_type, signal_threshold, action, created_at
-#             FROM agi_evolution.generated_patterns
-#             ORDER BY pattern_score DESC, created_at DESC
-#             LIMIT %s
-#         """, (limit,))
-#
-#         rows = cur.fetchall()
-#         cur.close()
-#         conn.close()
-#
-#         patterns = []
-#         for row in rows:
-#             patterns.append({
-#                 'id': row['id'],
-#                 'generation_id': row['generation_id'],
-#                 'pattern': np.array(json.loads(row['pattern_vector'])),
-#                 'score': row['pattern_score'],
-#                 'sense_type': row['sense_type'],
-#                 'signal_type': row['signal_type'],
-#                 'threshold': row['signal_threshold'],
-#                 'action': row['action'],
-#                 'created_at': row['created_at']
-#             })
-#
-#         return patterns
-#     except Exception as e:
-#         print(f"❌ Ошибка загрузки паттернов: {e}")
-#         return []
-#
 #
 # def save_generated_pattern(generation_id: int, pattern: np.ndarray,
 #                            score: float, rule: dict) -> bool:
 #     """
 #     Сохраняет сгенерированный паттерн в БД.
-#
-#     Args:
-#         generation_id: ID поколения
-#         pattern: Вектор паттерна (47-dim)
-#         score: Оценка паттерна
-#         rule: Правило, извлечённое из паттерна
 #     """
 #     try:
 #         conn = get_connection()
@@ -439,6 +407,44 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 #         return False
 #
 #
+# def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Dict]:
+#     """
+#     Загружает сгенерированные паттерны из БД.
+#     """
+#     try:
+#         conn = get_connection()
+#         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+#
+#         cur.execute(f"""
+#             SELECT id, generation_id, pattern_vector, pattern_score,
+#                    sense_type, signal_type, signal_threshold, action, created_at
+#             FROM {schema}.generated_patterns
+#             ORDER BY pattern_score DESC, created_at DESC
+#             LIMIT %s
+#         """, (limit,))
+#
+#         rows = cur.fetchall()
+#         cur.close()
+#         conn.close()
+#
+#         patterns = []
+#         for row in rows:
+#             patterns.append({
+#                 'id': row['id'],
+#                 'generation_id': row['generation_id'],
+#                 'pattern': np.array(json.loads(row['pattern_vector'])),
+#                 'score': row['pattern_score'],
+#                 'sense_type': row['sense_type'],
+#                 'signal_type': row['signal_type'],
+#                 'threshold': row['signal_threshold'],
+#                 'action': row['action'],
+#                 'created_at': row['created_at']
+#             })
+#
+#         return patterns
+#     except Exception as e:
+#         print(f"❌ Ошибка загрузки паттернов: {e}")
+#         return []
 #
 #
 #

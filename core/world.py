@@ -48,7 +48,9 @@ class World:
                 # можно добавить другие типы
 
     def reset(self, bot_start_pos=(0, 0)):
-        """Сбрасывает мир в начальное состояние (для нового эпизода)."""
+        """
+        Сбрасывает мир в начальное состояние (для нового эпизода).
+        """
         # Пока просто ничего не делаем
         pass
 
@@ -119,81 +121,6 @@ class World:
 
         return state
 
-    # def get_state(self, bot):
-    #     """
-    #     Возвращает состояние мира для бота.
-    #     Размерность ФИКСИРОВАННАЯ: всегда 21 (8 + 13 объектов).
-    #     """
-    #     half = self.world_size / 2.0
-    #     state = [bot.x / half, bot.z / half]  # 2 значения
-    #
-    #     # Фиксируем список объектов для консистентности
-    #     # Берем до 6 объектов (2 + 6*3 = 20, плюс резерв)
-    #     max_objects = 6
-    #     objects_list = list(self.objects)[:max_objects]
-    #
-    #     # Дополняем до max_objects пустыми объектами
-    #     while len(objects_list) < max_objects:
-    #         objects_list.append(None)
-    #
-    #     for obj in objects_list[:max_objects]:
-    #         if obj is None:
-    #             # Пустой объект: тип 0, позиция 0, 0
-    #             state.extend([0.0, 0.0, 0.0])
-    #         else:
-    #             # Кодируем тип объекта числом
-    #             if hasattr(obj, 'type'):
-    #                 type_code = obj.type
-    #             elif isinstance(obj, GameObject):
-    #                 type_code = 1  # огонь/костёр
-    #             elif isinstance(obj, Food):
-    #                 type_code = 2  # еда
-    #             elif isinstance(obj, Predator):
-    #                 type_code = 3  # хищник
-    #             else:
-    #                 type_code = 0  # неизвестный тип
-    #
-    #             # Нормализуем относительное положение
-    #             dx = (obj.x - bot.x) / half
-    #             dz = (obj.z - bot.z) / half
-    #
-    #             state.extend([float(type_code), float(dx), float(dz)])
-    #
-    #     # Гарантируем размерность 2 + max_objects * 3 = 2 + 6*3 = 20
-    #     # Добавляем ещё один резервный объект для 21
-    #     state.extend([0.0, 0.0, 0.0])  # +3 = 23, но оставим 21
-    #
-    #     # Обрезаем до 21
-    #     state = state[:21]
-    #
-    #     # Если меньше 21, дополняем нулями
-    #     while len(state) < 21:
-    #         state.append(0.0)
-    #
-    #     return state
-
-    # def get_state(self, bot):
-    #     half = self.world_size / 2.0  # половина размера мира (10)
-    #     state = [bot.x / half, bot.z / half]  # позиция бота нормализована в [-1, 1]
-    #
-    #     for obj in self.objects:
-    #         # Кодируем тип объекта числом
-    #         if isinstance(obj, GameObject):
-    #             type_code = 1  # огонь/костёр
-    #         elif isinstance(obj, Food):
-    #             type_code = 2  # еда
-    #         elif isinstance(obj, Predator):
-    #             type_code = 3  # хищник
-    #         else:
-    #             type_code = 0  # неизвестный тип
-    #
-    #         # Нормализуем относительное положение объекта относительно бота
-    #         dx = (obj.x - bot.x) / half
-    #         dz = (obj.z - bot.z) / half
-    #
-    #         state.extend([type_code, dx, dz])
-    #         # print("state: ", state)
-    #     return state
 
     def get_scale(self):
         return self.cell_size * self.zoom

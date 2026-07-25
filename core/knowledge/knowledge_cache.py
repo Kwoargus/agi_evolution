@@ -29,7 +29,9 @@ class KnowledgeCache:
         self.type_index: Dict[str, List[str]] = {}
 
     def add_node(self, node: KnowledgeNode):
-        """Добавляет узел в кэш."""
+        """
+        Добавляет узел в кэш.
+        """
         self.nodes[node.id] = node
         self.graph.add_node(node.id, **node.metadata)
 
@@ -47,14 +49,18 @@ class KnowledgeCache:
             self.type_index[node.node_type].append(node.id)
 
     def add_edge(self, edge: KnowledgeEdge):
-        """Добавляет ребро в кэш."""
+        """
+        Добавляет ребро в кэш.
+        """
         self.edges[edge.id] = edge
         self.graph.add_edge(edge.source_id, edge.target_id,
                             weight=edge.weight,
                             edge_type=edge.edge_type.value)
 
     def find_by_properties(self, properties: List[str]) -> List[KnowledgeNode]:
-        """Находит узлы по свойствам."""
+        """
+        Находит узлы по свойствам.
+        """
         if not properties:
             return list(self.nodes.values())
 
@@ -87,7 +93,9 @@ class KnowledgeCache:
             return []
 
     def get_neighbors(self, node_id: str) -> List[KnowledgeNode]:
-        """Возвращает соседние узлы."""
+        """
+        Возвращает соседние узлы.
+        """
         if node_id not in self.graph:
             return []
 
@@ -104,7 +112,9 @@ class KnowledgeCache:
         return neighbors
 
     def clear(self):
-        """Очищает кэш."""
+        """
+        Очищает кэш.
+        """
         self.graph.clear()
         self.nodes.clear()
         self.edges.clear()

@@ -6,7 +6,8 @@ from typing import List, Dict, Optional, Tuple, Any, Union
 class Genome:
     def __init__(self, params=None):
         if params is None:
-            # Значения по умолчанию
+            # [ru] Значения по умолчанию
+            # [en] Default values
             params = {
                 'move_delay': 5,
                 'step_size': 2.0,
@@ -35,7 +36,10 @@ class Genome:
         self.params[key] = value
 
     def mutate(self, mutation_rate=0.1):
-        """Мутирует параметры генома."""
+        """
+        [ru] Мутирует параметры генома.
+        [en] Mutates genome parameters.
+        """
         new_params = copy.deepcopy(self.params)
         for key, value in new_params.items():
             if isinstance(value, (int, float)):
@@ -47,7 +51,8 @@ class Genome:
                         delta = random.uniform(-0.2, 0.2) * abs(value) if value != 0 else random.uniform(-0.5, 0.5)
                         new_params[key] = max(0.0, value + delta)
             elif isinstance(value, dict):
-                # Для словарей мутируем каждый элемент
+                # [ru] Для словарей мутируем каждый элемент
+                # [en] For dictionaries, we mutate each element
                 for sub_key, sub_value in value.items():
                     if isinstance(sub_value, (int, float)):
                         if random.random() < mutation_rate:
@@ -59,16 +64,21 @@ class Genome:
         return Genome(new_params)
 
     def crossover(self, other):
-        """Скрещивание двух геномов (усреднение или случайный выбор)."""
+        """
+        [ru] Скрещивание двух геномов (усреднение или случайный выбор).
+        [en] Crossing two genomes (averaging or random selection).
+        """
         child_params = {}
         for key in self.params:
             if isinstance(self.params[key], (int, float)):
-                # Усреднение
+                # [ru] Усреднение
+                # [en] Averaging
                 child_params[key] = (self.params[key] + other.params[key]) / 2
                 if isinstance(self.params[key], int):
                     child_params[key] = int(round(child_params[key]))
             elif isinstance(self.params[key], dict):
-                # Для словарей — усреднение значений
+                # [ru] Для словарей — усреднение значений
+                # [en] For dictionaries - averaging of values
                 child_dict = {}
                 all_keys = set(self.params[key].keys()) | set(other.params[key].keys())
                 for k in all_keys:
@@ -86,7 +96,8 @@ class Genome:
                         child_dict[k] = v1 if random.random() < 0.5 else v2
                 child_params[key] = child_dict
             else:
-                # Остальное — случайный выбор
+                # [ru] Остальное — случайный выбор
+                # [en] The rest is random selection
                 child_params[key] = self.params[key] if random.random() < 0.5 else other.params[key]
         return Genome(child_params)
 
