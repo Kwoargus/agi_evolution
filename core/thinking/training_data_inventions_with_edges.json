@@ -1,0 +1,3298 @@
+[
+  {
+    "task": "Создать устройство для наблюдения за микро объектами невидимыми невооружённым глазом.",
+    "combination": [
+      "увеличительное стекло",
+      "источник света"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за микро объектами невидимыми невооружённым глазом.",
+    "combination": [
+      "увеличительное стекло",
+      "свеча"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за микро объектами невидимыми невооружённым глазом.",
+    "combination": [
+      "подзорная труба",
+      "ручной фонарь"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за микро объектами невидимыми невооружённым глазом.",
+    "combination": [
+      "очки",
+      "лампа"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за космическими объектами за пределами атмосферы земли.",
+    "combination": [
+      "большое гиперболическое зеркало",
+      "малое зеркало",
+      "объектив"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за космическими объектами за пределами атмосферы земли.",
+    "combination": [
+      "отражатель",
+      "малое зеркало",
+      "объектив"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за космическими объектами за пределами атмосферы земли.",
+    "combination": [
+      "плоское зеркало",
+      "белый экран"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для наблюдения за космическими объектами за пределами атмосферы земли.",
+    "combination": [
+      "сферическое зеркало",
+      "призма"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "котёл",
+      "топка",
+      "форсунки",
+      "турбина",
+      "лопатки",
+      "выходной вал"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "котёл",
+      "печь",
+      "турбина",
+      "лопатки",
+      "выходной вал"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "костёр",
+      "кастрюля",
+      "весло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "печь",
+      "казан",
+      "кочерга"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "f3dc856c-b61f-48d3-ba09-a3eb08daba2b",
+      "137ab7fc-c7d9-452c-8a20-4072c552295d",
+      "2959c5e0-f447-46ed-afa1-3efee74a42fb"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "79c8bc7e-25e9-4366-bf08-876b35cbb460",
+      "e26a7885-e9f9-4367-99bf-4d7ffd4b34ef",
+      "dd8aef1c-c5ca-4a6e-8d26-50f827d56601"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "9005a5e1-e18f-400f-8fed-8e8c3494ffa3",
+      "34373c07-31b2-4bd3-97e1-191495ef0c91",
+      "c12e30cb-43e4-4fb4-9f66-2fe35b064e40"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "79c8bc7e-25e9-4366-bf08-876b35cbb460",
+      "e26a7885-e9f9-4367-99bf-4d7ffd4b34ef",
+      "f8e9e480-a336-4f02-b560-eb25d1b0e0ab"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии горения угля во вращение вала турбины.",
+    "combination": [
+      "79c8bc7e-25e9-4366-bf08-876b35cbb460",
+      "e26a7885-e9f9-4367-99bf-4d7ffd4b34ef",
+      "cc0908f5-5f34-48c4-9277-38fdccd056be"
+    ],
+    "score": 0.5,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "цилиндр",
+      "поршень",
+      "карбюратор",
+      "свеча",
+      "шатун",
+      "коленвал"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "цилиндр",
+      "поршень",
+      "рычаг",
+      "свеча",
+      "шатун",
+      "коленвал"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "топка",
+      "котёл",
+      "коленвал",
+      "лыжи"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "факел",
+      "кружка",
+      "рычаг",
+      "c5708c32-3859-43e5-aefa-5125f902d025",
+      "таз"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "2b858fa3-0d4e-44f7-9208-7f20f5892214",
+      "cffeda6e-0dda-4984-8fec-e0715c601007"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "d43e5a2a-1052-4df3-8f74-7cbdee8d010e",
+      "5696d593-484d-44bc-b41b-def91b2dba4c"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "d95061ae-51de-43f3-80d9-a02582cfddea",
+      "139c2919-b244-4440-8946-25f9e3345253"
+    ],
+    "score": 0.6,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "f2dae4f7-e708-4bdf-9cc2-5b0e01871ab3",
+      "11d308ef-7421-46c1-b4e1-12fd932b8090"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии сгорания жидкого топлива в механическую энергию вращательного движения коленчатого вала.",
+    "combination": [
+      "e498bf16-1d16-4f24-93a4-c45e8b2cfa37",
+      "ccd00915-7a42-4685-839a-4649489fa0df"
+    ],
+    "score": 0.5,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "камера сгорания",
+      "сопло Лаваля",
+      "топливный бак",
+      "аэродинамические рули"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "пушка",
+      "сопло Лаваля",
+      "аэродинамические рули"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "пушка",
+      "ядро",
+      "eff921d8-0031-4d5b-b6ef-a31ec2bffb1d"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "катапульта",
+      "крыло",
+      "паровой двигатель"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "2b858fa3-0d4e-44f7-9208-7f20f5892214",
+      "2cac411c-c903-472b-b1f9-67b5c4168d05"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "d43e5a2a-1052-4df3-8f74-7cbdee8d010e",
+      "e81393a2-d0f6-4164-8530-e552e4fc47e6"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "cffeda6e-0dda-4984-8fec-e0715c601007",
+      "0338457f-6f13-4aab-a6f1-f15578513b73"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "3483b902-6510-4758-86ce-9e1a8dd8562d",
+      "81ad5f8d-4d86-4bfd-a151-6add3e2f2317"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии струи газа сгорающего топлива в механическую энергию поступательного движения ракеты.",
+    "combination": [
+      "6c161145-16e1-406c-8d6a-ea8c83f26c93",
+      "e81393a2-d0f6-4164-8530-e552e4fc47e6"
+    ],
+    "score": 0.5,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "строение",
+      "крыльчатка",
+      "лопасти",
+      "вал",
+      "шестерня",
+      "жернов"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "ящик",
+      "крыльчатка",
+      "вал",
+      "шестерня",
+      "жернов"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "рычаг",
+      "весло",
+      "ведро"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "печь",
+      "рельс",
+      "лодка"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "eff921d8-0031-4d5b-b6ef-a31ec2bffb1d",
+      "b1ed86b8-67de-4ab4-aa19-d5bad183545f",
+      "e7faeabf-fe07-49a4-ac54-23b30ed288fe"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "c12e30cb-43e4-4fb4-9f66-2fe35b064e40",
+      "09ab7cfb-d502-4676-b6a1-891f80588d8a",
+      "e7faeabf-fe07-49a4-ac54-23b30ed288fe"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "eff921d8-0031-4d5b-b6ef-a31ec2bffb1d",
+      "c5708c32-3859-43e5-aefa-5125f902d025",
+      "e7faeabf-fe07-49a4-ac54-23b30ed288fe"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "1bd9851e-a7ee-4ebc-89d2-71ad8d56eccf",
+      "09ab7cfb-d502-4676-b6a1-891f80588d8a",
+      "e7faeabf-fe07-49a4-ac54-23b30ed288fe"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования энергии ветра во вращение жерновов для перетирания зерна.",
+    "combination": [
+      "eff921d8-0031-4d5b-b6ef-a31ec2bffb1d",
+      "5231728f-2d36-4044-adc9-f0e6ab46afa5",
+      "e7faeabf-fe07-49a4-ac54-23b30ed288fe"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования быстрого вращения с малой силой в медленное вращение с большой силой.",
+    "combination": [
+      "зубчатое колесо",
+      "подшипник",
+      "первичный вал",
+      "вторичный вал"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования быстрого вращения с малой силой в медленное вращение с большой силой.",
+    "combination": [
+      "зубчатое колесо",
+      "подшипник",
+      "первичный вал",
+      "рычаг"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования быстрого вращения с малой силой в медленное вращение с большой силой.",
+    "combination": [
+      "багор",
+      "уключина",
+      "забор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования быстрого вращения с малой силой в медленное вращение с большой силой.",
+    "combination": [
+      "лодка",
+      "скамья",
+      "рычаг"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования быстрого вращения с малой силой в медленное вращение с большой силой.",
+    "combination": [
+      "f07855ec-4963-4353-a9ac-a1d75b848435",
+      "890ac139-d440-466a-9d5a-bcf664508da8"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования быстрого вращения с малой силой в медленное вращение с большой силой.",
+    "combination": [
+      "4b67d9f6-d850-439c-b2b7-5dde331cd809",
+      "杠杆"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "колесо",
+      "рама",
+      "педали",
+      "шестерня",
+      "руль"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "колесо",
+      "рама",
+      "объектив",
+      "шестерня",
+      "пропеллер"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "пропеллер",
+      "горшок",
+      "объектив"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "стол",
+      "колесо",
+      "весло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "7e95ec3a-6e37-4b01-9d74-eb36f0c491ab",
+      "182eedf1-7c5f-42da-a2d9-b9ef5e23a887"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "56052240-60e1-43bc-906e-d6d38c880946",
+      "3f4735cf-6457-4638-b487-af3a90ae79ff"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "ec580028-762c-4070-b854-3798d1bc2900",
+      "8e3effc6-eb99-4a3f-9cac-c51712f9de83"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "6ca5a0b6-c0f8-4a50-b2bf-af54c37a7d13",
+      "3f4735cf-6457-4638-b487-af3a90ae79ff"
+    ],
+    "score": 0.6,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для езды на двух колёсах при помощи силы мышц ног.",
+    "combination": [
+      "56052240-60e1-43bc-906e-d6d38c880946",
+      "182eedf1-7c5f-42da-a2d9-b9ef5e23a887"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "антенна",
+      "079901c3-9867-4e54-bfc3-e06329903813",
+      "усилитель"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "антенна",
+      "079901c3-9867-4e54-bfc3-e06329903813",
+      "выключатель",
+      "конденсатор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "генератор тока",
+      "конденсатор",
+      "катушка из медной проволоки"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "09ab7cfb-d502-4676-b6a1-891f80588d8a",
+      "рамка с током",
+      "выключатель"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "c6c98987-2b44-4b47-9eeb-d1a9678bfd30",
+      "5f43605c-82d8-4328-9306-62842b37cf95"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "079901c3-9867-4e54-bfc3-e06329903813",
+      "358894f4-85c9-4f4b-bd40-3a9e5ae43fab"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "5f43605c-82d8-4328-9306-62842b37cf95",
+      "c6c98987-2b44-4b47-9eeb-d1a9678bfd30"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "079901c3-9867-4e54-bfc3-e06329903813",
+      "5f43605c-82d8-4328-9306-62842b37cf95"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для передачи электромагнитного сигнала на большое расстояние.",
+    "combination": [
+      "c6c98987-2b44-4b47-9eeb-d1a9678bfd30",
+      "358894f4-85c9-4f4b-bd40-3a9e5ae43fab"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "c6c98987-2b44-4b47-9eeb-d1a9678bfd30",
+      "антенна",
+      "демодулятор",
+      "усилитель",
+      "преобразоратель тока",
+      "звуковой динамик"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "резистор",
+      "c6c98987-2b44-4b47-9eeb-d1a9678bfd30",
+      "пантенна",
+      "демодулятор",
+      "заземление"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "резистор",
+      "конденсатор",
+      "заземление",
+      "чайник"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "граммофон",
+      "усилитель",
+      "антенна",
+      "самовар"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "bbe8845c-e484-4f2c-bef6-3531f3888fd5",
+      "микросounder"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "e8b6502c-5694-47b7-8170-1b9e416bf18c",
+      "ad856ae5-5678-482d-b43f-4a9cab6e8134"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "4571f788-26d6-4ab5-ba95-8b3d5db4c6dd",
+      "a08edcc3-f30a-4411-967d-a25b9ad42efd"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "01505712-b5e5-48df-958c-fa9915f45bb2",
+      "e8b6502c-5694-47b7-8170-1b9e416bf18c"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для пприёма электромагнитного сигнала на большом расстоянии.",
+    "combination": [
+      "6d0cda22-20dc-4fb4-b205-bbf578818a5d",
+      "c2c52d66-53bc-4d8d-8192-cd991df46fdc"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "катушка индуктивноси",
+      "e701deed-3ce6-4074-b222-07aee9bd648d",
+      "d87f198a-5413-4e48-b028-6a6e9603b9e5",
+      "вал привода силового агрегата",
+      "проводник с током",
+      "индикатор напряжения"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "антенна",
+      "конденсатор",
+      "e701deed-3ce6-4074-b222-07aee9bd648d",
+      "d87f198a-5413-4e48-b028-6a6e9603b9e5",
+      "вал привода силового агрегата",
+      "заземление"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "антенна",
+      "конденсатор",
+      "усилитель"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "конденсатор",
+      "d87f198a-5413-4e48-b028-6a6e9603b9e5",
+      "заземление"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "ad00689a-814e-4ab3-9ef4-69254fcb53fd",
+      "8b7f6e28-82fc-4089-b07e-a374643bf8e5"
+    ],
+    "score": 0.95,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "6474691f-0251-41d8-b278-fcbb30cc7b91",
+      "cb42447b-105d-4228-95e0-731e209a7c34"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "42d68b5c-9763-430f-b41b-dd474cf8ccfa",
+      "6474691f-0251-41d8-b278-fcbb30cc7b91"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "1d450862-5091-47a6-94b0-0b52ed77ea37",
+      "cb42447b-105d-4228-95e0-731e209a7c34"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования механической энергии вращения вала в электрическое напряжени.",
+    "combination": [
+      "6474691f-0251-41d8-b278-fcbb30cc7b91",
+      "1d450862-5091-47a6-94b0-0b52ed77ea37"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "источник тока",
+      "катушка индуктивности",
+      "вторичный вал",
+      "механическая нагрузка"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "источник тока",
+      "катушка индуктивности",
+      "трансформатор",
+      "розетка"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "диод",
+      "трансформатор",
+      "розетка",
+      "коленвал",
+      "карбюратор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "котёл",
+      "поршень",
+      "пропеллер",
+      "топливный бак"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "e701deed-3ce6-4074-b222-07aee9bd648d",
+      "d87f198a-5413-4e48-b028-6a6e9603b9e5"
+    ],
+    "score": 1,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "1fedb9ac-8714-4b03-bee3-81816513e03c",
+      "2c2402f1-9218-4edc-b5ac-b786a048b81a"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "a5f3d2fc-3f75-48a6-ad17-630f02bee9ec",
+      "1a55156e-a4d5-4910-aaac-747fcbf87a87"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "1998b337-5dba-4a64-886a-f27056e3eb96",
+      "e6658645-0ed4-442a-8a50-e05631067296"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического тока в механическую энергию вращения вала.",
+    "combination": [
+      "645ee798-43ab-4713-87d0-66520c75a590",
+      "6b7e93d1-19ea-4b63-845f-8f460348d437"
+    ],
+    "score": 0.6,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "колба",
+      "цоколь",
+      "fa5d5353-b524-412e-8b74-e48da9c5cfd0",
+      "контакты",
+      "резьбовое соединение"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "колба",
+      "цоколь",
+      "fa5d5353-b524-412e-8b74-e48da9c5cfd0",
+      "катушка",
+      "заземдение"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "e701deed-3ce6-4074-b222-07aee9bd648d",
+      "d87f198a-5413-4e48-b028-6a6e9603b9e5",
+      "провод",
+      "катушка"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "конденсатор",
+      "триод",
+      "заземдение"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "fa5d5353-b524-412e-8b74-e48da9c5cfd0",
+      "a49fb157-5d14-41d0-adf4-9bbe99529edd"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "e84bd6fc-546e-47d4-8080-d74bbbcee222",
+      "b3ea7b4e-f0bd-4c57-9665-cb085beb47db"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "d1dbf1b5-1f8e-41a5-97cd-a73024f93035",
+      "a49fb157-5d14-41d0-adf4-9bbe99529edd"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "fa5d5353-b524-412e-8b74-e48da9c5cfd0",
+      "1701a5b3-a300-4dfc-a69c-17cadb4cd27b"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования электрического напряжения в свечение нити накаливания.",
+    "combination": [
+      "fa5d5353-b524-412e-8b74-e48da9c5cfd0",
+      "a49fb157-5d14-41d0-adf4-9bbe99529edd",
+      "1701a5b3-a300-4dfc-a69c-17cadb4cd27b"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "триод",
+      "контроллер",
+      "079901c3-9867-4e54-bfc3-e06329903813",
+      "входные контакты",
+      "выходные контакты"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "колба",
+      "триод",
+      "контроллер",
+      "079901c3-9867-4e54-bfc3-e06329903813",
+      "контакт"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "колба",
+      "болт",
+      "подшипник",
+      "e701deed-3ce6-4074-b222-07aee9bd648d",
+      "контакт"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "резистор",
+      "весло",
+      "заземление",
+      "крыло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "Тرانзистор",
+      "cb4e1162-2e75-4eca-906f-8da770ecd427"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "7d14f65a-0f95-4cfd-b71b-b08054bafded",
+      "48f11703-6499-4a72-81c3-4832307de3a6"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "ecb43462-f5e8-417a-b070-d8111b9ef396",
+      "Аmplификатор"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "43aa3984-18d8-4133-9c3a-5749dde0ae74",
+      "e121fa1d-ed45-4bd5-a292-37146fea809d"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для модуляции тока высокого напряжения слабым электрическим сигналом.",
+    "combination": [
+      "6be641aa-0162-4b9d-a929-6bb257359566",
+      "8073bd8d-c34d-432e-bfb4-30be173df127"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "звуковая бороздка",
+      "пластинка с записью",
+      "игла",
+      "звукосниматель",
+      "рупор",
+      "приводная пружина"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "звуковая бороздка",
+      "пластинка с записью",
+      "игла",
+      "рычаг",
+      "шкаф"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "рупор",
+      "гвоздь",
+      "игла",
+      "рычаг",
+      "шкаф"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "болт",
+      "крыльчатка",
+      "котёл",
+      "весло",
+      "колодец"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "0da09b08-9cc9-4a1a-b93f-53067bf7e67a",
+      "e0036426-e90c-480f-b2de-5a246898a2ad"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "5d5a3c00-1739-4830-8a06-2ff8d64663fc",
+      "20591e17-4ffa-4fb7-ba41-fcc4682b32c5"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "143b68ef-aef0-4eb3-a224-cbd53bdb2b88",
+      "20591e17-4ffa-4fb7-ba41-fcc4682b32c5"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "5bd5af87-33b3-45a5-a45c-95f2e8027a9b",
+      "20591e17-4ffa-4fb7-ba41-fcc4682b32c5"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для преобразования колебаний иглы, движущейся по бороздке звуковой дорожки, в звуковой сигнал в рупоре.",
+    "combination": [
+      "143b68ef-aef0-4eb3-a224-cbd53bdb2b88",
+      "e0036426-e90c-480f-b2de-5a246898a2ad"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для сбора пыли и мусора при помощи втягивания и фильрации струи воздуха.",
+    "combination": [
+      "электродвигатель",
+      "77839d65-1d5e-4357-a083-4f8551e0e647",
+      "трубка",
+      "фильр",
+      "сопло"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для сбора пыли и мусора при помощи втягивания и фильрации струи воздуха.",
+    "combination": [
+      "электродвигатель",
+      "поршень",
+      "трубка",
+      "фильр"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для сбора пыли и мусора при помощи втягивания и фильрации струи воздуха.",
+    "combination": [
+      "центрифуга",
+      "поршень",
+      "антенна",
+      "проводник",
+      "сопло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для сбора пыли и мусора при помощи втягивания и фильрации струи воздуха.",
+    "combination": [
+      "объектив",
+      "стол",
+      "колесо",
+      "заземление"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для охлаждения и замораживания продуктов питания.",
+    "combination": [
+      "77839d65-1d5e-4357-a083-4f8551e0e647",
+      "испаритель",
+      "бак с хладоагенто",
+      "трубопровод",
+      "электродвигатель"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для охлаждения и замораживания продуктов питания.",
+    "combination": [
+      "77839d65-1d5e-4357-a083-4f8551e0e647",
+      "испаритель",
+      "трубопровод",
+      "электродвигатель",
+      "топливный бак"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для охлаждения и замораживания продуктов питания.",
+    "combination": [
+      "факел",
+      "кружка",
+      "рычаг",
+      "пропеллер",
+      "топливный бак"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для охлаждения и замораживания продуктов питания.",
+    "combination": [
+      "катапульта",
+      "крыло",
+      "паровой двигатель"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для охлаждения и замораживания продуктов питания.",
+    "combination": [
+      "e431a316-c6f6-4020-97a3-e98014edc284",
+      "77839d65-1d5e-4357-a083-4f8551e0e647",
+      "1ecb0481-060c-4f81-b469-7ae299a62c7b"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для охлаждения и замораживания продуктов питания.",
+    "combination": [
+      "530bf25f-8faa-4c16-bcdb-9b9013e9a8b4",
+      "40c930e4-07ce-4b59-aae1-7c20277e91b7",
+      "сolenoid阀"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для записи на светочувствительном материале изображения формирумого лучами света.",
+    "combination": [
+      "светочувствительный материал",
+      "тёмная камера",
+      "линза",
+      "3889e11d-2519-4120-82ed-16e451adedb5"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для записи на светочувствительном материале изображения формирумого лучами света.",
+    "combination": [
+      "светочувствительный материал",
+      "подшипник",
+      "линза",
+      "e701deed-3ce6-4074-b222-07aee9bd648d"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для записи на светочувствительном материале изображения формирумого лучами света.",
+    "combination": [
+      "котёл",
+      "топка",
+      "форсунки",
+      "линза",
+      "e701deed-3ce6-4074-b222-07aee9bd648d"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для записи на светочувствительном материале изображения формирумого лучами света.",
+    "combination": [
+      "рычаг",
+      "весло",
+      "заземление",
+      "крыло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "приёмник сигнала",
+      "демодулятор",
+      "электронно-лучевая трубка",
+      "блок развёртки",
+      "блок управления"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "антенна",
+      "конденсатор",
+      "приёмник сигнала",
+      "демодулятор",
+      "блок развёртки"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "антенна",
+      "конденсатор",
+      "усилитель",
+      "котёл",
+      "подшипник"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "лодка",
+      "скамья",
+      "рычаг",
+      "весло",
+      "заземление"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "94baea49-c583-4cce-a57e-4f08d9d2a0c8",
+      "c12a0a90-7bfd-4277-b560-447441a1f06e"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "2049b364-e333-4ee5-8d3e-0bac545d16f5",
+      "db3d4ed8-0bf3-4712-8336-8166cc4b9e25"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "85df995c-4866-496b-988b-bde69fda3a96",
+      "7e67ee20-1f61-437b-b671-03a0cf49c183"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "7af52be3-e4dd-4962-930f-bc54ac941704",
+      "d139c421-286e-4bde-84ca-9b253681cc08"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для отображения изображений полученных с ипомощью электромагнитного взаимодействия на большом расстоянии.",
+    "combination": [
+      "45184a12-8fbe-4c34-9307-7edfdbaade5d",
+      "3de8671d-93e8-475c-be23-9742d2d2b9aa"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "зубчатое колесо",
+      "вал с зубчатыми колёсами",
+      "ручка вращения вала",
+      "шкалы выставления значений"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "зубчатое колесо",
+      "вал с зубчатыми колёсами",
+      "3889e11d-2519-4120-82ed-16e451adedb5",
+      "блок развёртки",
+      "блок управления"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "принимающая антенна",
+      "демодулятор",
+      "ручка вращения вала",
+      "блок развёртки",
+      "блок управления"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "линза",
+      "3889e11d-2519-4120-82ed-16e451adedb5",
+      "испаритель",
+      "антенна",
+      "трубопровод"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "30a74479-6104-4210-aa82-81d2c6b1e88c",
+      "3b29dc2a-3fa4-4d99-a97f-c4c44037fc1b"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "4eab957c-c956-4ce2-8bd0-a6c9ebf722d5",
+      "021c755b-4f59-4c8b-a2e5-5475c2fc2126"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "ebe961f5-6364-487d-ab35-6b8e63306a7c",
+      "bcfe32ee-982a-40ca-bb21-e5e2c42d083c"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "021c755b-4f59-4c8b-a2e5-5475c2fc2126",
+      "6d927f12-b11d-42e6-856b-078b6737d6d4"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для механического выполнения арифметических операций.",
+    "combination": [
+      "bcfe32ee-982a-40ca-bb21-e5e2c42d083c",
+      "78604972-8e47-4521-9278-1a730a203a3d"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "ствол",
+      "патронник",
+      "приклад",
+      "35f3df95-2bcc-4cb9-8c66-da291747fe04",
+      "спусковой крючёк"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "тетива",
+      "ствол",
+      "патронник",
+      "приклад",
+      "антенна"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "тетива",
+      "приклад",
+      "рычаг взвода",
+      "испаритель",
+      "антенна"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "котёл",
+      "топка",
+      "крыло",
+      "паровой двигатель"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "d29d7aa1-e993-4c11-b1d7-10cb198f0cd2",
+      "95281b33-bbe4-4ece-bda8-93a2565d9e67",
+      "2fe6aefb-6ee0-4ab8-930a-9bf495d49e0e"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "7a7651fd-bb65-4fbb-89f6-b99490e22a9c",
+      "95281b33-bbe4-4ece-bda8-93a2565d9e67",
+      "35f3df95-2bcc-4cb9-8c66-da291747fe04"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "d29d7aa1-e993-4c11-b1d7-10cb198f0cd2",
+      "95281b33-bbe4-4ece-bda8-93a2565d9e67",
+      "d42ac7c3-387d-4a81-bbca-9ed77b6231ce"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "d29d7aa1-e993-4c11-b1d7-10cb198f0cd2",
+      "95281b33-bbe4-4ece-bda8-93a2565d9e67",
+      "35f3df95-2bcc-4cb9-8c66-da291747fe04"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания боевого снаряда на большое расстояние с пиемлемой точностью за счёт энергии сгорния пороховых газов.",
+    "combination": [
+      "d29d7aa1-e993-4c11-b1d7-10cb198f0cd2",
+      "95281b33-bbe4-4ece-bda8-93a2565d9e67",
+      "d42ac7c3-387d-4a81-bbca-9ed77b6231ce",
+      "35f3df95-2bcc-4cb9-8c66-da291747fe04"
+    ],
+    "score": 1.0,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для приближения отдалённых объектов с возможностью их подробного рассмотрения наблюдения за ними.",
+    "combination": [
+      "линза",
+      "трубка",
+      "винт фокусировки"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для приближения отдалённых объектов с возможностью их подробного рассмотрения наблюдения за ними.",
+    "combination": [
+      "зубчатое колесо",
+      "линза",
+      "винт фокусировкивтулка"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для приближения отдалённых объектов с возможностью их подробного рассмотрения наблюдения за ними.",
+    "combination": [
+      "зубчатое колесо",
+      "испаритель",
+      "обод",
+      "сепаратор",
+      "втулка"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для приближения отдалённых объектов с возможностью их подробного рассмотрения наблюдения за ними.",
+    "combination": [
+      "антенна",
+      "лодка",
+      "конденсатор",
+      "рычаг",
+      "усилитель"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "упругая боевая дуга",
+      "тетива",
+      "приклад",
+      "рычаг взвода",
+      "спусковой механизм"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "упругая боевая дуга",
+      "приклад",
+      "рычаг взвода",
+      "сопло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "рупор",
+      "гвоздь",
+      "пошень",
+      "рычаг",
+      "сопло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "центрифуга",
+      "антенна",
+      "игла",
+      "проводник",
+      "шкаф"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "ffe432bb-fa4e-44db-a00f-e4419cf8a4ff",
+      "daad8bf9-4b55-479d-b91e-10a720737545"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "3d64dae6-2dcb-426a-afb0-e45a8e4d0040",
+      "35f3df95-2bcc-4cb9-8c66-da291747fe04"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "c3b354d8-ae85-4c63-b2b0-8c6221843414",
+      "1d5e9fad-d35c-4687-8716-37f052cc86bd"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "ae96fbb9-fd23-4156-be63-2725977822b3",
+      "5c32e6d3-2378-49aa-a3d0-40a07ae77c8d"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выбрасывания стрелы на большое расстояние с приемлемой точностью за счёт энергии упругой деформации боевой дуги.",
+    "combination": [
+      "3d64dae6-2dcb-426a-afb0-e45a8e4d0040",
+      "7c2e2eef-5898-4c27-bca0-e2f94a9fd91c"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для обеспечения снижения сопротивления трения скольжения при вращения путём замены его трение качени шариков внутри ободов.",
+    "combination": [
+      "шарик",
+      "внешний обод",
+      "внутренний обод",
+      "сепаратор",
+      "втулка"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для обеспечения снижения сопротивления трения скольжения при вращения путём замены его трение качени шариков внутри ободов.",
+    "combination": [
+      "усилитель",
+      "шарик",
+      "внешний обод",
+      "сепаратор",
+      "втулка"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для обеспечения снижения сопротивления трения скольжения при вращения путём замены его трение качени шариков внутри ободов.",
+    "combination": [
+      "усилитель",
+      "конденсатор",
+      "чайник",
+      "граммофон"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для обеспечения снижения сопротивления трения скольжения при вращения путём замены его трение качени шариков внутри ободов.",
+    "combination": [
+      "заземление",
+      "антенна",
+      "резистор",
+      "самовар"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "клубок нити",
+      "рамка с опорным шпагатом",
+      "челнок",
+      "подающее устройство",
+      "принимающее устройство"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "клубок нити",
+      "рамка с опорным шпагатом",
+      "катушка из медной проволоки",
+      "подающее устройство",
+      "принимающее устройствоконденсатор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "челнок",
+      "конденсатор",
+      "катушка из медной проволоки"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "09ab7cfb-d502-4676-b6a1-891f80588d8a",
+      "рамка с током",
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "a1bc2d15-0176-480a-b4d9-a5eca106acc4",
+      "dc1d76c4-60ad-4010-9138-37addcc3bdb7"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "b2edc5e7-8d09-4e19-9482-2f05d084ffa4",
+      "e6d854f4-46ec-4bcd-9747-a5bb364386db"
+    ],
+    "score": 0.6,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "c20dbfd8-0ddc-4508-ae16-edb54f2eb256",
+      "e6d854f4-46ec-4bcd-9747-a5bb364386db"
+    ],
+    "score": 0.3,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "c20dbfd8-0ddc-4508-ae16-edb54f2eb256",
+      "b2edc5e7-8d09-4e19-9482-2f05d084ffa4"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для изготовления тканей из нитей.",
+    "combination": [
+      "e6d854f4-46ec-4bcd-9747-a5bb364386db",
+      "dc1d76c4-60ad-4010-9138-37addcc3bdb7"
+    ],
+    "score": 0.4,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "проводник электронов",
+      "проводик дырок"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "проводик дырокпоршень",
+      "антенна"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "поршень",
+      "антенна",
+      "проводник",
+      "сопло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "объектив",
+      "стол",
+      "колесо",
+      "заземление",
+      "антенна"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "7930727a-ecb4-4795-ae22-27c01350d2fa",
+      "54c09763-d069-4daf-99f1-667044d9f38c"
+    ],
+    "score": 1,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "a7623ca9-817b-4728-95b1-8cfa886ff8d9",
+      "17e4042f-1691-4c26-9617-8a8c6e083bd7"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "842a2053-25fa-4cac-bb9d-5c77ec0e3487",
+      "65505eeb-89d1-42dd-a95e-ac38bd8c5335"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "742c4e34-4c53-44a6-9acf-f1ad9916ecfe",
+      "dd9224f8-962d-4eca-80b7-e873ee084309"
+    ],
+    "score": 0.8,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное в одном направлении электрический ток пропускать а в обратном направлении нет.",
+    "combination": [
+      "842a2053-25fa-4cac-bb9d-5c77ec0e3487",
+      "f1405988-72b5-4109-88a2-5d41ab69c1bb"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "проводник",
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "исток",
+      "сток",
+      "база"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "трансформатор",
+      "проводник",
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "сток",
+      "база"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "поршень",
+      "трансформатор",
+      "розетка",
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "карбюратор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "котёл",
+      "поршень",
+      "пропеллер",
+      "сопло"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "b3ea7b4e-f0bd-4c57-9665-cb085beb47db",
+      "3889e11d-2519-4120-82ed-16e451adedb5"
+    ],
+    "score": 0.9,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "7ba3d709-683d-42a4-b82e-cbddd8a77684",
+      "b3ea7b4e-f0bd-4c57-9665-cb085beb47db",
+      "3889e11d-2519-4120-82ed-16e451adedb5"
+    ],
+    "score": 1,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "b3ea7b4e-f0bd-4c57-9665-cb085beb47db",
+      "12f8bfb8-53f3-4f08-9846-43ff7b58b4c6"
+    ],
+    "score": 0.85,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "b3ea7b4e-f0bd-4c57-9665-cb085beb47db",
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "a87057b7-4c9f-4868-b0fa-1840a1dcebdb"
+    ],
+    "score": 0.75,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство способное управлять проводимостью тока между контактами истока и стока при помощи электрического напряжения натретьем контакте.",
+    "combination": [
+      "aadd4c58-17e2-43d7-8f2c-30247df433e0",
+      "b3ea7b4e-f0bd-4c57-9665-cb085beb47db",
+      "752d7c81-f182-465f-a505-bd4363c815ae"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "арифметико-логическое устройство",
+      "регистр AX",
+      "регистр BX",
+      "оперативная память",
+      "индикатор"
+    ],
+    "score": 0.95,
+    "source": "manual_good",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "катушка индуктивности",
+      "конденсатор",
+      "решатель",
+      "оперативная память",
+      "индикатор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "катушка индуктивности",
+      "конденсатор",
+      "диод",
+      "электромотор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "цоколь",
+      "fa5d5353-b524-412e-8b74-e48da9c5cfd0",
+      "аккумулятор"
+    ],
+    "score": 0.2,
+    "source": "manual_bad",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "c675e4ae-2c7c-49ab-bd93-67dd06d8da67",
+      "3e56f7e9-fb73-4c5a-a21b-879a73504457"
+    ],
+    "score": 0.7,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "22d8fed0-e987-4c44-81c1-e63fee42d3a7",
+      "3e56f7e9-fb73-4c5a-a21b-879a73504457"
+    ],
+    "score": 0.65,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "c546a738-5889-49b6-b28b-ad6276b005ce",
+      "3e56f7e9-fb73-4c5a-a21b-879a73504457"
+    ],
+    "score": 0.5,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "b8b00f17-c489-459f-8bb7-c01115a69eba",
+      "3e56f7e9-fb73-4c5a-a21b-879a73504457"
+    ],
+    "score": 0.6,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  },
+  {
+    "task": "Создать устройство для выполнения действий арифметики при помощи управления токами и зарядами в электронной схеме.",
+    "combination": [
+      "bbfcd523-dd78-4484-8398-806f19cc162f",
+      "3e56f7e9-fb73-4c5a-a21b-879a73504457"
+    ],
+    "score": 0.45,
+    "source": "llm_generated",
+    "edge_features": {
+      "edge_sim_mean": 0.0,
+      "edge_density": 0.0,
+      "type_diversity": 0.0
+    }
+  }
+]

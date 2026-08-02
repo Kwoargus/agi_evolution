@@ -1,0 +1,21 @@
+generate_hypothesis_with_edges.py
+
+TASK = "[ru] Разработать устройство для управляемого перемещения человека по воздуху. [en] Develop a device for controlled human movement through the air"
+
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████| 103/103 [00:00<00:00, 13719.93it/s]
+✅ Генератор загружен.
+Loading weights: 100%|██████████| 103/103 [00:00<00:00, 11226.96it/s]
+✅ Модель эмбеддингов загружена.
+✅ Загружено 1446 узлов, 641 рёбер.
+✅ Дискриминатор с рёбрами загружен.
+
+🧠 ГИПОТЕЗА (комбинация узлов):
+  - Винт воздушный (part)
+  - двигатель внутреннего сгорания (device)
+  - Фюзеляж (part)
+  - крыло (part)
+📊 Оценка дискриминатора (с рёбрами): 0.947
+
+[ru] Алгоритм перебрал узлы и связи в графе знаний и выбрал комбинацию узлов которая позволяет сформировать АЭРОПЛАН!!!
+[en] The algorithm iterated through the nodes and edges in the knowledge graph and selected a combination of nodes that allows the formation of an AIRPLANE!!!
