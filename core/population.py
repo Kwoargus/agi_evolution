@@ -1,3 +1,4 @@
+# core/population.py
 import random
 from core.individual import Individual
 from core.genome import Genome
@@ -18,6 +19,9 @@ class Population:
                 genome = Genome()
             ind = Individual(x=start_pos[0], z=start_pos[1], genome=genome)
             self.individuals.append(ind)
+
+        for ind in self.individuals:
+            world.add_bot(ind)
 
     def evaluate_all(self, steps_per_episode=500):
         fitnesses = []

@@ -30,8 +30,8 @@ class EmotionGraphDB(EmotionGraph):
         [ru] Загружает данные из БД.
         [en] Loads data from the database.
         """
-        print("📥 [ru] Загрузка биграфа из БД...")
-        print("📥 [en] Loading bi`graph from database...")
+        print("[ru] Загрузка биграфа из БД...")
+        print("[en] Loading bi`graph from database...")
 
         graph_data = self.db.load_full_graph()
 
@@ -84,8 +84,8 @@ class EmotionGraphDB(EmotionGraph):
             self._add_to_index(self._emotion_outgoing, link.source_id, link.id)
             self._add_to_index(self._event_incoming, link.target_id, link.id)
 
-        print(f"✅ [ru] Биграф загружен из БД")
-        print(f"✅ [en] Bi`graph loaded from the database")
+        print(f"[ru] Биграф загружен из БД")
+        print(f"[en] Bi`graph loaded from the database")
 
     def _add_event_internal(self, event: EmotionalEvent):
         """
@@ -115,8 +115,8 @@ class EmotionGraphDB(EmotionGraph):
         [ru] Сохраняет текущее состояние в БД.
         [en] Saves the current state in the database.
         """
-        print("💾 [ru] Сохранение биграфа в БД...")
-        print("💾 [en] Saving the bi`graph to the database...")
+        print("[ru] Сохранение биграфа в БД...")
+        print("[en] Saving the bi`graph to the database...")
 
         # [ru] Сохраняем события
         # [en] Saving events
@@ -139,8 +139,8 @@ class EmotionGraphDB(EmotionGraph):
         for link in self.emotion_event_links.values():
             self.db.save_emotion_event_link(link)
 
-        print(f"✅ [ru] Биграф сохранен в БД")
-        print(f"✅ [en] The bi`graph is saved in the database")
+        print(f"[ru] Биграф сохранен в БД")
+        print(f"[en] The bi`graph is saved in the database")
 
     def save(self):
         """

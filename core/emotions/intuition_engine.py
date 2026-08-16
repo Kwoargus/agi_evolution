@@ -1,5 +1,4 @@
-# core/emotions/intuition_engine.py (расширенный)
-
+# core/emotions/intuition_engine.py
 import numpy as np
 from typing import List, Dict, Optional, Tuple, Any
 from collections import defaultdict

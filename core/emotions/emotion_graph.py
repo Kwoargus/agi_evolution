@@ -1,5 +1,4 @@
-# core/emotions/emotion_graph.py (добавляем методы add_event и add_emotion)
-
+# core/emotions/emotion_graph.py
 import networkx as nx
 import numpy as np
 from typing import List, Dict, Optional, Tuple, Any, Set
@@ -98,8 +97,7 @@ class EmotionGraph:
         emotion_type_str = emotion.emotion_type.value if hasattr(emotion.emotion_type, 'value') else str(emotion.emotion_type)
 
         self.emotions[emotion_type_str] = emotion
-        self.emotion_graph.add_node(emotion_type_str,
-                                    embedding=emotion.embedding)
+        self.emotion_graph.add_node(emotion_type_str, embedding=emotion.embedding)
         self.emotion_embeddings.append(emotion.embedding)
 
     # ============================================================
@@ -468,7 +466,3 @@ class EmotionGraph:
             return node_id in self.emotion_to_event
         return False
 
-
-
-    #         print(f"✅ [ru] Биграф сохранен в {path}")
-    #         print(f"✅ [en] The bigraph is saved in {path}")

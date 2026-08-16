@@ -7,54 +7,32 @@ import numpy as np
 from enum import Enum
 import time
 
-
 class EmotionType(Enum):
-    """[ru] Типы эмоций."""
-    """[en] Types of emotions."""
-    JOY = "joy"
-    SADNESS = "sadness"
-    ANGER = "anger"
-    FEAR = "fear"
-    SURPRISE = "surprise"
-    DISGUST = "disgust"
-    TRUST = "trust"
-    ANTICIPATION = "anticipation"
-    LOVE = "love"
-    OPTIMISM = "optimism"
-    AWE = "awe"
-    CONTEMPT = "contempt"
-    RESENTMENT = "resentment"
-    HATRED = "hatred"
-    GUILT = "guilt"
-    SHAME = "shame"
-    EMPATHY = "empathy"
+    """[ru] Базовые типы эмоций."""
+    """[en] Basic types of emotions."""
+    JOY = "joy"  # Радость
+    SADNESS = "sadness"  # Печаль
+    ANGER = "anger"  # Гнев
+    FEAR = "fear"  # Страх
+    SURPRISE = "surprise"  # Удивление
+    DISGUST = "disgust"  # Отвращение
+    TRUST = "trust"  # Доверие
+    ANTICIPATION = "anticipation"  # Ожидание
 
-# class EmotionType(Enum):
-#     """[ru] Базовые типы эмоций."""
-#     """[en] Basic types of emotions."""
-#     JOY = "joy"  # Радость
-#     SADNESS = "sadness"  # Печаль
-#     ANGER = "anger"  # Гнев
-#     FEAR = "fear"  # Страх
-#     SURPRISE = "surprise"  # Удивление
-#     DISGUST = "disgust"  # Отвращение
-#     TRUST = "trust"  # Доверие
-#     ANTICIPATION = "anticipation"  # Ожидание
-#
-#     # [ru] Составные эмоции
-#     # [en] Compound emotions
-#     LOVE = "love"  # Радость + Доверие
-#     OPTIMISM = "optimism"  # Радость + Ожидание
-#     AWE = "awe"  # Страх + Удивление
-#     CONTEMPT = "contempt"  # Гнев + Отвращение
-#
-#     # [ru] Сложные эмоции
-#     # [en] Complex emotions
-#     RESENTMENT = "resentment"  # Обида
-#     HATRED = "hatred"  # Ненависть
-#     GUILT = "guilt"  # Вина
-#     SHAME = "shame"  # Стыд
-#     EMPATHY = "empathy"  # Эмпатия
+    # [ru] Составные эмоции
+    # [en] Compound emotions
+    LOVE = "love"  # Радость + Доверие
+    OPTIMISM = "optimism"  # Радость + Ожидание
+    AWE = "awe"  # Страх + Удивление
+    CONTEMPT = "contempt"  # Гнев + Отвращение
+
+    # [ru] Сложные эмоции
+    # [en] Complex emotions
+    RESENTMENT = "resentment"  # Обида
+    HATRED = "hatred"  # Ненависть
+    GUILT = "guilt"  # Вина
+    SHAME = "shame"  # Стыд
+    EMPATHY = "empathy"  # Эмпатия
 
 
 @dataclass

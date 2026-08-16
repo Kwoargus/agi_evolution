@@ -3,8 +3,6 @@ import numpy as np
 from typing import List, Dict, Optional, Tuple, Any, Union
 from .emotion_base import MentalModel
 
-
-
 class MentalModelManager:
     """
     [ru]

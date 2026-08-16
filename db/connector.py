@@ -184,8 +184,8 @@ def save_generated_pattern(generation_id: int, pattern: np.ndarray,
         conn.close()
         return True
     except Exception as e:
-        print(f"[ru] ❌ Ошибка сохранения паттерна: {e}")
-        print(f"[en] ❌ Error saving pattern: {e}")
+        print(f"[ru] Ошибка сохранения паттерна: {e}")
+        print(f"[en] Error saving pattern: {e}")
         return False
 
 
@@ -226,8 +226,8 @@ def load_generated_patterns(limit: int = 100, schema='agi_evolution') -> List[Di
 
         return patterns
     except Exception as e:
-        print(f"[ru] ❌ Ошибка загрузки паттернов: {e}")
-        print(f"[en] ❌ Error loading patterns: {e}")
+        print(f"[ru] Ошибка загрузки паттернов: {e}")
+        print(f"[en] Error loading patterns: {e}")
         return []
 
 

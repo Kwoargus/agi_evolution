@@ -1,5 +1,4 @@
 # core/visualization.py
-
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -314,8 +313,8 @@ class TrainingVisualizer:
                                           interval=interval, repeat=False)
 
             ani.save(f"{self.save_path}training_animation.gif", writer='pillow', fps=5)
-            print("[ru] ✅ Анимация сохранена")
-            print("[en] ✅ Animation saved")
+            print("[ru] Анимация сохранена")
+            print("[en] Animation saved")
 
         except Exception as e:
             print(f"[ru] Не удалось создать анимацию: {e}")

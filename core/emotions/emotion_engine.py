@@ -27,6 +27,14 @@ class EmotionEngine:
         self._initialize_base_emotions()
         self._initialize_base_links()
 
+        # Прямая связь: событие 'bot_injured' → эмоция EMPATHY
+        self.graph.add_event_emotion_link(
+            'bot_injured',
+            EmotionType.EMPATHY,
+            probability=0.95,
+            intensity_factor=1.3
+        )
+
         # [ru] Обучаем связи событие→эмоция
         # [en] Teaching the event→emotion connection
         self.train_event_emotion_links()  # <-- ДОБАВЬТЕ ЭТУ СТРОКУ
@@ -35,7 +43,7 @@ class EmotionEngine:
         # [en] Cache for fast searching
         self._embedding_cache = {}
 
-        print("✅ Движок эмоциональных реакций инициализирован")
+        print("Движок эмоциональных реакций инициализирован")
 
     def _initialize_base_emotions(self):
         """
@@ -53,6 +61,7 @@ class EmotionEngine:
             EmotionType.DISGUST: (-0.6, 0.1, 0.4),
             EmotionType.TRUST: (0.6, -0.2, 0.3),
             EmotionType.ANTICIPATION: (0.4, 0.5, 0.4),
+            EmotionType.EMPATHY: (0.7, 0.3, 0.6)
         }
 
         for emotion_type, (valence, arousal, intensity) in base_emotions.items():
@@ -64,6 +73,18 @@ class EmotionEngine:
                 embedding=self._emotion_to_embedding(emotion_type, valence, arousal)
             )
             self.graph.add_emotion(emotion)
+
+        # Добавляем EMPATHY отдельно
+        empathy = EmotionalResponse(
+            emotion_type=EmotionType.EMPATHY,
+            intensity=0.6,
+            valence=0.7,
+            arousal=0.3,
+            embedding=self._emotion_to_embedding(EmotionType.EMPATHY, 0.7, 0.3)
+        )
+
+        self.graph.add_emotion(empathy)
+
 
     def _initialize_base_links(self):
         """
@@ -361,7 +382,10 @@ class EmotionEngine:
             # [en] Loss → Sadness
             ('loss', EmotionType.SADNESS, 0.8, 1.1),
             ('grief', EmotionType.SADNESS, 0.9, 1.2),
+            ('bot_injured', EmotionType.EMPATHY, 0.9, 1.2)
+
         ]
+
 
         # [ru] Добавляем связи в граф
         # [en] Adding connections to the graph
@@ -392,5 +416,5 @@ class EmotionEngine:
                 intensity_factor=intensity
             )
 
-        print(f"✅ Обучено {len(event_emotion_pairs)} связей событие→эмоция")
-        print(f"✅ Trained {len(event_emotion_pairs)} event→emotion connections")
+        print(f"Обучено {len(event_emotion_pairs)} связей событие→эмоция")
+        print(f"Trained {len(event_emotion_pairs)} event→emotion connections")

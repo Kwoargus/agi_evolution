@@ -1,5 +1,4 @@
 # core/objects.py
-
 import pygame
 import math
 import numpy as np

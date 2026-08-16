@@ -1,0 +1,67 @@
+[
+  {
+    "type": "случайная встреча",
+    "description": "встреча с раненым соплеменником",
+    "properties": {
+      "parameters": [
+        "одноразовое событие",
+        "невозможно остаться равнодушным"
+      ],
+      "attractiveness": 0.01,
+      "number_of_participants": 2,
+      "intensity": 0.95
+    }
+  },
+  {
+    "type": "случайная встреча",
+    "description": "встреча с хищником",
+    "properties": {
+      "": [
+        "одноразовое событие",
+        "очень опасное событие"
+      ],
+      "attractiveness": 0.01,
+      "number_of_participants": 2,
+      "intensity": 0.99
+    }
+  },
+  {
+    "type": "запланированная встреча",
+    "description": "встреча с другом, с которым давно не виделся",
+    "properties": {
+      "": [
+        "цепь событий",
+        "приятное событие"
+      ],
+      "attractiveness": 0.95,
+      "number_of_participants": 2,
+      "intensity": 0.5
+    }
+  },
+  {
+    "type": "встреча на работе",
+    "description": "встреча с коллегой",
+    "properties": {
+      "": [
+        "цепь событий",
+        "обыденное ничем не замечательное событие"
+      ],
+      "attractiveness": 0.5,
+      "number_of_participants": 2,
+      "intensity": 0.5
+    }
+  },
+  {
+    "type": "встреча на отдыхе",
+    "description": "встреча с приятным собеседником",
+    "properties": {
+      "": [
+        "одноразовое событие",
+        ""
+      ],
+      "attractiveness": 0.8,
+      "number_of_participants": 2,
+      "intensity": 0.5
+    }
+  }
+]

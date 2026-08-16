@@ -9,7 +9,7 @@ class Genome:
             # [ru] Значения по умолчанию
             # [en] Default values
             params = {
-                'move_delay': 5,
+                'move_delay': 25,
                 'step_size': 2.0,
                 'reflex_thresholds': {},  # {'food_smell': 0.2, 'predator_smell': 0.1, ...}
                 'instinct_priorities': {}, # {'run_away': 1.0, ...}

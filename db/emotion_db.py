@@ -56,8 +56,8 @@ def save_emotion(self, emotion: EmotionalResponse) -> bool:
         conn.close()
         return True
     except Exception as e:
-        print(f"[ru] ❌ Ошибка сохранения эмоции {emotion.id}: {e}")
-        print(f"[en] ❌ Error saving emotion {emotion.id}: {e}")
+        print(f"[ru] Ошибка сохранения эмоции {emotion.id}: {e}")
+        print(f"[en] Error saving emotion {emotion.id}: {e}")
         return False
 
 
@@ -123,8 +123,8 @@ class EmotionDB:
             conn.close()
             return True
         except Exception as e:
-            print(f"[ru] ❌ Ошибка сохранения события {event.id}: {e}")
-            print(f"[en] ❌ Error saving event {event.id}: {e}")
+            print(f"[ru] Ошибка сохранения события {event.id}: {e}")
+            print(f"[en] Error saving event {event.id}: {e}")
             return False
 
     def save_emotion(self, emotion: EmotionalResponse) -> bool:
@@ -160,8 +160,8 @@ class EmotionDB:
             conn.close()
             return True
         except Exception as e:
-            print(f"[ru] ❌ Ошибка сохранения эмоции {emotion.emotion_type.value}: {e}")
-            print(f"[en] ❌ Error saving emotion {emotion.emotion_type.value}: {e}")
+            print(f"[ru] Ошибка сохранения эмоции {emotion.emotion_type.value}: {e}")
+            print(f"[en] Error saving emotion {emotion.emotion_type.value}: {e}")
             return False
 
     def save_causal_link(self, link: CausalLink) -> bool:
@@ -204,8 +204,8 @@ class EmotionDB:
             conn.close()
             return True
         except Exception as e:
-            print(f"[ru] ❌ Ошибка сохранения связи {link.id}: {e}")
-            print(f"[en] ❌ Error saving link {link.id}: {e}")
+            print(f"[ru] Ошибка сохранения связи {link.id}: {e}")
+            print(f"[en] Error saving link {link.id}: {e}")
             return False
 
     def save_emotion_chain_link(self, link: EmotionChainLink) -> bool:
@@ -248,8 +248,8 @@ class EmotionDB:
             conn.close()
             return True
         except Exception as e:
-            print(f"[ru] ❌ Ошибка сохранения цепочки эмоций {link.id}: {e}")
-            print(f"[en] ❌ Error saving emotion chain {link.id}: {e}")
+            print(f"[ru] Ошибка сохранения цепочки эмоций {link.id}: {e}")
+            print(f"[en] Error saving emotion chain {link.id}: {e}")
             return False
 
     def save_event_emotion_link(self, link: EventEmotionLink) -> bool:
@@ -297,8 +297,8 @@ class EmotionDB:
             conn.close()
             return True
         except Exception as e:
-            print(f"[ru] ❌ Ошибка сохранения связи событие→эмоция {link.id}: {e}")
-            print(f"[en] ❌ Error saving event→emotion link {link.id}: {e}")
+            print(f"[ru] Ошибка сохранения связи событие→эмоция {link.id}: {e}")
+            print(f"[en] Error saving event→emotion link {link.id}: {e}")
             return False
 
     def save_emotion_event_link(self, link: EmotionEventLink) -> bool:
@@ -344,8 +344,8 @@ class EmotionDB:
             conn.close()
             return True
         except Exception as e:
-            print(f"[ru] ❌ Ошибка сохранения связи эмоция→событие {link.id}: {e}")
-            print(f"[en] ❌ Error saving emotion→event link {link.id}: {e}")
+            print(f"[ru] Ошибка сохранения связи эмоция→событие {link.id}: {e}")
+            print(f"[en] Error saving emotion→event link {link.id}: {e}")
             return False
 
     # ============================================================
@@ -384,8 +384,8 @@ class EmotionDB:
             conn.close()
             return events
         except Exception as e:
-            print(f"[ru] ❌ Ошибка загрузки событий: {e}")
-            print(f"[en] ❌ Error loading events: {e}")
+            print(f"[ru] Ошибка загрузки событий: {e}")
+            print(f"[en] Error loading events: {e}")
             return []
 
     def load_emotions(self) -> List[EmotionalResponse]:
@@ -423,8 +423,8 @@ class EmotionDB:
             conn.close()
             return emotions
         except Exception as e:
-            print(f"[ru] ❌ Ошибка загрузки эмоций: {e}")
-            print(f"[en] ❌ Error loading emotions: {e}")
+            print(f"[ru] Ошибка загрузки эмоций: {e}")
+            print(f"[en] Error loading emotions: {e}")
             return []
 
 
@@ -464,8 +464,8 @@ class EmotionDB:
             conn.close()
             return links
         except Exception as e:
-            print(f"[ru] ❌ Ошибка загрузки причинных связей: {e}")
-            print(f"[en] ❌ Error loading causal links: {e}")
+            print(f"[ru] Ошибка загрузки причинных связей: {e}")
+            print(f"[en] Error loading causal links: {e}")
             return {}
 
     def load_emotion_chain_links(self) -> Dict[str, EmotionChainLink]:
@@ -545,8 +545,8 @@ class EmotionDB:
             conn.close()
             return links
         except Exception as e:
-            print(f"[ru] ❌ Ошибка загрузки связей событие→эмоция: {e}")
-            print(f"[en] ❌ Error loading event→emotion links: {e}")
+            print(f"[ru] Ошибка загрузки связей событие→эмоция: {e}")
+            print(f"[en] Error loading event→emotion links: {e}")
             return {}
 
     def load_emotion_event_links(self) -> Dict[str, EmotionEventLink]:
@@ -586,8 +586,8 @@ class EmotionDB:
             conn.close()
             return links
         except Exception as e:
-            print(f"[ru] ❌ Ошибка загрузки связей эмоция→событие: {e}")
-            print(f"[en] ❌ Error loading emotion→event links: {e}")
+            print(f"[ru] Ошибка загрузки связей эмоция→событие: {e}")
+            print(f"[en] Error loading emotion→event links: {e}")
             return {}
 
     # ============================================================
@@ -600,8 +600,8 @@ class EmotionDB:
         [ru] Загружает полный биграф из БД. Возвращает словарь с данными для восстановления EmotionGraph.
         [en] Loads the full bigraph from the database. Returns a dictionary with data to restore EmotionGraph.
         """
-        print("[ru] 🔄 Загрузка биграфа из БД...")
-        print("[en] 🔄 Loading bigraph from database...")
+        print("[ru] Загрузка биграфа из БД...")
+        print("[en] Loading bigraph from database...")
 
         graph_data = {
             'events': self.load_events(),
@@ -612,13 +612,13 @@ class EmotionDB:
             'emotion_event_links': self.load_emotion_event_links()
         }
 
-        print(f"[ru] ✅ Загружено: {len(graph_data['events'])} событий, "
+        print(f"[ru] Загружено: {len(graph_data['events'])} событий, "
               f"{len(graph_data['emotions'])} эмоций, "
               f"{len(graph_data['causal_links'])} причинных связей, "
               f"{len(graph_data['emotion_chain_links'])} цепочек эмоций, "
               f"{len(graph_data['event_emotion_links'])} связей событие→эмоция, "
               f"{len(graph_data['emotion_event_links'])} связей эмоция→событие")
-        print(f"[en] ✅ Loaded: {len(graph_data['events'])} events, "
+        print(f"[en] Loaded: {len(graph_data['events'])} events, "
               f"{len(graph_data['emotions'])} emotions, "
               f"{len(graph_data['causal_links'])} causal links, "
               f"{len(graph_data['emotion_chain_links'])} emotion chains, "
