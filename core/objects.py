@@ -163,6 +163,7 @@ class Explosion:
         self.color = (255, 200, 50)
         self.damage_dealt = False
 
+
     def update(self, dt=1.0):
         self.age += dt
         if self.age > self.lifetime:
