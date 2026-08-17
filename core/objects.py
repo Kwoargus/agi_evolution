@@ -153,7 +153,7 @@ class Explosion:
         self.z = round(z / 2) * 2
         # [ru] 40 кадров = 2 секунды при 20 FPS
         # [en] 40 frames = 2 seconds at 20 FPS
-        self.lifetime = 40
+        self.lifetime = 10
         self.age = 0
         self.active = True
         self.radius = 0.2

@@ -199,8 +199,8 @@ class World:
         for obj in self.objects:
             obj.draw(screen, self.world_to_screen)
 
-        for expl in self.explosions:
-            expl.draw(screen, self.world_to_screen)
+        # for expl in self.explosions:
+        #     expl.draw(screen, self.world_to_screen)
 
         for bot in self.bots:
             if bot.alive:

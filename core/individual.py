@@ -722,7 +722,8 @@ class Individual:
             dominant = max(self.current_emotions, key=lambda x: x.intensity)
             pos = world_to_screen_func(self.x, self.z, self.body_h + 1.0)
             font = pygame.font.Font(None, 24)
-            text = font.render(dominant.emotion_type.value[:3].upper(), True, (255, 255, 0))
+            text = font.render("EMO", True, (255, 255, 0))
+            # text = font.render(dominant.emotion_type.value[:3].upper(), True, (255, 255, 0))
             screen.blit(text, (pos[0] - 20, pos[1] - 30))
 
     def reset(self, start_x=0, start_z=0):
