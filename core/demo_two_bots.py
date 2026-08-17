@@ -1,7 +1,6 @@
 # core/demo_two_bots.py
 import sys
 import os
-import math
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from core.world import World
@@ -16,7 +15,7 @@ def create_bot_with_emotions(x, z, emotions_enabled, health=100, food_reserve=0)
         'step_size': 1.0,
         'reflex_rules': [],
         'instinct_patterns': [],
-        'max_steps': 2000
+        'max_steps': 1000
     })
     bot = Individual(x=x, z=z, genome=genome)
     bot.health = health
